@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "1047128712830",
+    "project_id": "chronoverify-app",
+    "storage_bucket": "chronoverify-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1047128712830:android:18f181c4525993945f9a2f",
+        "android_client_info": {
+          "package_name": "com.chronoverify.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1047128712830-1924ncvbsu1boerl4nplrp2k7mrr5283.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chronoverify.app",
+            "certificate_hash": "df89d9dbf3b475cae8e470fab4130f017df09f23"
+          }
+        },
+        {
+          "client_id": "1047128712830-ivhdbnhsts7aksn6fpn6et6ju5ijnqbs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chronoverify.app",
+            "certificate_hash": "560eb1158fa7d293f3191d8ea387165cd7659a66"
+          }
+        },
+        {
+          "client_id": "1047128712830-s4a1qkohjttiml5am5uk65g6cteccr56.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTJt3RIm6VFkR4pLcQUL4eO1VbEkrVcHY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1047128712830-s4a1qkohjttiml5am5uk65g6cteccr56.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1047128712830-0chpauimk032t684pee8u2n8j8bbfd7v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.chronoverify.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

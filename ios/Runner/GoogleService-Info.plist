@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1047128712830-0chpauimk032t684pee8u2n8j8bbfd7v.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1047128712830-0chpauimk032t684pee8u2n8j8bbfd7v</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>1047128712830-1924ncvbsu1boerl4nplrp2k7mrr5283.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyB5p6MsirtQDoKHhc-uOPK_HFXgZhUc_LQ</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1047128712830</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.chronoverify.app</string>
+	<key>PROJECT_ID</key>
+	<string>chronoverify-app</string>
+	<key>STORAGE_BUCKET</key>
+	<string>chronoverify-app.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1047128712830:ios:1cd0da007decaae75f9a2f</string>
+</dict>
+</plist>
