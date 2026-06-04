@@ -45,6 +45,7 @@ class NavBar extends GetView<NavBarController> {
             items: [
               _buildNavItem(iconPath: IconPath.home, label: 'Home'.tr),
               _buildNavItem(iconPath: IconPath.history, label: 'History'.tr),
+              // _buildNavItem(iconPath: IconPath.premium, label: 'Premium'.tr),
               _buildNavItem(iconPath: IconPath.user, label: 'Profile'.tr),
               
             ],

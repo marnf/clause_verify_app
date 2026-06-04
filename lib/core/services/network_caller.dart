@@ -191,87 +191,84 @@ Future<ResponseData> getRequest(String endpoint, {String? token}) async {
   }
 
 
-  Future<ResponseData> multipartRequest(
-    String endpoint, {
-    Map<String, String>? files,      // File paths: {'front_image': '/path/to/image.jpg'}
-    Map<String, String>? fields,     // Text fields: {'original_box': 'true', 'invoice': 'false'}
-    String? token,
-  }) async {
-    AppLoggerHelper.info('MULTIPART Request: $endpoint');
-    
-    try {
-      // Step 1: Create multipart request
-      var request = http.MultipartRequest('POST', Uri.parse(endpoint));
+ Future<ResponseData> multipartRequest(
+  String endpoint, {
+  List<MapEntry<String, String>>? files, // ✅ Changed Map to List<MapEntry> to allow multiple files with same key name 'files'
+  Map<String, String>? fields,
+  String? token,
+}) async {
+  AppLoggerHelper.info('MULTIPART Request: $endpoint');
+  
+  try {
+    var request = http.MultipartRequest('POST', Uri.parse(endpoint));
 
-      // Step 2: Add Authorization header
-      request.headers['Authorization'] = 'Bearer ${token ?? AuthService.token}';
-      AppLoggerHelper.info('Authorization: Bearer ${token ?? AuthService.token}');
+    request.headers['Authorization'] = 'Bearer ${token ?? AuthService.token}';
+    AppLoggerHelper.info('Authorization: Bearer ${token ?? AuthService.token}');
 
-      // Step 3: Add files
-      if (files != null) {
-        for (var entry in files.entries) {
-          String fieldName = entry.key;    // 'front_image'
-          String filePath = entry.value;   // '/path/to/image.jpg'
-          
-          File file = File(filePath);
-          
-          // Check if file exists
-          if (!await file.exists()) {
-            AppLoggerHelper.error('File not found: $filePath');
-            continue;
-          }
-          
-          // Determine content type from file extension
-          String extension = filePath.split('.').last.toLowerCase();
-          MediaType contentType;
-          
-          if (extension == 'jpg' || extension == 'jpeg') {
-            contentType = MediaType('image', 'jpeg');
-          } else if (extension == 'png') {
-            contentType = MediaType('image', 'png');
-          } else {
-            contentType = MediaType('image', 'jpeg'); // default
-          }
-
-          // Add file to request
-          request.files.add(
-            await http.MultipartFile.fromPath(
-              fieldName,
-              file.path,
-              contentType: contentType,
-            ),
-          );
-          
-          AppLoggerHelper.info('✅ Added file: $fieldName -> $filePath (${contentType.mimeType})');
+    // ✅ Add files
+    if (files != null) {
+      for (var entry in files) {
+        String fieldName = entry.key;    // e.g., 'files'
+        String filePath = entry.value;   // e.g., '/path/to/file.pdf'
+        
+        File file = File(filePath);
+        
+        if (!await file.exists()) {
+          AppLoggerHelper.error('File not found: $filePath');
+          continue;
         }
+        
+        String extension = filePath.split('.').last.toLowerCase();
+        MediaType contentType;
+        
+        if (extension == 'jpg' || extension == 'jpeg') {
+          contentType = MediaType('image', 'jpeg');
+        } else if (extension == 'png') {
+          contentType = MediaType('image', 'png');
+        } else if (extension == 'pdf') {
+          contentType = MediaType('application', 'pdf');
+        } else if (extension == 'doc') {
+          contentType = MediaType('application', 'msword');
+        } else if (extension == 'docx') {
+          contentType = MediaType('application', 'vnd.openxmlformats-officedocument.wordprocessingml.document');
+        } else {
+          contentType = MediaType('application', 'octet-stream');
+        }
+
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            fieldName,
+            file.path,
+            contentType: contentType,
+          ),
+        );
+        
+        AppLoggerHelper.info('✅ Added file: $fieldName -> $filePath (${contentType.mimeType})');
       }
-
-      // Step 4: Add additional text fields (accessories data)
-      if (fields != null) {
-        request.fields.addAll(fields);
-        AppLoggerHelper.info('📦 Added fields: $fields');
-      }
-
-      AppLoggerHelper.info('📤 Sending multipart request...');
-
-      // Step 5: Send request with extended timeout for file uploads
-      var streamedResponse = await request.send().timeout(
-        Duration(seconds: timeoutDuration * 3), // 30 seconds for file uploads
-      );
-      
-      // Step 6: Convert streamed response to regular response
-      var response = await http.Response.fromStream(streamedResponse);
-      
-      AppLoggerHelper.info('📥 Response received: ${response.statusCode}');
-      
-      // Step 7: Use existing response handler
-      return _handleResponse(response);
-      
-    } catch (e) {
-      AppLoggerHelper.error('Multipart request error: $e');
-      return _handleError(e);
     }
+
+    if (fields != null) {
+      request.fields.addAll(fields);
+      AppLoggerHelper.info('📦 Added fields: $fields');
+    }
+
+    AppLoggerHelper.info('📤 Sending multipart request...');
+
+    var streamedResponse = await request.send().timeout(
+      Duration(seconds: timeoutDuration * 3),
+    );
+    
+    var response = await http.Response.fromStream(streamedResponse);
+    
+    AppLoggerHelper.info('📥 Response received: ${response.statusCode}');
+    
+    return _handleResponse(response);
+    
+  } catch (e) {
+    AppLoggerHelper.error('Multipart request error: $e');
+    return _handleError(e);
   }
+}
 
 
   // Handle the response from the server

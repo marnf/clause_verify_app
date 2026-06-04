@@ -1,100 +1,52 @@
-// History API Response Model
-class HistoryApiModel {
-  final String id;
-  final String brandDetected;
-  final String modelDetected;
-  final String confidenceScore;
-  final DateTime createdAt;
+// lib/features/history/model/history_model.dart
 
-  HistoryApiModel({
-    required this.id,
-    required this.brandDetected,
-    required this.modelDetected,
-    required this.confidenceScore,
-    required this.createdAt,
-  });
-
-  factory HistoryApiModel.fromJson(Map<String, dynamic> json) {
-    return HistoryApiModel(
-      id: json['id'] ?? '',
-      brandDetected: json['brand_detected'] ?? 'Unknown Brand',
-      modelDetected: json['model_detected'] ?? 'Unknown Model',
-      confidenceScore: json['confidence_score'] ?? '0',
-      createdAt: json['created_at'] != null 
-          ? DateTime.parse(json['created_at'])
-          : DateTime.now(),
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'brand_detected': brandDetected,
-      'model_detected': modelDetected,
-      'confidence_score': confidenceScore,
-      'created_at': createdAt.toIso8601String(),
-    };
-  }
-
-  String _formatDate(DateTime date) {
-    String day = date.day.toString().padLeft(2, '0');
-    String month = date.month.toString().padLeft(2, '0');
-    String year = date.year.toString();
-    return '$day/$month/$year';
-  }
-}
-
-// HistoryModel for UI
 class HistoryModel {
-  final String productName;
-  final String modelNumber;
-  final int score;
-  final String date;
-  final String? id;
+  final String id;
+  final String? createdAt;
+  final String? country;
+  final int? confidenceScore;
+  final String? overallRisk;
+  final String? isPaidScan;
+  final String? isPaidReport;
+  final String? recommendation;
 
   HistoryModel({
-    required this.productName,
-    required this.modelNumber,
-    required this.score,
-    required this.date,
-    this.id,
+    required this.id,
+    this.createdAt,
+    this.country,
+    this.confidenceScore,
+    this.overallRisk,
+    this.isPaidScan,
+    this.isPaidReport,
+    this.recommendation,
   });
 
   factory HistoryModel.fromJson(Map<String, dynamic> json) {
     return HistoryModel(
-      productName: json['productName'] ?? '',
-      modelNumber: json['modelNumber'] ?? '',
-      score: json['score'] ?? 0,
-      date: json['date'] ?? '',
-      id: json['id'],
+      id: json['id'] ?? '',
+      createdAt: json['created_at'] as String?,
+      country: json['country'] as String?,
+      confidenceScore: json['confidence_score'] as int?,
+      overallRisk: json['overall_risk'] as String?,
+      isPaidScan: json['is_paid_scan']?.toString(),
+      isPaidReport: json['is_paid_report']?.toString(),
+      recommendation: json['recommendation'] as String?,
     );
   }
 
-  // Create from API model
-  factory HistoryModel.fromApiModel(HistoryApiModel apiModel) {
-    return HistoryModel(
-      id: apiModel.id,
-      productName: apiModel.brandDetected,
-      modelNumber: apiModel.modelDetected,
-      score: double.parse(apiModel.confidenceScore).round(),
-      date: _formatDate(apiModel.createdAt),
-    );
-  }
+  bool get hasData => confidenceScore != null && overallRisk != null;
+  
+  bool get isReportPaid => isPaidReport?.toLowerCase() == 'true';
 
-  static String _formatDate(DateTime date) {
-    String day = date.day.toString().padLeft(2, '0');
-    String month = date.month.toString().padLeft(2, '0');
-    String year = date.year.toString();
-    return '$day/$month/$year';
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'productName': productName,
-      'modelNumber': modelNumber,
-      'score': score,
-      'date': date,
-    };
+  // Format date to "Jun 04, 2026"
+  String get formattedDate {
+    if (createdAt == null || createdAt!.isEmpty) return '';
+    try {
+      final dateTime = DateTime.parse(createdAt!);
+      final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      return '${months[dateTime.month - 1]} ${dateTime.day.toString().padLeft(2, '0')}, ${dateTime.year}';
+    } catch (e) {
+      return '';
+    }
   }
 }

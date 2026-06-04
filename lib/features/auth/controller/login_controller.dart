@@ -17,7 +17,7 @@ class LoginController extends GetxController {
   final isFormValid = false.obs;
   final isLoading = false.obs;
   final isGoogleLoading = false.obs;
-  final isAppleLoading = false.obs; // ✅ নতুন
+  final isAppleLoading = false.obs;
 
   @override
   void onInit() {
@@ -73,42 +73,43 @@ class LoginController extends GetxController {
         requiresAuth: false,
       );
 
-      print('🔍 Login API Response:');
-      print('   - isSuccess: ${response.isSuccess}');
-      print('   - statusCode: ${response.statusCode}');
-      print('   - has responseData: ${response.responseData != null}');
-
       if (response.isSuccess && response.responseData != null) {
-        print('✅ Login successful, saving data...');
-        print('Response data keys: ${response.responseData!.keys.toList()}');
-
+        // Save all login data via AuthService
         await AuthService.saveLoginData(response.responseData!);
-        await _fetchAndSaveUserProfile();
-        await AuthService.testDataPersistence();
 
-        // ✅ RevenueCat এ user identify করো
-        final iapService = IAPService();
-        await iapService.initialize();
-        await iapService.loginUser(email);
-        print('✅ RevenueCat user identified: $email');
+        // RevenueCat identify
+        try {
+          final iapService = IAPService();
+          await iapService.initialize();
+          await iapService.loginUser(email);
+        } catch (e) {
+          print('⚠️ RevenueCat identify failed (continuing): $e');
+        }
 
-        final localizationController = Get.find<LocalizationController>();
-        await localizationController.syncLanguageToServer();
-        Get.offNamed(AppRoute.termsAndCondition);
+        // Language sync
+        try {
+          final localizationController = Get.find<LocalizationController>();
+          await localizationController.syncLanguageToServer();
+        } catch (e) {
+          print('⚠️ Language sync failed (continuing): $e');
+        }
+
+        Get.offNamed(AppRoute.navBar);
       } else {
-        print('❌ Login failed: ${response.errorMessage}');
+        final errorMsg = response.responseData?['error']?.toString() ??
+            response.errorMessage;
+
         Get.snackbar(
-          'Login Failed',
-          response.errorMessage ?? 'Invalid email or password',
+          'error'.tr,
+          errorMsg,
           snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
       }
     } catch (e) {
-      print('❌ Exception during login: $e');
       Get.snackbar(
-        'Error',
+        'error'.tr,
         'An error occurred: ${e.toString()}',
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red,
@@ -119,73 +120,43 @@ class LoginController extends GetxController {
     }
   }
 
-  Future<void> _fetchAndSaveUserProfile() async {
-    try {
-      final networkCaller = NetworkCaller();
-      final response = await networkCaller.getRequest(
-        Endpoints.user,
-        token: AuthService.token,
-      );
-      if (response.isSuccess && response.responseData != null) {
-        final data = response.responseData!['data'] as Map<String, dynamic>;
-        await AuthService.saveUserData(data);
-        print('✅ User profile saved after login');
-      }
-    } catch (e) {
-      print('⚠️ Could not fetch user profile: $e');
-    }
-  }
-
   void loginWithGoogle() async {
-    if (isGoogleLoading.value == true) return;
-
-    print('🔵 Login with Google started...');
+    if (isGoogleLoading.value) return;
     isGoogleLoading.value = true;
 
     try {
       final success = await AuthService.signInWithGoogle();
 
       if (success == true) {
-        print('✅ Google login successful!');
-
         final userEmail = AuthService.userEmail;
         if (userEmail != null && userEmail.isNotEmpty) {
-          final iapService = IAPService();
-          await iapService.initialize();
-          await iapService.loginUser(userEmail);
-          print('✅ RevenueCat user identified (Google): $userEmail');
+          try {
+            final iapService = IAPService();
+            await iapService.initialize();
+            await iapService.loginUser(userEmail);
+          } catch (e) {
+            print('⚠️ RevenueCat identify failed (continuing): $e');
+          }
         }
-
-        Get.snackbar(
-          'Success',
-          'Google login successful!',
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          duration: Duration(seconds: 2),
-        );
 
         try {
           final localizationController = Get.find<LocalizationController>();
           await localizationController.syncLanguageToServer();
         } catch (e) {
-          print('⚠️ Language sync failed (continuing anyway): $e');
+          print('⚠️ Language sync failed (continuing): $e');
         }
 
-        await Future.delayed(Duration(milliseconds: 500));
+        await Future.delayed(const Duration(milliseconds: 500));
 
         final shouldShowTerms = await AuthService.shouldShowTerms();
         if (shouldShowTerms == true) {
-          print('📋 Navigating to Terms & Conditions...');
           Get.offNamed(AppRoute.termsAndCondition);
         } else {
-          print('🏠 Navigating to Home (Navbar)...');
           Get.offNamed(AppRoute.navBar);
         }
       } else {
-        print('❌ Google login failed');
         Get.snackbar(
-          'Login Failed',
+          'error'.tr,
           'Google login was cancelled or failed. Please try again.',
           snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.red,
@@ -193,9 +164,8 @@ class LoginController extends GetxController {
         );
       }
     } catch (e) {
-      print('❌ Google login error: $e');
       Get.snackbar(
-        'Error',
+        'error'.tr,
         'An error occurred during Google login: ${e.toString()}',
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red,
@@ -207,42 +177,32 @@ class LoginController extends GetxController {
   }
 
   void loginWithApple() async {
-    if (isAppleLoading.value) return; // ✅
-
-    print('🍎 Login with Apple started...');
-    isAppleLoading.value = true; // ✅
+    if (isAppleLoading.value) return;
+    isAppleLoading.value = true;
 
     try {
       final success = await AuthService.signInWithApple();
 
       if (success == true) {
-        print('✅ Apple login successful!');
-
         final userEmail = AuthService.userEmail;
         if (userEmail != null && userEmail.isNotEmpty) {
-          final iapService = IAPService();
-          await iapService.initialize();
-          await iapService.loginUser(userEmail);
-          print('✅ RevenueCat user identified (Apple): $userEmail');
+          try {
+            final iapService = IAPService();
+            await iapService.initialize();
+            await iapService.loginUser(userEmail);
+          } catch (e) {
+            print('⚠️ RevenueCat identify failed (continuing): $e');
+          }
         }
-
-        Get.snackbar(
-          'Success',
-          'Apple login successful!',
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          duration: Duration(seconds: 2),
-        );
 
         try {
           final localizationController = Get.find<LocalizationController>();
           await localizationController.syncLanguageToServer();
         } catch (e) {
-          print('⚠️ Language sync failed (continuing anyway): $e');
+          print('⚠️ Language sync failed (continuing): $e');
         }
 
-        await Future.delayed(Duration(milliseconds: 500));
+        await Future.delayed(const Duration(milliseconds: 500));
 
         final shouldShowTerms = await AuthService.shouldShowTerms();
         if (shouldShowTerms == true) {
@@ -251,9 +211,8 @@ class LoginController extends GetxController {
           Get.offNamed(AppRoute.navBar);
         }
       } else {
-        print('❌ Apple login failed');
         Get.snackbar(
-          'Login Failed',
+          'error'.tr,
           'Apple login was cancelled or failed. Please try again.',
           snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.red,
@@ -261,16 +220,15 @@ class LoginController extends GetxController {
         );
       }
     } catch (e) {
-      print('❌ Apple login error: $e');
       Get.snackbar(
-        'Error',
+        'error'.tr,
         'An error occurred during Apple login: ${e.toString()}',
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
     } finally {
-      isAppleLoading.value = false; // ✅
+      isAppleLoading.value = false;
     }
   }
 
@@ -289,19 +247,5 @@ class LoginController extends GetxController {
     emailController.dispose();
     passwordController.dispose();
     super.onClose();
-  }
-
-  Future<void> afterSuccessfulLogin() async {
-    try {
-      final localizationController = Get.find<LocalizationController>();
-      final synced = await localizationController.syncLanguageToServer();
-      if (synced == true) {
-        print('✅ Language preference synced to server');
-      } else {
-        print('⚠️ Failed to sync language preference (continuing anyway)');
-      }
-    } catch (e) {
-      print('❌ Error in post-login sync: $e');
-    }
   }
 }

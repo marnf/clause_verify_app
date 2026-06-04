@@ -1,6 +1,7 @@
 import 'package:flutter_extension/features/history/controller/history_controller.dart';
 import 'package:flutter_extension/features/history/screen/history_screen.dart';
 import 'package:flutter_extension/features/home/controllers/home_controller.dart';
+import 'package:flutter_extension/features/pricing/screen/subscription_screen.dart';
 import 'package:flutter_extension/features/profile/screen/profile_screen.dart';
 import 'package:get/get.dart';
 import '../../../core/services/auth_service.dart';
@@ -14,6 +15,7 @@ class NavBarController extends GetxController {
   List screens = [
     HomeScreen(),
     HistoryScreen(),
+    // SubscriptionScreen(),
     ProfileScreen(),
   ];
 

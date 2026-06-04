@@ -23,14 +23,14 @@ class OtpVerificationControllerForRegistraion extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    
+
     final arguments = Get.arguments;
     if (arguments != null && arguments['email'] != null) {
       email = arguments['email'] as String;
     } else {
       email = '';
     }
-    
+
     startTimer();
   }
 
@@ -39,7 +39,6 @@ class OtpVerificationControllerForRegistraion extends GetxController {
   }
 
   Future<void> verifyOtp() async {
-    // Validate OTP
     if (otp.value.length != 6) {
       Get.snackbar(
         'error'.tr,
@@ -64,8 +63,8 @@ class OtpVerificationControllerForRegistraion extends GetxController {
 
     try {
       final Map<String, dynamic> otpData = {
-        "email": email,
         "otp": otp.value,
+        "email": email,
       };
 
       final NetworkCaller networkCaller = NetworkCaller();
@@ -76,30 +75,30 @@ class OtpVerificationControllerForRegistraion extends GetxController {
       );
 
       if (response.isSuccess) {
-        // Clear before navigation
         _cleanup();
-        
+
+        final successMsg = response.responseData?['success']?.toString() ??
+            'Registration successful!';
+
         showCustomDialogGetX(
           imagePath: IconPath.successIcon,
-          title: 'Registration Successfully Complete',
-          subtitle: 'Thanks for staying, now we are going to redirect you to login screen, and then please login',
+          title: 'Registration Successful',
+          subtitle: successMsg,
           buttonText: 'Continue',
           onButtonPressed: () {
-            // Use off() instead of offAllNamed()
             Get.offNamed(AppRoute.loginScreen);
           },
         );
       } else {
-        String errorMessage = response.responseData?['message']?.toString() 
-                             ?? response.errorMessage 
-                             ?? 'OTP verification failed';
-        
+        final errorMsg = response.responseData?['error']?.toString() ??
+            response.errorMessage;
+
         Get.snackbar(
           'error'.tr,
-          errorMessage,
+          errorMsg,
           backgroundColor: Colors.red,
           colorText: Colors.white,
-          duration: Duration(seconds: 3),
+          duration: const Duration(seconds: 3),
         );
       }
     } catch (e) {
@@ -108,7 +107,7 @@ class OtpVerificationControllerForRegistraion extends GetxController {
         'network_error'.tr,
         backgroundColor: Colors.red,
         colorText: Colors.white,
-        duration: Duration(seconds: 3),
+        duration: const Duration(seconds: 3),
       );
     } finally {
       isLoading.value = false;
@@ -119,7 +118,7 @@ class OtpVerificationControllerForRegistraion extends GetxController {
     if (!isClickable.value) return;
     if (email.isEmpty) {
       Get.snackbar(
-        'Error',
+        'error'.tr,
         'Email not found',
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -142,26 +141,28 @@ class OtpVerificationControllerForRegistraion extends GetxController {
       );
 
       if (response.isSuccess) {
-        // Reset timer
         otpTEController.clear();
+        otp.value = '';
         secondsRemaining.value = 30;
         isClickable.value = false;
         startTimer();
 
+        final successMsg = response.responseData?['success']?.toString() ??
+            'OTP sent successfully';
+
         Get.snackbar(
           'success'.tr,
-          response.responseData?['message']?.toString() ?? 'OTP sent successfully',
+          successMsg,
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
       } else {
-        String errorMessage = response.responseData?['message']?.toString() 
-                             ?? response.errorMessage 
-                             ?? 'Failed to resend OTP';
-        
+        final errorMsg = response.responseData?['error']?.toString() ??
+            response.errorMessage;
+
         Get.snackbar(
           'error'.tr,
-          errorMessage,
+          errorMsg,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
@@ -178,38 +179,28 @@ class OtpVerificationControllerForRegistraion extends GetxController {
     }
   }
 
-void startTimer() {
-  // Stop existing timer
-  _timer?.cancel();
-  
-  // Reset values
-  secondsRemaining.value = 30;
-  isClickable.value = false;
-  
-  // Start new timer
-  _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-    if (secondsRemaining.value > 1) {
-      secondsRemaining.value--;
-    } else {
-      // When timer reaches 0
-      secondsRemaining.value = 0;
-      isClickable.value = true;
-      timer.cancel();
-      _timer = null;
-    }
-  });
-}
+  void startTimer() {
+    _timer?.cancel();
+    secondsRemaining.value = 30;
+    isClickable.value = false;
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (secondsRemaining.value > 1) {
+        secondsRemaining.value--;
+      } else {
+        secondsRemaining.value = 0;
+        isClickable.value = true;
+        timer.cancel();
+        _timer = null;
+      }
+    });
+  }
 
   void _cleanup() {
-    // Clear controllers
     otpTEController.clear();
-    
-    // Unfocus
     if (focusNode.hasFocus) {
       focusNode.unfocus();
     }
-    
-    // Cancel timer
     _timer?.cancel();
     _timer = null;
   }
@@ -217,6 +208,8 @@ void startTimer() {
   @override
   void onClose() {
     _cleanup();
+    otpTEController.dispose();
+    focusNode.dispose();
     super.onClose();
   }
 }

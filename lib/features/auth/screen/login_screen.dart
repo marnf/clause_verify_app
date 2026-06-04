@@ -6,11 +6,34 @@ import 'package:flutter_extension/features/auth/controller/login_controller.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LoginScreen extends StatelessWidget {
-  final LoginController controller = Get.put(LoginController());
+class LoginScreen extends StatefulWidget {
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  late final LoginController controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (Get.isRegistered<LoginController>()) {
+      Get.delete<LoginController>(force: true);
+    }
+    controller = LoginController();
+    controller.onInit();
+  }
+
+  @override
+  void dispose() {
+    controller.onClose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0A),
       body: SafeArea(
@@ -39,13 +62,10 @@ class LoginScreen extends StatelessWidget {
                           ImagePath.logo,
                           height: 100.h,
                         ),
-                       
-                         Image.asset(
+                        Image.asset(
                           ImagePath.logo_name,
                           height: 100.h,
                         ),
-                       
-                       
                         Text(
                           'welcomeBack'.tr,
                           textAlign: TextAlign.center,
@@ -90,15 +110,16 @@ class LoginScreen extends StatelessWidget {
                                   hasError:
                                       controller.emailError.value.isNotEmpty,
                                   onChanged: (value) {
-                                    if (controller.emailError.value.isNotEmpty) {
+                                    if (controller
+                                        .emailError.value.isNotEmpty) {
                                       controller.validateEmail(value);
                                     }
                                   },
                                 ),
                                 if (controller.emailError.value.isNotEmpty)
                                   Padding(
-                                    padding: EdgeInsets.only(
-                                        top: 6.h, left: 4.w),
+                                    padding:
+                                        EdgeInsets.only(top: 6.h, left: 4.w),
                                     child: Row(
                                       children: [
                                         Icon(
@@ -140,7 +161,8 @@ class LoginScreen extends StatelessWidget {
                             () => _buildTextField(
                               controller: controller.passwordController,
                               hintText: 'Enter your password',
-                              obscureText: !controller.isPasswordVisible.value,
+                              obscureText:
+                                  !controller.isPasswordVisible.value,
                               suffixIcon: IconButton(
                                 icon: Icon(
                                   controller.isPasswordVisible.value
@@ -149,7 +171,8 @@ class LoginScreen extends StatelessWidget {
                                   color: const Color(0xFF6E6E6E),
                                   size: 20.sp,
                                 ),
-                                onPressed: controller.togglePasswordVisibility,
+                                onPressed:
+                                    controller.togglePasswordVisibility,
                               ),
                             ),
                           ),
@@ -184,8 +207,8 @@ class LoginScreen extends StatelessWidget {
                                     : null,
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFFC9952A),
-                                  disabledBackgroundColor:
-                                      const Color(0xFFC9952A).withOpacity(0.45),
+                                  disabledBackgroundColor: const Color(0xFFC9952A)
+                                      .withOpacity(0.45),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -227,7 +250,8 @@ class LoginScreen extends StatelessWidget {
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 14.w),
+                                padding:
+                                    EdgeInsets.symmetric(horizontal: 14.w),
                                 child: Text(
                                   'orContinueWith'.tr,
                                   style: TextStyle(
@@ -351,15 +375,12 @@ class LoginScreen extends StatelessWidget {
         hintText: hintText,
         hintStyle: const TextStyle(color: Color(0xFF6E6E6E)),
         filled: true,
-        fillColor: hasError
-            ? const Color(0xFF2A1010)
-            : const Color(0xFF1A1A1A),
+        fillColor:
+            hasError ? const Color(0xFF2A1010) : const Color(0xFF1A1A1A),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: hasError
-                ? Colors.redAccent
-                : const Color(0xFF2E2E2E),
+            color: hasError ? Colors.redAccent : const Color(0xFF2E2E2E),
             width: 1,
           ),
         ),
@@ -407,7 +428,8 @@ class LoginScreen extends StatelessWidget {
                   height: 22.h,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(loadingColor),
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(loadingColor),
                   ),
                 )
               : child,

@@ -4,7 +4,6 @@ import 'package:flutter_extension/core/utils/constants/app_colors.dart';
 import 'package:flutter_extension/core/utils/constants/app_sizer.dart';
 import 'package:flutter_extension/core/utils/constants/icon_path.dart';
 import 'package:flutter_extension/features/profile/controller/profile_controller.dart';
-import 'package:flutter_extension/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
