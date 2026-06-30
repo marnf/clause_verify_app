@@ -116,7 +116,7 @@
 //   static const String privacyPolicy = 'privacyPolicy';
 //   static const String cookiePolicy = 'cookiePolicy';
 //   static const String logout = 'logout';
-//   static const String chronoVerifyVersion = 'chronoVerifyVersion';
+//   static const String clauseverifyVersion = 'clauseverifyVersion';
 
 //   // Premium Subscription Screen - FULL TEXT AS VARIABLE NAMES
 //   static const String premiumSubscription = 'premiumSubscription';

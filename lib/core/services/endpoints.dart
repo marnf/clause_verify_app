@@ -28,6 +28,7 @@ static const String resetPassword = "$baseUrl/api/auth/forgot-change-password/";
   // ✅ নতুন endpoints
   static const String userProfile = "$baseUrl/api/auth/user-profile-info/";
   static const String fileUpload = "$baseUrl/api/files/upload/";
+  static const String generateReport = "$baseUrl/api/files/generate/report/";
 
 
 

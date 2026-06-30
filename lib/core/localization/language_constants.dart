@@ -1,4 +1,4 @@
-import 'package:flutter_extension/core/localization/language_model.dart';
+import 'package:clause_verify/core/localization/language_model.dart';
 
 class LanguageConstants {
   // SharedPreferences Keys

@@ -1,12 +1,12 @@
 
-import 'package:flutter_extension/core/common/widgets/app_bar.dart';
-import 'package:flutter_extension/core/common/widgets/custom_button.dart';
-import 'package:flutter_extension/core/utils/constants/app_colors.dart';
-import 'package:flutter_extension/core/utils/constants/app_sizer.dart';
-import 'package:flutter_extension/core/utils/constants/icon_path.dart';
-import 'package:flutter_extension/core/utils/constants/image_path.dart';
-import 'package:flutter_extension/features/history/controller/history_preview_controller.dart';
-import 'package:flutter_extension/routes/app_routes.dart';
+import 'package:clause_verify/core/common/widgets/app_bar.dart';
+import 'package:clause_verify/core/common/widgets/custom_button.dart';
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
+import 'package:clause_verify/core/utils/constants/app_sizer.dart';
+import 'package:clause_verify/core/utils/constants/icon_path.dart';
+import 'package:clause_verify/core/utils/constants/image_path.dart';
+import 'package:clause_verify/features/history/controller/history_preview_controller.dart';
+import 'package:clause_verify/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';

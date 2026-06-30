@@ -1,6 +1,6 @@
-import 'package:flutter_extension/core/utils/constants/app_sizer.dart';
-import 'package:flutter_extension/core/utils/constants/image_path.dart';
-import 'package:flutter_extension/features/splash/controller/splash_controller.dart';
+import 'package:clause_verify/core/utils/constants/app_sizer.dart';
+import 'package:clause_verify/core/utils/constants/image_path.dart';
+import 'package:clause_verify/features/splash/controller/splash_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

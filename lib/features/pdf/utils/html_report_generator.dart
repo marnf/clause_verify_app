@@ -1,6 +1,6 @@
 // File: lib/utils/html_report_generator.dart
 
-import 'package:flutter_extension/features/pdf/model/authenticity_report_model.dart';
+import 'package:clause_verify/features/pdf/model/authenticity_report_model.dart';
 
 
 
@@ -21,7 +21,7 @@ class HtmlReportGenerator {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChronoVerify AI Pre-Expertise Report</title>
+    <title>clauseverify AI Pre-Expertise Report</title>
     <style>
         * {
             margin: 0;
@@ -354,7 +354,7 @@ class HtmlReportGenerator {
                 <div class="logo-icon">
                     ${logoUrl != null ? '<img src="$logoUrl" alt="Logo">' : ''}
                 </div>
-                <div class="logo-text">CHRONOVERIFY</div>
+                <div class="logo-text">clauseverify</div>
             </div>
 
             <div class="seal">

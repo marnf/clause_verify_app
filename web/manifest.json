@@ -1,6 +1,6 @@
 {
-    "name": "flutter_extension",
-    "short_name": "flutter_extension",
+    "name": "clause_verify",
+    "short_name": "clause_verify",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

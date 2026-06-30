@@ -1,4 +1,4 @@
-package com.chronoverify.flutter_extension
+package com.clauseverify.clause_verify
 
 import io.flutter.embedding.android.FlutterActivity
 

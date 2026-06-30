@@ -1,27 +1,27 @@
-// import 'package:flutter_extension/features/analysis/controller/analysis_result_controller.dart';
-// import 'package:flutter_extension/features/analysis/screen/analysis_result_screen.dart';
-// import 'package:flutter_extension/features/analysis/screen/contract_analysis_screen.dart';
-// import 'package:flutter_extension/features/auth/controller/email_verification_controller.dart';
-// import 'package:flutter_extension/features/auth/controller/login_controller.dart';
-// import 'package:flutter_extension/features/auth/controller/registration_controller.dart';
-// import 'package:flutter_extension/features/auth/controller/reset_password_controller.dart';
-// import 'package:flutter_extension/features/auth/screen/email_verification_screen.dart';
-// import 'package:flutter_extension/features/auth/screen/otp_verification_screen_for_registration.dart';
-// import 'package:flutter_extension/features/auth/screen/reset_password_screen.dart';
-// import 'package:flutter_extension/features/camera/screens/camera_screen.dart';
-// import 'package:flutter_extension/features/history/controller/history_controller.dart';
-// import 'package:flutter_extension/features/history/screen/history_preview.dart';
-// import 'package:flutter_extension/features/home/controllers/home_controller.dart';
-// import 'package:flutter_extension/features/nav_bar/controllers/nav_bar_controller.dart';
-// import 'package:flutter_extension/features/onboarding/controller/onboarding_controller.dart';
-// import 'package:flutter_extension/features/pricing/controller/subscription_controller.dart';
-// import 'package:flutter_extension/features/pricing/screen/subscription_screen.dart';
-// import 'package:flutter_extension/features/profile/controller/profile_controller.dart';
-// import 'package:flutter_extension/features/profile/screen/help_faq_screen.dart';
-// import 'package:flutter_extension/features/profile/screen/privacy_policy_screen.dart';
-// import 'package:flutter_extension/features/profile/screen/terms_of_use_screen.dart';
-// import 'package:flutter_extension/features/splash/controller/splash_controller.dart';
-// import 'package:flutter_extension/features/upload/screens/upload_screen.dart';
+// import 'package:clause_verify/features/analysis/controller/analysis_result_controller.dart';
+// import 'package:clause_verify/features/analysis/screen/analysis_result_screen.dart';
+// import 'package:clause_verify/features/analysis/screen/contract_analysis_screen.dart';
+// import 'package:clause_verify/features/auth/controller/email_verification_controller.dart';
+// import 'package:clause_verify/features/auth/controller/login_controller.dart';
+// import 'package:clause_verify/features/auth/controller/registration_controller.dart';
+// import 'package:clause_verify/features/auth/controller/reset_password_controller.dart';
+// import 'package:clause_verify/features/auth/screen/email_verification_screen.dart';
+// import 'package:clause_verify/features/auth/screen/otp_verification_screen_for_registration.dart';
+// import 'package:clause_verify/features/auth/screen/reset_password_screen.dart';
+// import 'package:clause_verify/features/camera/screens/camera_screen.dart';
+// import 'package:clause_verify/features/history/controller/history_controller.dart';
+// import 'package:clause_verify/features/history/screen/history_preview.dart';
+// import 'package:clause_verify/features/home/controllers/home_controller.dart';
+// import 'package:clause_verify/features/nav_bar/controllers/nav_bar_controller.dart';
+// import 'package:clause_verify/features/onboarding/controller/onboarding_controller.dart';
+// import 'package:clause_verify/features/pricing/controller/subscription_controller.dart';
+// import 'package:clause_verify/features/pricing/screen/subscription_screen.dart';
+// import 'package:clause_verify/features/profile/controller/profile_controller.dart';
+// import 'package:clause_verify/features/profile/screen/help_faq_screen.dart';
+// import 'package:clause_verify/features/profile/screen/privacy_policy_screen.dart';
+// import 'package:clause_verify/features/profile/screen/terms_of_use_screen.dart';
+// import 'package:clause_verify/features/splash/controller/splash_controller.dart';
+// import 'package:clause_verify/features/upload/screens/upload_screen.dart';
 // import 'package:get/get.dart';
 
 // // Home & Others
@@ -210,29 +210,31 @@
 
 // lib/routes/app_routes.dart
 
-import 'package:flutter_extension/features/analysis/controller/analysis_result_controller.dart';
-import 'package:flutter_extension/features/analysis/screen/analysis_result_screen.dart';
-import 'package:flutter_extension/features/analysis/screen/contract_analysis_screen.dart';
-import 'package:flutter_extension/features/auth/controller/email_verification_controller.dart';
-import 'package:flutter_extension/features/auth/controller/login_controller.dart';
-import 'package:flutter_extension/features/auth/controller/registration_controller.dart';
-import 'package:flutter_extension/features/auth/controller/reset_password_controller.dart';
-import 'package:flutter_extension/features/auth/screen/email_verification_screen.dart';
-import 'package:flutter_extension/features/auth/screen/otp_verification_screen_for_registration.dart';
-import 'package:flutter_extension/features/auth/screen/reset_password_screen.dart';
-import 'package:flutter_extension/features/camera/screens/camera_screen.dart';
-import 'package:flutter_extension/features/history/controller/history_controller.dart';
-import 'package:flutter_extension/features/home/controllers/home_controller.dart';
-import 'package:flutter_extension/features/nav_bar/controllers/nav_bar_controller.dart';
-import 'package:flutter_extension/features/onboarding/controller/onboarding_controller.dart';
-import 'package:flutter_extension/features/pricing/controller/subscription_controller.dart';
-import 'package:flutter_extension/features/pricing/screen/subscription_screen.dart';
-import 'package:flutter_extension/features/profile/controller/profile_controller.dart';
-import 'package:flutter_extension/features/profile/screen/help_faq_screen.dart';
-import 'package:flutter_extension/features/profile/screen/privacy_policy_screen.dart';
-import 'package:flutter_extension/features/profile/screen/terms_of_use_screen.dart';
-import 'package:flutter_extension/features/splash/controller/splash_controller.dart';
-import 'package:flutter_extension/features/upload/screens/upload_screen.dart';
+import 'package:clause_verify/features/analysis/controller/analysis_result_controller.dart';
+import 'package:clause_verify/features/analysis/screen/analysis_result_screen.dart';
+import 'package:clause_verify/features/analysis/screen/contract_analysis_screen.dart';
+import 'package:clause_verify/features/analysis/screen/pdf_viewer_screen.dart';
+import 'package:clause_verify/features/auth/controller/email_verification_controller.dart';
+import 'package:clause_verify/features/auth/controller/login_controller.dart';
+import 'package:clause_verify/features/auth/controller/registration_controller.dart';
+import 'package:clause_verify/features/auth/controller/reset_password_controller.dart';
+import 'package:clause_verify/features/auth/screen/email_verification_screen.dart';
+import 'package:clause_verify/features/auth/screen/otp_verification_screen_for_registration.dart';
+import 'package:clause_verify/features/auth/screen/reset_password_screen.dart';
+import 'package:clause_verify/features/camera/screens/camera_screen.dart';
+import 'package:clause_verify/features/history/controller/history_controller.dart';
+import 'package:clause_verify/features/history/screen/history_screen.dart';
+import 'package:clause_verify/features/home/controllers/home_controller.dart';
+import 'package:clause_verify/features/nav_bar/controllers/nav_bar_controller.dart';
+import 'package:clause_verify/features/onboarding/controller/onboarding_controller.dart';
+import 'package:clause_verify/features/pricing/controller/subscription_controller.dart';
+import 'package:clause_verify/features/pricing/screen/subscription_screen.dart';
+import 'package:clause_verify/features/profile/controller/profile_controller.dart';
+import 'package:clause_verify/features/profile/screen/help_faq_screen.dart';
+import 'package:clause_verify/features/profile/screen/privacy_policy_screen.dart';
+import 'package:clause_verify/features/profile/screen/terms_of_use_screen.dart';
+import 'package:clause_verify/features/splash/controller/splash_controller.dart';
+import 'package:clause_verify/features/upload/screens/upload_screen.dart';
 import 'package:get/get.dart';
 
 // Home & Others
@@ -290,6 +292,8 @@ class AppRoute {
   static const String cameraScreen = '/camera-screen';
   static const contractAnalysisScreen = '/contract-analysis-screen';
   static const analysisResultScreen = '/analysis-result-screen';
+  static const history = '/historyScreen';
+  static const String pdfViewerScreen = '/pdf-viewer-screen';
 
   static List<GetPage> routes = [
     // Splash & Onboarding
@@ -395,5 +399,10 @@ class AppRoute {
 
     GetPage(name: AppRoute.uploadScreen, page: () => UploadScreen()),
     GetPage(name: AppRoute.cameraScreen, page: () => CameraScreen()),
+    GetPage(name: AppRoute.history, page: () => HistoryScreen()),
+    GetPage(
+  name: AppRoute.pdfViewerScreen,
+  page: () => const PdfViewerScreen(),
+),
   ];
 }

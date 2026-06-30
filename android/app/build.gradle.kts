@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.chronoverify.app"
+    namespace = "com.clauseverify.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -22,7 +22,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.chronoverify.app"
+        applicationId = "com.clauseverify.app"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

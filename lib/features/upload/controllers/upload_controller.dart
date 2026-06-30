@@ -1,11 +1,11 @@
 import 'package:country_picker/country_picker.dart';
-import 'package:flutter_extension/core/services/endpoints.dart';
-import 'package:flutter_extension/core/services/network_caller.dart';
-import 'package:flutter_extension/core/utils/constants/app_colors.dart';
-import 'package:flutter_extension/core/utils/constants/country_confirmation_modal.dart';
-import 'package:flutter_extension/core/utils/constants/country_helper.dart';
-import 'package:flutter_extension/features/analysis/model/analysis_result_model.dart';
-import 'package:flutter_extension/routes/app_routes.dart';
+import 'package:clause_verify/core/services/endpoints.dart';
+import 'package:clause_verify/core/services/network_caller.dart';
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
+import 'package:clause_verify/core/utils/constants/country_confirmation_modal.dart';
+import 'package:clause_verify/core/utils/constants/country_helper.dart';
+import 'package:clause_verify/features/analysis/model/analysis_result_model.dart';
+import 'package:clause_verify/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:file_picker/file_picker.dart';
@@ -287,19 +287,19 @@ class UploadController extends GetxController {
     );
   }
 
- Future<void> _performUpload(Country country) async {
+  Future<void> _performUpload(Country country) async {
   try {
     isUploading.value = true;
 
-    final fileList = selectedFiles
-        .map((file) => MapEntry('files', file.path))
-        .toList();
+   final fileList = selectedFiles
+    .map((file) => MapEntry('files', file.path))
+    .toList();
 
     final networkCaller = NetworkCaller();
     final response = await networkCaller.multipartRequest(
       Endpoints.fileUpload,
       files: fileList,
-     fields: {'law_country': country.name},
+      fields: {'law_country': country.name},
     );
 
     if (response.isSuccess && response.responseData != null) {
@@ -314,14 +314,31 @@ class UploadController extends GetxController {
 
       final resultModel = AnalysisResultModel.fromJson(dataMap);
       clearAll();
-
       Get.toNamed(AppRoute.analysisResultScreen, arguments: resultModel);
     } else {
-      Get.snackbar('Error', response.errorMessage ?? 'Upload failed.',
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.redAccent,
-          colorText: Colors.white);
-    }
+  // ✅ Low resolution check
+  final errorData = response.responseData;
+  if (errorData != null && errorData['status'] == 'fail' && errorData['reason'] == 'low_resolution') {
+    final width = errorData['width'];
+    final height = errorData['height'];
+    final minRes = errorData['min_resolution'] ?? '300x300';
+    Get.snackbar(
+      'Image Resolution Too Low',
+      'Your image is ${width}x${height}px. Minimum required is $minRes.',
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.orange,
+      colorText: Colors.white,
+      margin: const EdgeInsets.all(16),
+      borderRadius: 8,
+      duration: const Duration(seconds: 4),
+    );
+  } else {
+    Get.snackbar('Error', response.errorMessage ?? 'Upload failed.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white);
+  }
+}
   } catch (e) {
     Get.snackbar('Error', 'Something went wrong: $e',
         snackPosition: SnackPosition.TOP,

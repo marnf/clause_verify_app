@@ -122,7 +122,7 @@
 //       AppText.privacyPolicy: 'Privacy Policy',
 //       AppText.cookiePolicy: 'Cookie Policy',
 //       AppText.logout: 'Logout',
-//       AppText.chronoVerifyVersion: 'ChronoVerify v1.0.0',
+//       AppText.clauseverifyVersion: 'clauseverify v1.0.0',
 
 //       // Premium Subscription Screen
 //       AppText.premiumSubscription: 'Premium Subscription',
@@ -346,7 +346,7 @@
 //       AppText.privacyPolicy: 'Politique de confidentialité',
 //       AppText.cookiePolicy: 'Politique des cookies',
 //       AppText.logout: 'Déconnexion',
-//       AppText.chronoVerifyVersion: 'ChronoVerify v1.0.0',
+//       AppText.clauseverifyVersion: 'clauseverify v1.0.0',
 
 //       // Premium Subscription Screen
 //       AppText.premiumSubscription: 'Abonnement Premium',

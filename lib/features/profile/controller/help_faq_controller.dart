@@ -25,15 +25,15 @@ class HelpFaqController extends GetxController {
       title: 'Getting Started'.tr,
       items: [
         FaqItem(
-          question: 'What is ChronoVerify?'.tr,
-          answer: 'ChronoVerify is a mobile application that uses AI-powered technology to verify the authenticity and production date of watches, helping collectors and buyers make informed decisions.'.tr,
+          question: 'What is clauseverify?'.tr,
+          answer: 'clauseverify is a mobile application that uses AI-powered technology to verify the authenticity and production date of watches, helping collectors and buyers make informed decisions.'.tr,
         ),
         FaqItem(
           question: 'How do I create an account?'.tr,
           answer: 'Tap "Sign Up" on the login screen. Enter your email, create a password, and verify your email address via the link sent to your inbox.'.tr,
         ),
         FaqItem(
-          question: 'Is ChronoVerify free to use?'.tr,
+          question: 'Is clauseverify free to use?'.tr,
           answer: 'You can download and register for free. Certain advanced features, like detailed verification reports or unlimited scans, may require a Premium subscription. Check the "Premium" section in the app for details.'.tr,
         ),
       ],
@@ -101,7 +101,7 @@ class HelpFaqController extends GetxController {
           answer: 'Yes. We take privacy seriously. All images and data are encrypted and processed securely. We do not share your personal data with third parties without your consent. For details, please read our Privacy Policy.'.tr,
         ),
         FaqItem(
-          question: 'Does ChronoVerify sell my data?'.tr,
+          question: 'Does clauseverify sell my data?'.tr,
           answer: 'No. We do not sell, trade, or rent your personal identification information. Data is used solely to provide and improve the verification service.'.tr,
         ),
       ],

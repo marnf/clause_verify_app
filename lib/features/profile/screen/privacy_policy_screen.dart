@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_extension/core/common/widgets/app_bar.dart';
-import 'package:flutter_extension/core/utils/constants/app_colors.dart';
-import 'package:flutter_extension/core/utils/constants/app_sizer.dart';
-import 'package:flutter_extension/features/profile/controller/privacy_policy_controller.dart';
+import 'package:clause_verify/core/common/widgets/app_bar.dart';
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
+import 'package:clause_verify/core/utils/constants/app_sizer.dart';
+import 'package:clause_verify/features/profile/controller/privacy_policy_controller.dart';
 import 'package:get/get.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
@@ -28,7 +28,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
     ),
     const SizedBox(height: 8),
     Text(
-      'ChronoVerify respects your privacy and is committed to protecting your personal data. This Privacy Policy explains how your information is collected, used, and protected when you use the ChronoVerify application and services.'.tr,
+      'clauseverify respects your privacy and is committed to protecting your personal data. This Privacy Policy explains how your information is collected, used, and protected when you use the clauseverify application and services.'.tr,
       style: const TextStyle(
         color: AppColors.textSecondary,
         fontSize: 13,

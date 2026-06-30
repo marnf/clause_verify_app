@@ -1,11 +1,11 @@
 
-import 'package:flutter_extension/core/localization/localization_controller.dart';
-import 'package:flutter_extension/core/localization/messages.dart';
+import 'package:clause_verify/core/localization/localization_controller.dart';
+import 'package:clause_verify/core/localization/messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:flutter_extension/routes/app_routes.dart';
+import 'package:clause_verify/routes/app_routes.dart';
 import 'core/utils/constants/app_sizer.dart';
 import 'core/utils/constants/app_sizes.dart';
 import 'core/utils/theme/theme.dart';
@@ -49,6 +49,8 @@ class MyApp extends StatelessWidget {
                   : child!,
 
               initialRoute: AppRoute.splashScreen,
+              // initialRoute: AppRoute.history,
+              // initialRoute: AppRoute.navBar,
               getPages: AppRoute.routes,
             );
           },

@@ -18,7 +18,7 @@
 //         'a) User Information\n• Email address (for account creation and access)\n• Subscription status (Free or Premium)',
 //         'b) Uploaded Content\n• Images of watches uploaded by users for AI analysis\n• Optional metadata related to the watch (model, brand, accessories)',
 //         'c) Usage Data\n• Number of analyses performed\n• Dates and times of usage\n• Application interactions (for performance and abuse prevention)',
-//         'd) Payment Information\n• Payments are processed securely via third-party providers (e.g., Stripe)\n• ChronoVerify does not store credit card details',
+//         'd) Payment Information\n• Payments are processed securely via third-party providers (e.g., Stripe)\n• clauseverify does not store credit card details',
 //       ],
 //     ),
 //     PrivacySection(
@@ -49,7 +49,7 @@
 //     PrivacySection(
 //       title: '6. User Responsibilities',
 //       content: [
-//         'By using ChronoVerify, you agree:\n• To upload only images you have the right to use\n• Not to misuse the platform or attempt to bypass usage limits\n• To accept that AI-based results are informational only',
+//         'By using clauseverify, you agree:\n• To upload only images you have the right to use\n• Not to misuse the platform or attempt to bypass usage limits\n• To accept that AI-based results are informational only',
 //       ],
 //     ),
 //   ];
@@ -78,7 +78,7 @@ class PrivacyPolicyController extends GetxController {
         'a) User Information\n• Email address (for account creation and access)\n• Subscription status (Free or Premium)'.tr,
         'b) Uploaded Content\n• Images of watches uploaded by users for AI analysis\n• Optional metadata related to the watch (model, brand, accessories)'.tr,
         'c) Usage Data\n• Number of analyses performed\n• Dates and times of usage\n• Application interactions (for performance and abuse prevention)'.tr,
-        'd) Payment Information\n• Payments are processed securely via third-party providers (e.g., Stripe)\n• ChronoVerify does not store credit card details'.tr,
+        'd) Payment Information\n• Payments are processed securely via third-party providers (e.g., Stripe)\n• clauseverify does not store credit card details'.tr,
       ],
     ),
     PrivacySection(
@@ -109,7 +109,7 @@ class PrivacyPolicyController extends GetxController {
     PrivacySection(
       title: '6. User Responsibilities'.tr,
       content: [
-        'By using ChronoVerify, you agree:\n• To upload only images you have the right to use\n• Not to misuse the platform or attempt to bypass usage limits\n• To accept that AI-based results are informational only'.tr,
+        'By using clauseverify, you agree:\n• To upload only images you have the right to use\n• Not to misuse the platform or attempt to bypass usage limits\n• To accept that AI-based results are informational only'.tr,
       ],
     ),
   ];

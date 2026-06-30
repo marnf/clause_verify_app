@@ -1,4 +1,4 @@
-import 'package:flutter_extension/features/pdf/controller/report_web_view_controller.dart';
+import 'package:clause_verify/features/pdf/controller/report_web_view_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:printing/printing.dart';
@@ -198,7 +198,7 @@ class ReportWebViewScreen extends StatelessWidget {
                 canDebug: false,
                 canChangeOrientation: false,
                 pdfFileName:
-                    'ChronoVerify_Report_${controller.reportData.value?.reportId ?? 'UNKNOWN'}.pdf',
+                    'clauseverify_Report_${controller.reportData.value?.reportId ?? 'UNKNOWN'}.pdf',
                 scrollViewDecoration: BoxDecoration(
                   color: Color(0xFFF5F5F5),
                 ),

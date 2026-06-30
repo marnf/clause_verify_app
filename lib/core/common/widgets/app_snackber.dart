@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_extension/core/utils/constants/app_colors.dart';
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
 
 class AppSnackBar {
   /// Default Configuration

@@ -1,9 +1,9 @@
-// import 'package:flutter_extension/core/utils/constants/app_sizer.dart';
-// import 'package:flutter_extension/features/onboarding/controller/onboarding_controller.dart';
-// import 'package:flutter_extension/features/onboarding/model/onboarding_data.dart';
-// import 'package:flutter_extension/core/common/widgets/language_modal.dart';
-// import 'package:flutter_extension/core/localization/localization_controller.dart';
-// import 'package:flutter_extension/routes/app_routes.dart';
+// import 'package:clause_verify/core/utils/constants/app_sizer.dart';
+// import 'package:clause_verify/features/onboarding/controller/onboarding_controller.dart';
+// import 'package:clause_verify/features/onboarding/model/onboarding_data.dart';
+// import 'package:clause_verify/core/common/widgets/language_modal.dart';
+// import 'package:clause_verify/core/localization/localization_controller.dart';
+// import 'package:clause_verify/routes/app_routes.dart';
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
 
@@ -474,12 +474,12 @@
 
 
 
-import 'package:flutter_extension/core/utils/constants/app_sizer.dart';
-import 'package:flutter_extension/features/onboarding/controller/onboarding_controller.dart';
-import 'package:flutter_extension/features/onboarding/model/onboarding_data.dart';
-import 'package:flutter_extension/core/common/widgets/language_modal.dart';
-import 'package:flutter_extension/core/localization/localization_controller.dart';
-import 'package:flutter_extension/routes/app_routes.dart';
+import 'package:clause_verify/core/utils/constants/app_sizer.dart';
+import 'package:clause_verify/features/onboarding/controller/onboarding_controller.dart';
+import 'package:clause_verify/features/onboarding/model/onboarding_data.dart';
+import 'package:clause_verify/core/common/widgets/language_modal.dart';
+import 'package:clause_verify/core/localization/localization_controller.dart';
+import 'package:clause_verify/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

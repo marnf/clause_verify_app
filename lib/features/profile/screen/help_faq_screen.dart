@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_extension/core/common/widgets/app_bar.dart';
-import 'package:flutter_extension/core/utils/constants/app_colors.dart';
-import 'package:flutter_extension/core/utils/constants/app_sizer.dart';
-import 'package:flutter_extension/features/profile/controller/help_faq_controller.dart';
+import 'package:clause_verify/core/common/widgets/app_bar.dart';
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
+import 'package:clause_verify/core/utils/constants/app_sizer.dart';
+import 'package:clause_verify/features/profile/controller/help_faq_controller.dart';
 import 'package:get/get.dart';
 
 class HelpFaqScreen extends StatelessWidget {
@@ -20,7 +20,7 @@ class HelpFaqScreen extends StatelessWidget {
         children: [
           const SizedBox(height: 4),
           Text(
-            'Find answers to common questions about ChronoVerify'.tr,
+            'Find answers to common questions about clauseverify'.tr,
             style: const TextStyle(
               color: AppColors.textSecondary,
               fontSize: 13,

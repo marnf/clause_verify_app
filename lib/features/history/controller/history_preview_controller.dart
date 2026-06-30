@@ -1,8 +1,8 @@
-import 'package:flutter_extension/core/services/endpoints.dart';
-import 'package:flutter_extension/core/services/network_caller.dart';
+import 'package:clause_verify/core/services/endpoints.dart';
+import 'package:clause_verify/core/services/network_caller.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_extension/features/history/model/history_details_model.dart';
+import 'package:clause_verify/features/history/model/history_details_model.dart';
 import 'package:get/get.dart';
 
 class HistoryPreviewController extends GetxController {

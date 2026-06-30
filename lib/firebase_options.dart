@@ -27,17 +27,17 @@ class DefaultFirebaseOptions {
     apiKey: 'AIzaSyCTJt3RIm6VFkR4pLcQUL4eO1VbEkrVcHY',
     appId: '1:1047128712830:android:18f181c4525993945f9a2f',
     messagingSenderId: '1047128712830',
-    projectId: 'chronoverify-app',
-    storageBucket: 'chronoverify-app.firebasestorage.app',
+    projectId: 'clauseverify-app',
+    storageBucket: 'clauseverify-app.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyB5p6MsirtQDoKHhc-uOPK_HFXgZhUc_LQ',
     appId: '1:1047128712830:ios:1cd0da007decaae75f9a2f',
     messagingSenderId: '1047128712830',
-    projectId: 'chronoverify-app',
-    storageBucket: 'chronoverify-app.firebasestorage.app',
+    projectId: 'clauseverify-app',
+    storageBucket: 'clauseverify-app.firebasestorage.app',
     iosClientId: '1047128712830-0chpauimk032t684pee8u2n8j8bbfd7v.apps.googleusercontent.com',
-    iosBundleId: 'com.chronoverify.app',
+    iosBundleId: 'com.clauseverify.app',
   );
 }

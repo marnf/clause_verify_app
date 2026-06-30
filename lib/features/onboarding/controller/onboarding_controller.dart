@@ -1,5 +1,5 @@
-// import 'package:flutter_extension/core/common/widgets/language_modal.dart';
-// import 'package:flutter_extension/routes/app_routes.dart';
+// import 'package:clause_verify/core/common/widgets/language_modal.dart';
+// import 'package:clause_verify/routes/app_routes.dart';
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
@@ -93,8 +93,8 @@
 // }
 
 
-import 'package:flutter_extension/core/common/widgets/language_modal.dart';
-import 'package:flutter_extension/routes/app_routes.dart';
+import 'package:clause_verify/core/common/widgets/language_modal.dart';
+import 'package:clause_verify/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';

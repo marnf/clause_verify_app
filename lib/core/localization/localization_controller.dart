@@ -1,9 +1,9 @@
-import 'package:flutter_extension/core/models/response_data.dart';
-import 'package:flutter_extension/core/services/auth_service.dart';
-import 'package:flutter_extension/core/services/endpoints.dart';
-import 'package:flutter_extension/core/services/network_caller.dart';
-import 'package:flutter_extension/core/localization/language_constants.dart';
-import 'package:flutter_extension/core/localization/language_model.dart';
+import 'package:clause_verify/core/models/response_data.dart';
+import 'package:clause_verify/core/services/auth_service.dart';
+import 'package:clause_verify/core/services/endpoints.dart';
+import 'package:clause_verify/core/services/network_caller.dart';
+import 'package:clause_verify/core/localization/language_constants.dart';
+import 'package:clause_verify/core/localization/language_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';

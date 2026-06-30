@@ -1,8 +1,8 @@
 // lib/features/history/screen/history_screen.dart
 
-import 'package:flutter_extension/core/utils/constants/app_sizer.dart';
-import 'package:flutter_extension/features/history/controller/history_controller.dart';
-import 'package:flutter_extension/features/history/model/history_model.dart';
+import 'package:clause_verify/core/utils/constants/app_sizer.dart';
+import 'package:clause_verify/features/history/controller/history_controller.dart';
+import 'package:clause_verify/features/history/model/history_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

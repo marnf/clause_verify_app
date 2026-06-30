@@ -1,5 +1,5 @@
-import 'package:flutter_extension/core/services/auth_service.dart';
-import 'package:flutter_extension/routes/app_routes.dart';
+import 'package:clause_verify/core/services/auth_service.dart';
+import 'package:clause_verify/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';

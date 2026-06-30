@@ -1,22 +1,22 @@
-// lib/controllers/analysis_result_controller.dart
-
-import 'package:flutter_extension/features/analysis/model/analysis_result_model.dart';
+import 'package:clause_verify/core/services/endpoints.dart';
+import 'package:clause_verify/core/services/network_caller.dart';
+import 'package:clause_verify/features/analysis/model/analysis_result_model.dart';
+import 'package:clause_verify/routes/app_routes.dart';
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 
 class AnalysisResultController extends GetxController {
-  // The result data passed when navigating to this screen
   final Rx<AnalysisResultModel?> result = Rx<AnalysisResultModel?>(null);
-
-  // Track which term cards are expanded
   final RxSet<int> expandedIndexes = <int>{}.obs;
-
-  // Active filter tab: 'all', 'high', 'medium', 'low'
   final RxString activeFilter = 'all'.obs;
+
+  // ✅ PDF Generate States
+  final RxBool isGeneratingPdf = false.obs;
+  final RxString pdfUrl = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
-    // Accept data passed via Get.arguments
     final args = Get.arguments;
     if (args is AnalysisResultModel) {
       result.value = args;
@@ -25,7 +25,6 @@ class AnalysisResultController extends GetxController {
     }
   }
 
-  /// Toggle expand/collapse of a term card
   void toggleExpand(int index) {
     if (expandedIndexes.contains(index)) {
       expandedIndexes.remove(index);
@@ -36,42 +35,106 @@ class AnalysisResultController extends GetxController {
 
   bool isExpanded(int index) => expandedIndexes.contains(index);
 
-  /// Filter setter
   void setFilter(String filter) {
     activeFilter.value = filter;
     expandedIndexes.clear();
   }
 
-  /// Returns filtered terms based on activeFilter
   List<ImportantTerm> get filteredTerms {
     final terms = result.value?.aiResponse.importantTerms ?? [];
     if (activeFilter.value == 'all') return terms;
-    return terms
-        .where((t) => t.riskLevel == activeFilter.value)
-        .toList();
+    return terms.where((t) => t.riskLevel == activeFilter.value).toList();
   }
 
-  /// Overall risk color label
-  String get overallRiskLabel =>
-      result.value?.aiResponse.summary.overallRisk ?? '';
-
-  int get confidenceScore =>
-      result.value?.aiResponse.summary.confidenceScore ?? 0;
-
+  String get overallRiskLabel => result.value?.aiResponse.summary.overallRisk ?? '';
+  int get confidenceScore => result.value?.aiResponse.summary.confidenceScore ?? 0;
   String get country => result.value?.aiResponse.summary.country ?? '';
+  String get recommendation => result.value?.aiResponse.summary.recommendation ?? '';
+  String get recommendationGuidance => result.value?.aiResponse.summary.recommendationGuidance ?? '';
+  RiskBreakdown? get riskBreakdown => result.value?.aiResponse.riskBreakdown;
+  List<String> get positivePoints => result.value?.aiResponse.positivePoints ?? [];
+  int get totalTerms => result.value?.aiResponse.importantTerms.length ?? 0;
 
-  String get recommendation =>
-      result.value?.aiResponse.summary.recommendation ?? '';
+  // ✅ নতুন যোগ করা গেটারস (পেজ সংখ্যা এবং তারিখ)
+  int get totalPages => result.value?.totalPages ?? 0;
+  String get createdAt => result.value?.createdAt ?? '';
 
-  String get recommendationGuidance =>
-      result.value?.aiResponse.summary.recommendationGuidance ?? '';
+  // ✅ তারিখ সুন্দর করে ফরম্যাট করার জন্য (যেমন: 01-07-2026 01:13)
+  String get formattedDate {
+    final dateStr = createdAt;
+    if (dateStr.isEmpty) return '';
+    try {
+      final dateTime = DateTime.parse(dateStr);
+      return '${dateTime.day.toString().padLeft(2, '0')}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+    } catch (e) {
+      return dateStr;
+    }
+  }
 
-  RiskBreakdown? get riskBreakdown =>
-      result.value?.aiResponse.riskBreakdown;
+  // ══════════════════════════════════════
+  //  PDF GENERATE & VIEW
+  // ══════════════════════════════════════
+  Future<void> generatePdfReport() async {
+    final String? id = result.value?.id; 
+    
+    if (id == null || id.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Analysis ID not found. Cannot generate PDF.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
+      return;
+    }
 
-  List<String> get positivePoints =>
-      result.value?.aiResponse.positivePoints ?? [];
+    try {
+      isGeneratingPdf.value = true;
 
-  int get totalTerms =>
-      result.value?.aiResponse.importantTerms.length ?? 0;
+      final networkCaller = NetworkCaller();
+      final response = await networkCaller.postRequest(
+        '${Endpoints.generateReport}$id/',
+        requiresAuth: true,
+      );
+
+      if (response.isSuccess && response.responseData != null) {
+        final data = response.responseData!['data'] as Map<String, dynamic>?;
+        if (data != null && data['pdf_file'] != null) {
+          pdfUrl.value = data['pdf_file'] as String;
+          
+          // ✅ PDF Viewer Screen এ নেভিগেট করুন
+          Get.toNamed(
+            AppRoute.pdfViewerScreen, 
+            arguments: pdfUrl.value,
+          );
+        } else {
+          Get.snackbar(
+            'Error',
+            'PDF link not found in response.',
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.redAccent,
+            colorText: Colors.white,
+          );
+        }
+      } else {
+        Get.snackbar(
+          'Error',
+          response.errorMessage ?? 'Failed to generate PDF report.',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Something went wrong: $e',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
+    } finally {
+      isGeneratingPdf.value = false;
+    }
+  }
 }

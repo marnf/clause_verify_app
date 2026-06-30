@@ -1,11 +1,11 @@
 import 'package:country_picker/country_picker.dart';
-import 'package:flutter_extension/core/services/endpoints.dart';
-import 'package:flutter_extension/core/services/network_caller.dart';
-import 'package:flutter_extension/core/utils/constants/app_colors.dart';
-import 'package:flutter_extension/core/utils/constants/country_confirmation_modal.dart';
-import 'package:flutter_extension/core/utils/constants/country_helper.dart';
-import 'package:flutter_extension/features/analysis/model/analysis_result_model.dart';
-import 'package:flutter_extension/routes/app_routes.dart';
+import 'package:clause_verify/core/services/endpoints.dart';
+import 'package:clause_verify/core/services/network_caller.dart';
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
+import 'package:clause_verify/core/utils/constants/country_confirmation_modal.dart';
+import 'package:clause_verify/core/utils/constants/country_helper.dart';
+import 'package:clause_verify/features/analysis/model/analysis_result_model.dart';
+import 'package:clause_verify/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -65,16 +65,32 @@ class CameraController extends GetxController {
         final file = File(photo.path);
         final fileSize = await file.length();
         final fileSizeMB = fileSize / (1024 * 1024);
-        
+
         if (fileSizeMB > maxFileSizeMB) {
-          Get.snackbar('File Too Large', 'Image size is ${fileSizeMB.toStringAsFixed(1)}MB. Maximum allowed is ${maxFileSizeMB}MB.', snackPosition: SnackPosition.TOP, backgroundColor: AppColors.error, colorText: Colors.white, margin: EdgeInsets.all(16), borderRadius: 8);
+          Get.snackbar(
+            'File Too Large',
+            'Image size is ${fileSizeMB.toStringAsFixed(1)}MB. Maximum allowed is ${maxFileSizeMB}MB.',
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: AppColors.error,
+            colorText: Colors.white,
+            margin: EdgeInsets.all(16),
+            borderRadius: 8,
+          );
           return;
         }
         capturedPhotos.add(file);
       }
     } catch (e) {
       print('❌ Camera error: $e');
-      Get.snackbar('Camera Error', 'Could not access the camera. Please check permissions.', snackPosition: SnackPosition.TOP, backgroundColor: AppColors.error, colorText: Colors.white, margin: EdgeInsets.all(16), borderRadius: 8);
+      Get.snackbar(
+        'Camera Error',
+        'Could not access the camera. Please check permissions.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: AppColors.error,
+        colorText: Colors.white,
+        margin: EdgeInsets.all(16),
+        borderRadius: 8,
+      );
     }
   }
 
@@ -86,13 +102,24 @@ class CameraController extends GetxController {
     }
 
     try {
-      final List<XFile> images = await _picker.pickMultiImage(imageQuality: 100);
+      final List<XFile> images = await _picker.pickMultiImage(
+        imageQuality: 100,
+      );
 
       if (images.isNotEmpty) {
         final remaining = remainingSlots;
         if (images.length > remaining) {
-          Get.snackbar('Selection Exceeded', 'You selected ${images.length} photos, but only $remaining more can be added. Please select up to $remaining photos.', snackPosition: SnackPosition.TOP, backgroundColor: Colors.orange, colorText: Colors.white, margin: EdgeInsets.all(16), borderRadius: 8, duration: Duration(seconds: 4));
-          return; 
+          Get.snackbar(
+            'Selection Exceeded',
+            'You selected ${images.length} photos, but only $remaining more can be added. Please select up to $remaining photos.',
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.orange,
+            colorText: Colors.white,
+            margin: EdgeInsets.all(16),
+            borderRadius: 8,
+            duration: Duration(seconds: 4),
+          );
+          return;
         }
 
         final newPhotos = <File>[];
@@ -107,12 +134,29 @@ class CameraController extends GetxController {
       }
     } catch (e) {
       print('❌ Gallery error: $e');
-      Get.snackbar('Gallery Error', 'Could not access the gallery. Please check permissions.', snackPosition: SnackPosition.TOP, backgroundColor: AppColors.error, colorText: Colors.white, margin: EdgeInsets.all(16), borderRadius: 8);
+      Get.snackbar(
+        'Gallery Error',
+        'Could not access the gallery. Please check permissions.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: AppColors.error,
+        colorText: Colors.white,
+        margin: EdgeInsets.all(16),
+        borderRadius: 8,
+      );
     }
   }
 
   void _showLimitWarning() {
-    Get.snackbar('Limit Reached', 'You can upload a maximum of $maxPhotos photos per scan.', snackPosition: SnackPosition.TOP, backgroundColor: AppColors.error, colorText: Colors.white, margin: EdgeInsets.all(16), borderRadius: 8, duration: Duration(seconds: 2));
+    Get.snackbar(
+      'Limit Reached',
+      'You can upload a maximum of $maxPhotos photos per scan.',
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: AppColors.error,
+      colorText: Colors.white,
+      margin: EdgeInsets.all(16),
+      borderRadius: 8,
+      duration: Duration(seconds: 2),
+    );
   }
 
   void removePhoto(int index) {
@@ -130,7 +174,15 @@ class CameraController extends GetxController {
   // ══════════════════════════════════════
   Future<void> submitForAnalysis() async {
     if (capturedPhotos.isEmpty) {
-      Get.snackbar('No Photos', 'Please take or select at least one photo to continue.', snackPosition: SnackPosition.TOP, backgroundColor: AppColors.error, colorText: Colors.white, margin: EdgeInsets.all(16), borderRadius: 8);
+      Get.snackbar(
+        'No Photos',
+        'Please take or select at least one photo to continue.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: AppColors.error,
+        colorText: Colors.white,
+        margin: EdgeInsets.all(16),
+        borderRadius: 8,
+      );
       return;
     }
 
@@ -148,7 +200,7 @@ class CameraController extends GetxController {
     );
   }
 
-    Future<void> _performUpload(Country country) async {
+  Future<void> _performUpload(Country country) async {
   try {
     isUploading.value = true;
 
@@ -160,7 +212,7 @@ class CameraController extends GetxController {
     final response = await networkCaller.multipartRequest(
       Endpoints.fileUpload,
       files: fileList,
-     fields: {'law_country': country.name},
+      fields: {'law_country': country.name},
     );
 
     if (response.isSuccess && response.responseData != null) {
@@ -175,13 +227,30 @@ class CameraController extends GetxController {
 
       final resultModel = AnalysisResultModel.fromJson(dataMap);
       clearAll();
-
       Get.toNamed(AppRoute.analysisResultScreen, arguments: resultModel);
     } else {
-      Get.snackbar('Error', response.errorMessage ?? 'Upload failed.',
+      // ✅ Low resolution check
+      final errorData = response.responseData;
+      if (errorData != null && errorData['status'] == 'fail' && errorData['reason'] == 'low_resolution') {
+        final width = errorData['width'];
+        final height = errorData['height'];
+        final minRes = errorData['min_resolution'] ?? '300x300';
+        Get.snackbar(
+          'Image Resolution Too Low',
+          'Your image is ${width}x${height}px. Minimum required is $minRes.',
           snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.redAccent,
-          colorText: Colors.white);
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(16),
+          borderRadius: 8,
+          duration: const Duration(seconds: 4),
+        );
+      } else {
+        Get.snackbar('Error', response.errorMessage ?? 'Upload failed.',
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.redAccent,
+            colorText: Colors.white);
+      }
     }
   } catch (e) {
     Get.snackbar('Error', 'Something went wrong: $e',

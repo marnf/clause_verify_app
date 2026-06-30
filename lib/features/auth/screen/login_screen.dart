@@ -1,8 +1,8 @@
 import 'dart:io';
-import 'package:flutter_extension/core/utils/constants/app_colors.dart';
-import 'package:flutter_extension/core/utils/constants/app_sizer.dart';
-import 'package:flutter_extension/core/utils/constants/image_path.dart';
-import 'package:flutter_extension/features/auth/controller/login_controller.dart';
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
+import 'package:clause_verify/core/utils/constants/app_sizer.dart';
+import 'package:clause_verify/core/utils/constants/image_path.dart';
+import 'package:clause_verify/features/auth/controller/login_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

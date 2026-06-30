@@ -1,8 +1,9 @@
-import 'package:flutter_extension/core/services/Auth_service.dart';
-import 'package:flutter_extension/core/services/endpoints.dart';
-import 'package:flutter_extension/core/services/network_caller.dart';
-import 'package:flutter_extension/routes/app_routes.dart';
+import 'package:clause_verify/core/services/Auth_service.dart';
+import 'package:clause_verify/core/services/endpoints.dart';
+import 'package:clause_verify/core/services/network_caller.dart';
+import 'package:clause_verify/routes/app_routes.dart';
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 
 class HomeController extends GetxController {
   final RxBool isPremiumUser = false.obs;
@@ -13,7 +14,12 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // Local data দিয়ে আগে দেখাও, তারপর API থেকে update করো
+    _initializeAndLoad();
+  }
+
+  // ✅ Ensures AuthService is initialized before any read/write
+  Future<void> _initializeAndLoad() async {
+    await AuthService.init(); 
     _loadFromLocal();
     loadUserProfile();
   }
@@ -22,9 +28,9 @@ class HomeController extends GetxController {
     userName.value = AuthService.userName ?? '';
     isPremiumUser.value = AuthService.isPremium;
     scanLimit.value = AuthService.scanLimit;
+    print('🔄 Local Data: Name=${userName.value}, Limit=${scanLimit.value}');
   }
 
-  // ── Load user profile from /api/auth/user-profile-info/ ──
   Future<void> loadUserProfile() async {
     try {
       isLoading.value = true;
@@ -35,16 +41,20 @@ class HomeController extends GetxController {
       );
 
       if (response.isSuccess && response.responseData != null) {
-        // এই API directly user object return করে, 'data' wrapper নেই
         final data = response.responseData as Map<String, dynamic>;
 
-        isPremiumUser.value = data['user_status'] == 'premium';
-        scanLimit.value = data['scan_limit'] ?? 0;
-        userName.value = data['full_name'] ?? '';
+        print('🔥 RAW API scan_limit: ${data['scan_limit']} (Type: ${data['scan_limit'].runtimeType})');
 
-        // AuthService এ save করো পরের জন্য
         await AuthService.saveUserData(data);
+
+        // Update UI from AuthService
+        isPremiumUser.value = AuthService.isPremium;
+        scanLimit.value = AuthService.scanLimit;
+        userName.value = AuthService.userName ?? '';
+
+        print('✅ UI Updated scanLimit.value: ${scanLimit.value}');
       } else {
+        print('❌ API Failed: ${response.errorMessage}');
         _loadFromLocal();
       }
     } catch (e) {
@@ -55,34 +65,27 @@ class HomeController extends GetxController {
     }
   }
 
-  // ── Upload Contract — scan_limit check ──
-  void navigateToUpload() {
+  Future<void> navigateToUpload() async {
     if (scanLimit.value <= 0) {
-      Get.snackbar(
-        'Scan Limit Reached',
-        'You have no scans remaining. Please upgrade to continue.',
-        snackPosition: SnackPosition.TOP,
-      );
+      Get.snackbar('Scan Limit Reached', 'You have no scans remaining. Please upgrade to continue.', snackPosition: SnackPosition.TOP);
       return;
     }
-    Get.toNamed(AppRoute.uploadScreen);
+    await Get.toNamed(AppRoute.uploadScreen);
+    await loadUserProfile();
   }
 
-  // ── Scan Contract — scan_limit check ──
-  void navigateToCamera() {
+  Future<void> navigateToCamera() async {
     if (scanLimit.value <= 0) {
-      Get.snackbar(
-        'Scan Limit Reached',
-        'You have no scans remaining. Please upgrade to continue.',
-        snackPosition: SnackPosition.TOP,
-      );
+      Get.snackbar('Scan Limit Reached', 'You have no scans remaining. Please upgrade to continue.', snackPosition: SnackPosition.TOP);
       return;
     }
-    Get.toNamed(AppRoute.cameraScreen);
+    await Get.toNamed(AppRoute.cameraScreen);
+    await loadUserProfile();
   }
 
-  void navigateToPremium() {
-    Get.toNamed(AppRoute.subscriptionScreen);
+  Future<void> navigateToPremium() async {
+    await Get.toNamed(AppRoute.subscriptionScreen);
+    await loadUserProfile();
   }
 
   Future<void> refreshData() async {

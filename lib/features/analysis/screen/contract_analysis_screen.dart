@@ -1,6 +1,6 @@
-import 'package:flutter_extension/core/utils/constants/app_sizer.dart';
+import 'package:clause_verify/core/utils/constants/app_sizer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_extension/features/analysis/controller/contract_analysis_controller.dart';
+import 'package:clause_verify/features/analysis/controller/contract_analysis_controller.dart';
 import 'package:get/get.dart';
 
 class ContractAnalysisScreen extends StatelessWidget {

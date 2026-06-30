@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_extension/core/common/widgets/custom_text.dart';
-import 'package:flutter_extension/core/utils/constants/app_sizer.dart';
+import 'package:clause_verify/core/common/widgets/custom_text.dart';
+import 'package:clause_verify/core/utils/constants/app_sizer.dart';
 
 class CustomNotificationCard extends StatelessWidget {
   final dynamic notification; // notification model

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_extension/core/common/widgets/app_bar.dart';
-import 'package:flutter_extension/core/utils/constants/app_colors.dart';
-import 'package:flutter_extension/core/utils/constants/app_sizer.dart';
-import 'package:flutter_extension/features/profile/controller/terms_of_use_controller.dart';
+import 'package:clause_verify/core/common/widgets/app_bar.dart';
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
+import 'package:clause_verify/core/utils/constants/app_sizer.dart';
+import 'package:clause_verify/features/profile/controller/terms_of_use_controller.dart';
 import 'package:get/get.dart';
 
 class TermsOfUseScreen extends StatelessWidget {
@@ -19,7 +19,7 @@ class TermsOfUseScreen extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 16.h),
         children: [
           Text(
-            'ChronoVerify – Legal Terms and Conditions'.tr,
+            'clauseverify – Legal Terms and Conditions'.tr,
             style: const TextStyle(
               color: AppColors.textSecondary,
               fontSize: 13,
@@ -28,7 +28,7 @@ class TermsOfUseScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'By accessing or using the ChronoVerify application, you agree to these Terms of Use. If you do not agree, you must discontinue use of the Application.'
+            'By accessing or using the clauseverify application, you agree to these Terms of Use. If you do not agree, you must discontinue use of the Application.'
                 .tr,
             style: const TextStyle(
               color: AppColors.textSecondary,

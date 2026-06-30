@@ -1,5 +1,5 @@
 // history_details_model.dart
-import 'package:flutter_extension/core/utils/formatters/app_formatters.dart';
+import 'package:clause_verify/core/utils/formatters/app_formatters.dart';
 
 class PdfDataModel {
   final String id;

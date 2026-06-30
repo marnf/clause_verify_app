@@ -1,7 +1,7 @@
-import 'package:flutter_extension/core/models/response_data.dart';
-import 'package:flutter_extension/core/services/endpoints.dart';
-import 'package:flutter_extension/core/services/network_caller.dart';
-import 'package:flutter_extension/routes/app_routes.dart';
+import 'package:clause_verify/core/models/response_data.dart';
+import 'package:clause_verify/core/services/endpoints.dart';
+import 'package:clause_verify/core/services/network_caller.dart';
+import 'package:clause_verify/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

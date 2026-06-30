@@ -107,8 +107,8 @@ class AuthenticityReportModel {
         "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=400&h=400&fit=crop",
         "https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?w=400&h=400&fit=crop"
       ],
-      "qrCodeUrl": "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://chronoverify.com/report/AWC-TEST-001",
-      "generatedBy": "CHRONOVERIFY",
+      "qrCodeUrl": "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://clauseverify.com/report/AWC-TEST-001",
+      "generatedBy": "clauseverify",
       "generatedDate": "17/12/2025"
     };
   }

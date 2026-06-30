@@ -1,13 +1,13 @@
 // // import 'package:flutter/material.dart';
-// // import 'package:flutter_extension/features/home/controllers/home_controller.dart';
+// // import 'package:clause_verify/features/home/controllers/home_controller.dart';
 // // import 'package:get/get.dart';
-// // import 'package:flutter_extension/core/common/widgets/app_bar.dart';
-// // import 'package:flutter_extension/core/common/widgets/custom_button.dart';
-// // import 'package:flutter_extension/core/utils/constants/app_colors.dart';
-// // import 'package:flutter_extension/core/utils/constants/app_sizer.dart';
-// // import 'package:flutter_extension/core/utils/constants/icon_path.dart';
-// // import 'package:flutter_extension/features/pricing/controller/subscription_controller.dart';
-// // import 'package:flutter_extension/features/pricing/model/plan_model.dart';
+// // import 'package:clause_verify/core/common/widgets/app_bar.dart';
+// // import 'package:clause_verify/core/common/widgets/custom_button.dart';
+// // import 'package:clause_verify/core/utils/constants/app_colors.dart';
+// // import 'package:clause_verify/core/utils/constants/app_sizer.dart';
+// // import 'package:clause_verify/core/utils/constants/icon_path.dart';
+// // import 'package:clause_verify/features/pricing/controller/subscription_controller.dart';
+// // import 'package:clause_verify/features/pricing/model/plan_model.dart';
 
 // // class SubscriptionScreen extends StatelessWidget {
 // //   const SubscriptionScreen({Key? key}) : super(key: key);
@@ -1007,15 +1007,15 @@
 
 
 // import 'package:flutter/material.dart';
-// import 'package:flutter_extension/features/home/controllers/home_controller.dart';
+// import 'package:clause_verify/features/home/controllers/home_controller.dart';
 // import 'package:get/get.dart';
-// import 'package:flutter_extension/core/common/widgets/app_bar.dart';
-// import 'package:flutter_extension/core/common/widgets/custom_button.dart';
-// import 'package:flutter_extension/core/utils/constants/app_colors.dart';
-// import 'package:flutter_extension/core/utils/constants/app_sizer.dart';
-// import 'package:flutter_extension/core/utils/constants/icon_path.dart';
-// import 'package:flutter_extension/features/pricing/controller/subscription_controller.dart';
-// import 'package:flutter_extension/features/pricing/model/plan_model.dart';
+// import 'package:clause_verify/core/common/widgets/app_bar.dart';
+// import 'package:clause_verify/core/common/widgets/custom_button.dart';
+// import 'package:clause_verify/core/utils/constants/app_colors.dart';
+// import 'package:clause_verify/core/utils/constants/app_sizer.dart';
+// import 'package:clause_verify/core/utils/constants/icon_path.dart';
+// import 'package:clause_verify/features/pricing/controller/subscription_controller.dart';
+// import 'package:clause_verify/features/pricing/model/plan_model.dart';
 
 // class SubscriptionScreen extends StatelessWidget {
 //   const SubscriptionScreen({Key? key}) : super(key: key);

@@ -1,4 +1,4 @@
-import 'package:flutter_extension/core/utils/constants/app_sizer.dart';
+import 'package:clause_verify/core/utils/constants/app_sizer.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui'; // IMPORTANT: Blur er jonno import korte hobe
 import 'package:get/get.dart';

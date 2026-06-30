@@ -1,10 +1,10 @@
 // import 'package:flutter/material.dart';
-// import 'package:flutter_extension/core/services/auth_service.dart';
-// import 'package:flutter_extension/core/services/endpoints.dart';
-// import 'package:flutter_extension/core/services/iap_service.dart';
-// import 'package:flutter_extension/core/services/network_caller.dart';
-// import 'package:flutter_extension/features/pricing/model/plan_model.dart';
-// import 'package:flutter_extension/routes/app_routes.dart';
+// import 'package:clause_verify/core/services/auth_service.dart';
+// import 'package:clause_verify/core/services/endpoints.dart';
+// import 'package:clause_verify/core/services/iap_service.dart';
+// import 'package:clause_verify/core/services/network_caller.dart';
+// import 'package:clause_verify/features/pricing/model/plan_model.dart';
+// import 'package:clause_verify/routes/app_routes.dart';
 // import 'package:get/get.dart';
 // import 'package:purchases_flutter/purchases_flutter.dart';
 
@@ -794,12 +794,12 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:flutter_extension/core/services/auth_service.dart';
-import 'package:flutter_extension/core/services/endpoints.dart';
-import 'package:flutter_extension/core/services/iap_service.dart';
-import 'package:flutter_extension/core/services/network_caller.dart';
-import 'package:flutter_extension/features/pricing/model/plan_model.dart';
-import 'package:flutter_extension/routes/app_routes.dart';
+import 'package:clause_verify/core/services/auth_service.dart';
+import 'package:clause_verify/core/services/endpoints.dart';
+import 'package:clause_verify/core/services/iap_service.dart';
+import 'package:clause_verify/core/services/network_caller.dart';
+import 'package:clause_verify/features/pricing/model/plan_model.dart';
+import 'package:clause_verify/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 

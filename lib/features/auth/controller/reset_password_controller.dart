@@ -1,10 +1,10 @@
-// import 'package:flutter_extension/core/common/widgets/custom_modal.dart';
-// import 'package:flutter_extension/core/models/response_data.dart';
-// import 'package:flutter_extension/core/services/endpoints.dart';
-// import 'package:flutter_extension/core/services/network_caller.dart';
-// import 'package:flutter_extension/core/utils/constants/icon_path.dart';
-// import 'package:flutter_extension/core/utils/validators/app_validator.dart';
-// import 'package:flutter_extension/routes/app_routes.dart';
+// import 'package:clause_verify/core/common/widgets/custom_modal.dart';
+// import 'package:clause_verify/core/models/response_data.dart';
+// import 'package:clause_verify/core/services/endpoints.dart';
+// import 'package:clause_verify/core/services/network_caller.dart';
+// import 'package:clause_verify/core/utils/constants/icon_path.dart';
+// import 'package:clause_verify/core/utils/validators/app_validator.dart';
+// import 'package:clause_verify/routes/app_routes.dart';
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
 
@@ -216,13 +216,13 @@
 // }
 
 
-import 'package:flutter_extension/core/common/widgets/custom_modal.dart';
-import 'package:flutter_extension/core/models/response_data.dart';
-import 'package:flutter_extension/core/services/endpoints.dart';
-import 'package:flutter_extension/core/services/network_caller.dart';
-import 'package:flutter_extension/core/utils/constants/icon_path.dart';
-import 'package:flutter_extension/core/utils/validators/app_validator.dart';
-import 'package:flutter_extension/routes/app_routes.dart';
+import 'package:clause_verify/core/common/widgets/custom_modal.dart';
+import 'package:clause_verify/core/models/response_data.dart';
+import 'package:clause_verify/core/services/endpoints.dart';
+import 'package:clause_verify/core/services/network_caller.dart';
+import 'package:clause_verify/core/utils/constants/icon_path.dart';
+import 'package:clause_verify/core/utils/validators/app_validator.dart';
+import 'package:clause_verify/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
