@@ -109,7 +109,9 @@ class LanguageModal extends StatelessWidget {
                 // ── Language List ──
                 ...languages.map((lang) {
                   final isSelected = lang.languageCode == currentCode;
-                  final isLoading = isUpdating && !isSelected;
+                  // যেহেতু সার্ভারে হিট করবে না, তাই loading state আর দরকার নেই, 
+                  // তবুও কোডটা রেখে দিলাম যাতে UI ঠিক থাকে।
+                  final isLoading = false; 
 
                   return InkWell(
                     onTap: isUpdating
@@ -119,16 +121,10 @@ class LanguageModal extends StatelessWidget {
                               if (Get.isDialogOpen ?? false) Get.back();
                               return;
                             }
-                            if (isOnboarding) {
-                              await controller.changeLanguageByCode(
-                                lang.languageCode,
-                                skipServerUpdate: true,
-                              );
-                            } else {
-                              await controller.changeLanguageByCode(
-                                lang.languageCode,
-                              );
-                            }
+                            
+                            // ✅ এখানে পরিবর্তন করা হয়েছে: সবসময় skipServerUpdate: true পাস করা হচ্ছে
+                            await controller.changeLanguageLocally(lang.languageCode);
+
                             if (Get.isDialogOpen ?? false) Get.back();
                           },
                     child: Container(

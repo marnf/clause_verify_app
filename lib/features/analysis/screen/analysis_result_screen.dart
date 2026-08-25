@@ -97,7 +97,7 @@ class AnalysisResultScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Analysis Results',
+                    'analysisResults'.tr,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: titleFontSize, 
@@ -108,7 +108,7 @@ class AnalysisResultScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 2.h),
                   Text(
-                    'Confidence: ${controller.confidenceScore}% · ${controller.country} · ${controller.totalPages} Pages',
+                    '${'confidence'.tr}: ${controller.confidenceScore}% · ${controller.country} · ${controller.totalPages} ${'pages'.tr}',
                     style: TextStyle(
                       color: const Color(0xFF888888),
                       fontSize: subtitleFontSize,
@@ -149,7 +149,7 @@ class AnalysisResultScreen extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Confidence Score', style: TextStyle(color: const Color(0xFF888888), fontSize: 12.sp)),
+                  Text('confidenceScore'.tr, style: TextStyle(color: const Color(0xFF888888), fontSize: 12.sp)),
                   SizedBox(height: 4.h),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -185,9 +185,9 @@ class AnalysisResultScreen extends StatelessWidget {
               padding: EdgeInsets.only(bottom: 12.h),
               child: Row(
                 children: [
-                  Icon(Icons.calendar_today_outlined, color: Color(0xFF666666), size: 12.sp),
+                  Icon(Icons.calendar_today_outlined, color: const Color(0xFF666666), size: 12.sp),
                   SizedBox(width: 6.w),
-                  Text('Analyzed on ${controller.formattedDate}', style: TextStyle(color: Color(0xFF666666), fontSize: 11.sp)),
+                  Text('${'analyzedOn'.tr} ${controller.formattedDate}', style: TextStyle(color: const Color(0xFF666666), fontSize: 11.sp)),
                 ],
               ),
             ),
@@ -239,13 +239,13 @@ class AnalysisResultScreen extends StatelessWidget {
         ),
         child: Center(
           child: controller.isGeneratingPdf.value
-              ? SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black))
+              ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black))
               : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.picture_as_pdf_rounded, color: Colors.black, size: 18.sp),
                     SizedBox(width: 8.w),
-                    Text('View PDF Report', style: TextStyle(color: Colors.black, fontSize: 14.sp, fontWeight: FontWeight.w700)),
+                    Text('viewPdfReport'.tr, style: TextStyle(color: Colors.black, fontSize: 14.sp, fontWeight: FontWeight.w700)),
                   ],
                 ),
         ),
@@ -273,11 +273,11 @@ class AnalysisResultScreen extends StatelessWidget {
     if (rb == null) return const SizedBox.shrink();
     return Row(
       children: [
-        _buildRiskBox('High Risk', rb.highRisk, const Color(0xFFE53935)),
+        _buildRiskBox('highRisk'.tr, rb.highRisk, const Color(0xFFE53935)),
         SizedBox(width: 10.w),
-        _buildRiskBox('Medium Risk', rb.mediumRisk, const Color(0xFFFF8F00)),
+        _buildRiskBox('mediumRisk'.tr, rb.mediumRisk, const Color(0xFFFF8F00)),
         SizedBox(width: 10.w),
-        _buildRiskBox('Low Risk', rb.lowRisk, const Color(0xFF2E7D32)),
+        _buildRiskBox('lowRisk'.tr, rb.lowRisk, const Color(0xFF2E7D32)),
       ],
     );
   }
@@ -309,10 +309,10 @@ class AnalysisResultScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle('Positive Findings', Icons.check_circle_outline_rounded),
+        _buildSectionTitle('positiveFindings'.tr, Icons.check_circle_outline_rounded),
         SizedBox(height: 12.h),
         Container(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: const Color(0xFF0D1A0D),
             borderRadius: BorderRadius.circular(14),
@@ -351,12 +351,12 @@ class AnalysisResultScreen extends StatelessWidget {
   Widget _buildTermsHeader(AnalysisResultController controller) {
     return Row(
       children: [
-        _buildSectionTitle('Clause Analysis', Icons.document_scanner_rounded),
+        _buildSectionTitle('clauseAnalysis'.tr, Icons.document_scanner_rounded),
         const Spacer(),
         Obx(() => Container(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
               decoration: BoxDecoration(color: const Color(0xFFB8860B).withOpacity(0.15), borderRadius: BorderRadius.circular(20)),
-              child: Text('${controller.filteredTerms.length} clauses', style: TextStyle(color: const Color(0xFFB8860B), fontSize: 11.sp, fontWeight: FontWeight.w600)),
+              child: Text('${controller.filteredTerms.length} ${'clauses'.tr}', style: TextStyle(color: const Color(0xFFB8860B), fontSize: 11.sp, fontWeight: FontWeight.w600)),
             )),
       ],
     );
@@ -364,10 +364,10 @@ class AnalysisResultScreen extends StatelessWidget {
 
   Widget _buildFilterTabs(AnalysisResultController controller) {
     final filters = [
-      {'key': 'all', 'label': 'All'},
-      {'key': 'high', 'label': 'High'},
-      {'key': 'medium', 'label': 'Medium'},
-      {'key': 'low', 'label': 'Low'},
+      {'key': 'all', 'label': 'all'.tr},
+      {'key': 'high', 'label': 'high'.tr},
+      {'key': 'medium', 'label': 'medium'.tr},
+      {'key': 'low', 'label': 'low'.tr},
     ];
 
     return Obx(() => Row(
@@ -401,7 +401,7 @@ class AnalysisResultScreen extends StatelessWidget {
       if (terms.isEmpty) {
         return Padding(
           padding: EdgeInsets.symmetric(vertical: 40.h),
-          child: Center(child: Column(children: [Icon(Icons.search_off_rounded, color: const Color(0xFF444444), size: 40.sp), SizedBox(height: 12.h), Text('No clauses found for this filter', style: TextStyle(color: const Color(0xFF555555), fontSize: 13.sp))])),
+          child: Center(child: Column(children: [Icon(Icons.search_off_rounded, color: const Color(0xFF444444), size: 40.sp), SizedBox(height: 12.h), Text('noClausesFound'.tr, style: TextStyle(color: const Color(0xFF555555), fontSize: 13.sp))])),
         );
       }
       return Column(children: terms.asMap().entries.map((entry) => _buildTermCard(controller, entry.value, entry.key)).toList());
@@ -428,7 +428,7 @@ class AnalysisResultScreen extends StatelessWidget {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.all(14),
+                padding: const EdgeInsets.all(14),
                 child: Row(
                   children: [
                     Container(width: 36.w, height: 36.w, decoration: BoxDecoration(color: statusColor.withOpacity(0.12), shape: BoxShape.circle, border: Border.all(color: statusColor.withOpacity(0.3), width: 1)), child: Icon(statusIcon, color: statusColor, size: 16.sp)),
@@ -451,11 +451,11 @@ class AnalysisResultScreen extends StatelessWidget {
                       if (term.lawReference.isNotEmpty) _buildLawReference(term.lawReference, const Color(0xFFB8860B)),
                       SizedBox(height: 12.h),
                       
-                      _buildExpandedSection('Full Text', term.extractedText, const Color(0xFFAAAAAA), Icons.format_quote_rounded, isQuote: true),
+                      _buildExpandedSection('fullText'.tr, term.extractedText, const Color(0xFFAAAAAA), Icons.format_quote_rounded, isQuote: true),
                       SizedBox(height: 12.h),
-                      _buildExpandedSection('AI Explanation', term.aiExplanation, const Color(0xFFCCCCCC), Icons.psychology_rounded),
+                      _buildExpandedSection('aiExplanation'.tr, term.aiExplanation, const Color(0xFFCCCCCC), Icons.psychology_rounded),
                       SizedBox(height: 12.h),
-                      _buildExpandedSection('Recommendation', term.aiRecommendation, statusColor, Icons.tips_and_updates_rounded, accentColor: statusColor),
+                      _buildExpandedSection('recommendation'.tr, term.aiRecommendation, statusColor, Icons.tips_and_updates_rounded, accentColor: statusColor),
                       SizedBox(height: 10.h),
                       _buildConfidenceBar(term.confidenceScore),
                     ],
@@ -519,7 +519,7 @@ class AnalysisResultScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Clause Confidence', style: TextStyle(color: const Color(0xFF666666), fontSize: 10.sp)), Text('$score%', style: TextStyle(color: const Color(0xFFB8860B), fontSize: 10.sp, fontWeight: FontWeight.w700))]),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('clauseConfidence'.tr, style: TextStyle(color: const Color(0xFF666666), fontSize: 10.sp)), Text('$score%', style: TextStyle(color: const Color(0xFFB8860B), fontSize: 10.sp, fontWeight: FontWeight.w700))]),
         SizedBox(height: 4.h),
         ClipRRect(borderRadius: BorderRadius.circular(4), child: LinearProgressIndicator(value: score / 100, backgroundColor: const Color(0xFF2A2A2A), valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFB8860B)), minHeight: 3.h)),
       ],

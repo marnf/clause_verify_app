@@ -43,7 +43,7 @@ class CustomDialog extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Dialog Content
           Container(
             padding: EdgeInsets.all(24),
@@ -112,25 +112,31 @@ class CustomDialog extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
+                      padding: EdgeInsets.zero,
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          buttonText,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w600,
+                    child: Center(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            buttonText,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 8.w),
-                        Icon(
-                          Icons.arrow_forward,
-                          color: Colors.black,
-                          size: 20.sp,
-                        ),
-                      ],
+                          SizedBox(width: 8.w),
+                          Icon(
+                            Icons.arrow_forward,
+                            color: Colors.black,
+                            size: 20.sp,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

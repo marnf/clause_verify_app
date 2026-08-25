@@ -67,7 +67,13 @@ class HomeController extends GetxController {
 
   Future<void> navigateToUpload() async {
     if (scanLimit.value <= 0) {
-      Get.snackbar('Scan Limit Reached', 'You have no scans remaining. Please upgrade to continue.', snackPosition: SnackPosition.TOP);
+      Get.snackbar(
+        'scanLimitReached'.tr, 
+        'noScansRemainingMessage'.tr, 
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
       return;
     }
     await Get.toNamed(AppRoute.uploadScreen);
@@ -76,7 +82,13 @@ class HomeController extends GetxController {
 
   Future<void> navigateToCamera() async {
     if (scanLimit.value <= 0) {
-      Get.snackbar('Scan Limit Reached', 'You have no scans remaining. Please upgrade to continue.', snackPosition: SnackPosition.TOP);
+      Get.snackbar(
+        'scanLimitReached'.tr, 
+        'noScansRemainingMessage'.tr, 
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
       return;
     }
     await Get.toNamed(AppRoute.cameraScreen);

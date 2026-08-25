@@ -1,5 +1,3 @@
-// lib/features/history/controller/history_controller.dart
-
 import 'package:flutter/material.dart';
 import 'package:clause_verify/core/services/endpoints.dart';
 import 'package:clause_verify/core/services/network_caller.dart';
@@ -77,10 +75,10 @@ class HistoryController extends GetxController {
         hasMoreData.value = _nextUrl != null && _nextUrl!.isNotEmpty;
       } else {
         errorMessage.value =
-            response.errorMessage ?? 'Failed to load history';
+            response.errorMessage ?? 'failedToLoadHistory'.tr;
       }
     } catch (e) {
-      errorMessage.value = 'An error occurred: $e';
+      errorMessage.value = 'anErrorOccurred'.trParams({'error': e.toString()});
     } finally {
       isLoading.value = false;
     }
@@ -125,7 +123,7 @@ class HistoryController extends GetxController {
       Get.dialog(
         WillPopScope(
           onWillPop: () async => false,
-          child: Center(
+          child: const Center(
             child: CircularProgressIndicator(color: Color(0xFFD4A574)),
           ),
         ),
@@ -154,10 +152,10 @@ class HistoryController extends GetxController {
         );
       } else {
         Get.snackbar(
-          'Error',
-          response.errorMessage ?? 'Failed to load details',
+          'error'.tr,
+          response.errorMessage ?? 'failedToLoadAnalysisDetails'.tr,
           snackPosition: SnackPosition.TOP,
-          backgroundColor: Color(0xFF1A1A1A),
+          backgroundColor: const Color(0xFF1A1A1A),
           colorText: Colors.white,
         );
       }
@@ -165,10 +163,10 @@ class HistoryController extends GetxController {
       if (Get.isDialogOpen == true) Get.back();
 
       Get.snackbar(
-        'Error',
-        'Failed to load analysis details',
+        'error'.tr,
+        'failedToLoadAnalysisDetails'.tr,
         snackPosition: SnackPosition.TOP,
-        backgroundColor: Color(0xFF1A1A1A),
+        backgroundColor: const Color(0xFF1A1A1A),
         colorText: Colors.white,
       );
     }
@@ -181,7 +179,7 @@ class HistoryController extends GetxController {
       if (scrollController.hasClients) {
         scrollController.animateTo(
           0,
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
         );
       }

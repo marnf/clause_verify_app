@@ -75,8 +75,8 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
           await File(localPath.value).copy(newFilePath);
           
           _showPremiumNotification(
-            title: 'Downloaded!', 
-            message: 'Report saved to Downloads folder.',
+            title: 'downloaded'.tr, 
+            message: 'reportSavedToDownloads'.tr,
             isSuccess: true,
           );
           return; // Exit if successful
@@ -93,21 +93,21 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
         await File(localPath.value).copy(newFilePath);
         
         _showPremiumNotification(
-          title: 'Saved!', 
-          message: 'Report saved to app storage.',
+          title: 'saved'.tr, 
+          message: 'reportSavedToAppStorage'.tr,
           isSuccess: true,
         );
       } else {
          _showPremiumNotification(
-          title: 'Error', 
-          message: 'Could not save file. Please use Share option.',
+          title: 'error'.tr, 
+          message: 'couldNotSaveFile'.tr,
           isSuccess: false,
         );
       }
     } catch (e) {
        _showPremiumNotification(
-        title: 'Error', 
-        message: 'Something went wrong.',
+        title: 'error'.tr, 
+        message: 'somethingWentWrong'.tr,
         isSuccess: false,
       );
     } finally {
@@ -118,11 +118,11 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
   Future<void> _sharePdf() async {
     if (localPath.value.isEmpty) return;
     try {
-      await Share.shareXFiles([XFile(localPath.value)], text: 'ClauseVerify Analysis Report');
+      await Share.shareXFiles([XFile(localPath.value)], text: 'clauseverifyAnalysisReport'.tr);
     } catch (e) {
       _showPremiumNotification(
-        title: 'Error', 
-        message: 'Could not share the file.',
+        title: 'error'.tr, 
+        message: 'couldNotShareFile'.tr,
         isSuccess: false,
       );
     }
@@ -183,18 +183,18 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
           onPressed: () => Get.back(),
         ),
         title: Obx(() {
-          if (isDownloadingFile.value) return Text('Fetching Report...', style: TextStyle(color: Colors.white, fontSize: 16.sp));
-          if (isPdfRendering.value) return Text('Rendering PDF...', style: TextStyle(color: Colors.white, fontSize: 16.sp));
+          if (isDownloadingFile.value) return Text('fetchingReport'.tr, style: TextStyle(color: Colors.white, fontSize: 16.sp));
+          if (isPdfRendering.value) return Text('renderingPdf'.tr, style: TextStyle(color: Colors.white, fontSize: 16.sp));
           return Text('${currentPage + 1} / $totalPages', style: TextStyle(color: Colors.white, fontSize: 16.sp));
         }),
       ),
       body: Column(
         children: [
-          // ✅ পুরো স্ক্রিনের ম্যাক্সিমাম জায়গা জুড়ে PDF শো করবে
+          // ✅ পুরো স্ক্রিনের ম্যাক্সিমাম জায়গা জুড়ে PDF শো করবে
           Expanded(
             child: Obx(() {
               if (isDownloadingFile.value) {
-                return Center(child: CircularProgressIndicator(color: Color(0xFFB8860B)));
+                return const Center(child: CircularProgressIndicator(color: Color(0xFFB8860B)));
               }
               if (hasError.value) {
                 return Center(
@@ -203,7 +203,7 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
                     children: [
                       Icon(Icons.error_outline_rounded, color: Colors.redAccent, size: 48.sp),
                       SizedBox(height: 16.h),
-                      Text('Failed to load PDF', style: TextStyle(color: Colors.white, fontSize: 16.sp)),
+                      Text('failedToLoadPdf'.tr, style: TextStyle(color: Colors.white, fontSize: 16.sp)),
                     ],
                   ),
                 );
@@ -233,21 +233,21 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
                       },
                     ),
                     if (isPdfRendering.value)
-                      Center(child: CircularProgressIndicator(color: Color(0xFFB8860B))),
+                      const Center(child: CircularProgressIndicator(color: const Color(0xFFB8860B))),
                   ],
                 );
               }
-              return SizedBox.shrink();
+              return const SizedBox.shrink();
             }),
           ),
           
           // ✅ নিচে কমপ্যাক্ট বাটন বার
           Obx(() {
-            if (isDownloadingFile.value || hasError.value || localPath.value.isEmpty) return SizedBox.shrink();
+            if (isDownloadingFile.value || hasError.value || localPath.value.isEmpty) return const SizedBox.shrink();
             return Container(
               padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 20.h),
-              decoration: BoxDecoration(
-                color: const Color(0xFF0A0A0A),
+              decoration: const BoxDecoration(
+                color: Color(0xFF0A0A0A),
                 border: Border(top: BorderSide(color: Color(0xFF2A2A2A), width: 1)),
               ),
               child: Row(
@@ -258,18 +258,18 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
                       child: Obx(() => Container(
                         padding: EdgeInsets.symmetric(vertical: 12.h),
                         decoration: BoxDecoration(
-                          color: isSavingToDevice.value ? Color(0xFFB8860B).withOpacity(0.5) : Color(0xFFB8860B),
+                          color: isSavingToDevice.value ? const Color(0xFFB8860B).withOpacity(0.5) : const Color(0xFFB8860B),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Center(
                           child: isSavingToDevice.value
-                              ? SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black))
+                              ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black))
                               : Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(Icons.download_rounded, color: Colors.black, size: 16.sp),
                                     SizedBox(width: 6.w),
-                                    Text('Download', style: TextStyle(color: Colors.black, fontSize: 13.sp, fontWeight: FontWeight.w700)),
+                                    Text('download'.tr, style: TextStyle(color: Colors.black, fontSize: 13.sp, fontWeight: FontWeight.w700)),
                                   ],
                                 ),
                         ),
@@ -285,15 +285,15 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
                         decoration: BoxDecoration(
                           color: Colors.transparent,
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Color(0xFFB8860B).withOpacity(0.5), width: 1.5),
+                          border: Border.all(color: const Color(0xFFB8860B).withOpacity(0.5), width: 1.5),
                         ),
                         child: Center(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.share_rounded, color: Color(0xFFB8860B), size: 16.sp),
+                              Icon(Icons.share_rounded, color: const Color(0xFFB8860B), size: 16.sp),
                               SizedBox(width: 6.w),
-                              Text('Share', style: TextStyle(color: Color(0xFFB8860B), fontSize: 13.sp, fontWeight: FontWeight.w700)),
+                              Text('share'.tr, style:  TextStyle(color: Color(0xFFB8860B), fontSize: 13.sp, fontWeight: FontWeight.w700)),
                             ],
                           ),
                         ),

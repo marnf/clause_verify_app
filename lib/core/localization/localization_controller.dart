@@ -187,24 +187,23 @@ class LocalizationController extends GetxController implements GetxService {
 
   /// Update language preference on server
  /// Update language preference on server
-Future<bool> _updateLanguageOnServer(String languageCode) async {
-  try {
-    // ✅ Updated: 5 languages supported
-    final languageMap = {
-      'en': 'english',
-      'fr': 'french',
-      'es': 'spanish',
-      'de': 'german',
-      'it': 'italian',
-    };
+  /// Update language preference on server
+  Future<bool> _updateLanguageOnServer(String languageCode) async {
+    try {
+      // ✅ Updated: 5 languages supported
+      final languageMap = {
+        'en': 'english',
+        'fr': 'french',
+        'es': 'spanish',
+        'de': 'german',
+        'it': 'italian',
+      };
 
-    final languagePreference = languageMap[languageCode] ?? 'english';
+      final languagePreference = languageMap[languageCode] ?? 'english';
 
-    final Map<String, dynamic> requestData = {
-      "language_preference": languagePreference,
-    };
-
-    // ... rest of the method stays the same
+      final Map<String, dynamic> requestData = {
+        "language_preference": languagePreference,
+      };
 
       // Get token for authenticated request
       String? token;
@@ -228,7 +227,6 @@ Future<bool> _updateLanguageOnServer(String languageCode) async {
       );
 
       if (response.isSuccess) {
-        // Update local user data if response contains user data
         try {
           final userData = response.responseData?['data'];
           if (userData != null) {
@@ -237,17 +235,14 @@ Future<bool> _updateLanguageOnServer(String languageCode) async {
               languagePreference,
             );
           }
-          
         } catch (e) {
           print('Error updating local user data: $e');
         }
-        
         return true;
       } else {
         String errorMessage = response.responseData?['message'] ?? 
                              response.errorMessage ??
                              'language_update_failed'.tr;
-        
         print('❌ Language update failed: $errorMessage');
         return false;
       }

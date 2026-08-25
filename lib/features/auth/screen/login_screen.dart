@@ -213,27 +213,32 @@ class _LoginScreenState extends State<LoginScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   elevation: 0,
+                                  padding: EdgeInsets.zero,
+                                  minimumSize: Size.zero,
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                 ),
-                                child: controller.isLoading.value
-                                    ? const SizedBox(
-                                        width: 22,
-                                        height: 22,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                  Colors.white),
+                                child: Center(
+                                  child: controller.isLoading.value
+                                      ? const SizedBox(
+                                          width: 22,
+                                          height: 22,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                    Colors.white),
+                                          ),
+                                        )
+                                      : Text(
+                                          'login'.tr,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.w700,
+                                            letterSpacing: 0.5,
+                                          ),
                                         ),
-                                      )
-                                    : Text(
-                                        'login'.tr,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16.sp,
-                                          fontWeight: FontWeight.w700,
-                                          letterSpacing: 0.5,
-                                        ),
-                                      ),
+                                ),
                               ),
                             ),
                           ),

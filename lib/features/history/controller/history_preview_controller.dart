@@ -26,7 +26,7 @@ class HistoryPreviewController extends GetxController {
     if (analysisId != null) {
       fetchAnalysisFromAPI();
     } else {
-      errorMessage.value = 'Analysis ID not found';
+      errorMessage.value = 'analysisIdNotFound'.tr;
       isLoading.value = false;
     }
   }
@@ -85,26 +85,9 @@ class HistoryPreviewController extends GetxController {
         print('box: ${originalBox}');
         print('certificate: ${originalBrandCertificate}');
 
-        // Get.snackbar(
-        //   'Success',
-        //   'Analysis data loaded successfully',
-        //   snackPosition: SnackPosition.TOP,
-        //   backgroundColor: Color(0xFF0D3B2B),
-        //   colorText: Color(0xFF4ADE80),
-        //   duration: Duration(seconds: 2),
-        // );
       } else {
         errorMessage.value = response.errorMessage;
         print('❌ API Error: ${response.errorMessage}');
-
-        // Get.snackbar(
-        //   'Error',
-        //   response.errorMessage,
-        //   snackPosition: SnackPosition.TOP,
-        //   backgroundColor: Color(0xFF1A1A1A),
-        //   colorText: Color(0xFFEF4444),
-        //   duration: Duration(seconds: 3),
-        // );
       }
     } catch (e, stackTrace) {
       errorMessage.value = e.toString();
@@ -112,12 +95,12 @@ class HistoryPreviewController extends GetxController {
       print('Stack trace: $stackTrace');
 
       Get.snackbar(
-        'Error',
-        'Failed to load analysis data: ${e.toString()}',
+        'error'.tr,
+        'failedToLoadAnalysisData'.trParams({'error': e.toString()}),
         snackPosition: SnackPosition.TOP,
-        backgroundColor: Color(0xFF1A1A1A),
-        colorText: Color(0xFFEF4444),
-        duration: Duration(seconds: 3),
+        backgroundColor: const Color(0xFF1A1A1A),
+        colorText: const Color(0xFFEF4444),
+        duration: const Duration(seconds: 3),
       );
     } finally {
       isLoading.value = false;
@@ -144,10 +127,10 @@ class HistoryPreviewController extends GetxController {
 
   String get authenticityStatus {
     try {
-      return analysisData.value?.authenticityStatus ?? 'UNKNOWN';
+      return analysisData.value?.authenticityStatus ?? 'unknownStatus'.tr;
     } catch (e) {
       print('Error getting authenticityStatus: $e');
-      return 'UNKNOWN';
+      return 'unknownStatus'.tr;
     }
   }
 
@@ -181,20 +164,20 @@ class HistoryPreviewController extends GetxController {
 
   String get categoryTitle {
     try {
-      return analysisData.value?.categoryAnalysis.title ?? 'Category Analysis';
+      return analysisData.value?.categoryAnalysis.title ?? 'categoryAnalysis'.tr;
     } catch (e) {
       print('Error getting categoryTitle: $e');
-      return 'Category Analysis';
+      return 'categoryAnalysis'.tr;
     }
   }
 
   String get categorySubtitle {
     try {
       return analysisData.value?.categoryAnalysis.subtitle ??
-          'Component evaluation';
+          'componentEvaluation'.tr;
     } catch (e) {
       print('Error getting categorySubtitle: $e');
-      return 'Component evaluation';
+      return 'componentEvaluation'.tr;
     }
   }
 
@@ -210,20 +193,20 @@ class HistoryPreviewController extends GetxController {
 
   String get commentaryTitle {
     try {
-      return analysisData.value?.expertCommentary.title ?? 'Expert Commentary';
+      return analysisData.value?.expertCommentary.title ?? 'expertCommentary'.tr;
     } catch (e) {
       print('Error getting commentaryTitle: $e');
-      return 'Expert Commentary';
+      return 'expertCommentary'.tr;
     }
   }
 
   String get commentarySubtitle {
     try {
       return analysisData.value?.expertCommentary.subtitle ??
-          'Detailed findings';
+          'detailedFindings'.tr;
     } catch (e) {
       print('Error getting commentarySubtitle: $e');
-      return 'Detailed findings';
+      return 'detailedFindings'.tr;
     }
   }
 
@@ -421,11 +404,11 @@ class HistoryPreviewController extends GetxController {
   // Get color based on percentage
   Color getColorBasedOnPercentage(int percentage) {
     if (percentage >= 80) {
-      return Color(0xFF4ADE80); // Green
+      return const Color(0xFF4ADE80); // Green
     } else if (percentage >= 60) {
-      return Color(0xFFD4A574); // Gold
+      return const Color(0xFFD4A574); // Gold
     } else {
-      return Color(0xFFEF4444); // Red
+      return const Color(0xFFEF4444); // Red
     }
   }
 
@@ -447,34 +430,34 @@ class HistoryPreviewController extends GetxController {
   void downloadReport() {
     if (!hasData) {
       Get.snackbar(
-        'Error',
-        'No data available to download',
+        'error'.tr,
+        'noDataAvailableToDownload'.tr,
         snackPosition: SnackPosition.TOP,
-        backgroundColor: Color(0xFF1A1A1A),
-        colorText: Color(0xFFFFFFFF),
+        backgroundColor: const Color(0xFF1A1A1A),
+        colorText: const Color(0xFFFFFFFF),
       );
       return;
     }
 
     // TODO: Implement actual download logic
     Get.snackbar(
-      'Download Started',
-      'Your AI Pre-Expertise Report is being downloaded',
+      'downloadStarted'.tr,
+      'aiPreExpertiseReportDownloading'.tr,
       snackPosition: SnackPosition.TOP,
-      backgroundColor: Color(0xFF1A1A1A),
-      colorText: Color(0xFFFFFFFF),
-      duration: Duration(seconds: 2),
+      backgroundColor: const Color(0xFF1A1A1A),
+      colorText: const Color(0xFFFFFFFF),
+      duration: const Duration(seconds: 2),
     );
 
     // Simulate download
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       Get.snackbar(
-        'Download Complete',
-        'Report saved successfully',
+        'downloadComplete'.tr,
+        'reportSavedSuccessfully'.tr,
         snackPosition: SnackPosition.TOP,
-        backgroundColor: Color(0xFF0D3B2B),
-        colorText: Color(0xFF4ADE80),
-        duration: Duration(seconds: 2),
+        backgroundColor: const Color(0xFF0D3B2B),
+        colorText: const Color(0xFF4ADE80),
+        duration: const Duration(seconds: 2),
       );
     });
   }
@@ -483,11 +466,11 @@ class HistoryPreviewController extends GetxController {
   void viewPriceEstimation() {
     if (!hasData) {
       Get.snackbar(
-        'Error',
-        'No data available',
+        'error'.tr,
+        'noDataAvailable'.tr,
         snackPosition: SnackPosition.TOP,
-        backgroundColor: Color(0xFF1A1A1A),
-        colorText: Color(0xFFFFFFFF),
+        backgroundColor: const Color(0xFF1A1A1A),
+        colorText: const Color(0xFFFFFFFF),
       );
       return;
     }
@@ -499,29 +482,33 @@ class HistoryPreviewController extends GetxController {
 
       if (priceEstimation != null) {
         Get.snackbar(
-          'Price Estimation',
-          '${priceEstimation.currency} ${priceEstimation.estimatedPrice} - ${priceEstimation.conditionAssumed} condition',
+          'priceEstimation'.tr,
+          'priceEstimationCondition'.trParams({
+            'currency': priceEstimation.currency,
+            'price': priceEstimation.estimatedPrice,
+            'condition': priceEstimation.conditionAssumed
+          }),
           snackPosition: SnackPosition.TOP,
-          backgroundColor: Color(0xFF1A1A1A),
-          colorText: Color(0xFFFFFFFF),
+          backgroundColor: const Color(0xFF1A1A1A),
+          colorText: const Color(0xFFFFFFFF),
         );
       } else {
         Get.snackbar(
-          'Info',
-          'Price estimation not available',
+          'info'.tr,
+          'priceEstimationNotAvailable'.tr,
           snackPosition: SnackPosition.TOP,
-          backgroundColor: Color(0xFF1A1A1A),
-          colorText: Color(0xFFFFFFFF),
+          backgroundColor: const Color(0xFF1A1A1A),
+          colorText: const Color(0xFFFFFFFF),
         );
       }
     } catch (e) {
       print('Error viewing price estimation: $e');
       Get.snackbar(
-        'Error',
-        'Unable to load price estimation',
+        'error'.tr,
+        'unableToLoadPriceEstimation'.tr,
         snackPosition: SnackPosition.TOP,
-        backgroundColor: Color(0xFF1A1A1A),
-        colorText: Color(0xFFEF4444),
+        backgroundColor: const Color(0xFF1A1A1A),
+        colorText: const Color(0xFFEF4444),
       );
     }
 
@@ -540,21 +527,21 @@ class HistoryPreviewController extends GetxController {
   void shareReport() {
     if (!hasData) {
       Get.snackbar(
-        'Error',
-        'No data available to share',
+        'error'.tr,
+        'noDataAvailableToShare'.tr,
         snackPosition: SnackPosition.TOP,
-        backgroundColor: Color(0xFF1A1A1A),
-        colorText: Color(0xFFFFFFFF),
+        backgroundColor: const Color(0xFF1A1A1A),
+        colorText: const Color(0xFFFFFFFF),
       );
       return;
     }
 
     Get.snackbar(
-      'Share',
-      'Opening share options',
+      'share'.tr,
+      'openingShareOptions'.tr,
       snackPosition: SnackPosition.TOP,
-      backgroundColor: Color(0xFF1A1A1A),
-      colorText: Color(0xFFFFFFFF),
+      backgroundColor: const Color(0xFF1A1A1A),
+      colorText: const Color(0xFFFFFFFF),
     );
 
     // TODO: Implement share logic

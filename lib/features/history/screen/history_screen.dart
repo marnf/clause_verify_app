@@ -1,5 +1,3 @@
-// lib/features/history/screen/history_screen.dart
-
 import 'package:clause_verify/core/utils/constants/app_sizer.dart';
 import 'package:clause_verify/features/history/controller/history_controller.dart';
 import 'package:clause_verify/features/history/model/history_model.dart';
@@ -26,7 +24,7 @@ class HistoryScreen extends StatelessWidget {
             Expanded(
               child: Obx(() {
                 if (controller.isLoading.value) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(
                       color: Color(0xFFD4A574),
                     ),
@@ -52,14 +50,14 @@ class HistoryScreen extends StatelessWidget {
                         ElevatedButton(
                           onPressed: () => controller.refreshData(),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFFD4A574),
+                            backgroundColor: const Color(0xFFD4A574),
                             padding: EdgeInsets.symmetric(
                                 horizontal: 32.w, vertical: 12.h),
                           ),
-                          child: Text('Retry',
-                              style: TextStyle(
+                          child: Text('retry'.tr,
+                              style: const TextStyle(
                                   color: Colors.black,
-                                  fontSize: 14.sp,
+                                  fontSize: 14.0,
                                   fontWeight: FontWeight.w600)),
                         ),
                       ],
@@ -85,8 +83,8 @@ class HistoryScreen extends StatelessWidget {
 
                 return RefreshIndicator(
                   onRefresh: () => controller.refreshData(),
-                  color: Color(0xFFD4A574),
-                  backgroundColor: Color(0xFF1A1A1A),
+                  color: const Color(0xFFD4A574),
+                  backgroundColor: const Color(0xFF1A1A1A),
                   child: ListView.builder(
                     controller: controller.scrollController,
                     physics: const AlwaysScrollableScrollPhysics(),
@@ -101,7 +99,7 @@ class HistoryScreen extends StatelessWidget {
                             child: SizedBox(
                               width: 24.sp,
                               height: 24.sp,
-                              child: CircularProgressIndicator(
+                              child: const CircularProgressIndicator(
                                 color: Color(0xFFD4A574),
                                 strokeWidth: 2.5,
                               ),
@@ -127,28 +125,26 @@ class HistoryScreen extends StatelessWidget {
   Widget _buildHeader() {
     return Obx(() => Padding(
           padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 8.h),
-          child: Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Scan History',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.w700,
-                  ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'scanHistory'.tr,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.w700,
                 ),
-                SizedBox(height: 4.h),
-                Text(
-                  '${controller.totalCount.value} documents analyzed',
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 13.sp,
-                  ),
+              ),
+              SizedBox(height: 4.h),
+              Text(
+                'documentsAnalyzed'.trParams({'count': controller.totalCount.value.toString()}),
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 13.sp,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ));
   }
@@ -167,10 +163,10 @@ class HistoryScreen extends StatelessWidget {
         margin: EdgeInsets.only(bottom: 12.h),
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: Color(0xFF141414),
+          color: const Color(0xFF141414),
           borderRadius: BorderRadius.circular(16.w),
           border: Border.all(
-            color: hasData ? Color(0xFF2A2A2A) : Colors.grey[800]!,
+            color: hasData ? const Color(0xFF2A2A2A) : Colors.grey[800]!,
             width: 1,
           ),
         ),
@@ -209,7 +205,7 @@ class HistoryScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        item.country ?? 'Analysis Pending',
+                        item.country ?? 'analysisPending'.tr,
                         style: TextStyle(
                           color: hasData ? Colors.white : Colors.grey[600],
                           fontSize: 15.sp,
@@ -220,7 +216,7 @@ class HistoryScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 4.h),
                       Text(
-                        item.formattedDate.isNotEmpty ? item.formattedDate : 'Processing...',
+                        item.formattedDate.isNotEmpty ? item.formattedDate : 'processing'.tr,
                         style: TextStyle(
                           color: hasData ? Colors.grey[500] : Colors.grey[700],
                           fontSize: 12.sp,
@@ -239,7 +235,7 @@ class HistoryScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Score',
+                  'score'.tr,
                   style: TextStyle(
                     color: Colors.grey[500],
                     fontSize: 12.sp,
@@ -261,7 +257,7 @@ class HistoryScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(6.w),
               child: LinearProgressIndicator(
                 value: hasData ? (item.confidenceScore! / 100) : 0,
-                backgroundColor: Color(0xFF2A2A2A),
+                backgroundColor: const Color(0xFF2A2A2A),
                 valueColor: AlwaysStoppedAnimation<Color>(riskColor),
                 minHeight: 6.h,
               ),
@@ -302,16 +298,16 @@ class HistoryScreen extends StatelessWidget {
                     ),
                   ),
                 
-                Spacer(),
+                const Spacer(),
                 
                 // ✅ Download Icon (Only if is_paid_report is "true")
                 if (item.isReportPaid)
                   Container(
                     padding: EdgeInsets.all(8.w),
                     decoration: BoxDecoration(
-                      color: Color(0xFF1A1A1A),
+                      color: const Color(0xFF1A1A1A),
                       shape: BoxShape.circle,
-                      border: Border.all(color: Color(0xFF2A2A2A), width: 1),
+                      border: Border.all(color: const Color(0xFF2A2A2A), width: 1),
                     ),
                     child: Icon(
                       Icons.download_rounded,
@@ -332,9 +328,9 @@ class HistoryScreen extends StatelessWidget {
   // ─────────────────────────────────────────────
   
   String _shortenRecommendation(String rec) {
-    if (rec.toLowerCase().contains('accept')) return 'Accept';
-    if (rec.toLowerCase().contains('review')) return 'Legal Review';
-    if (rec.toLowerCase().contains('reject') || rec.toLowerCase().contains('refuse')) return 'Reject';
+    if (rec.toLowerCase().contains('accept')) return 'accept'.tr;
+    if (rec.toLowerCase().contains('review')) return 'legalReview'.tr;
+    if (rec.toLowerCase().contains('reject') || rec.toLowerCase().contains('refuse')) return 'reject'.tr;
     if (rec.length > 20) return '${rec.substring(0, 17)}...';
     return rec;
   }

@@ -1,4 +1,3 @@
-
 import 'package:clause_verify/core/services/endpoints.dart';
 import 'package:clause_verify/core/services/network_caller.dart';
 import 'package:clause_verify/features/analysis/model/analysis_result_model.dart';
@@ -16,12 +15,13 @@ class ContractAnalysisController extends GetxController with GetSingleTickerProv
   List<File> filesToUpload = [];
   String lawCountry = '';
   
+  // এখানে .tr যুক্ত করা হয়েছে
   List<AnalysisStep> get analysisSteps => [
-    AnalysisStep(title: 'Uploading Documents'.tr, duration: 5), 
-    AnalysisStep(title: 'Analyzing Contract Clauses'.tr, duration: 7), 
-    AnalysisStep(title: 'Identifying Legal Risks'.tr, duration: 6), 
-    AnalysisStep(title: 'Evaluating Compliance'.tr, duration: 6), 
-    AnalysisStep(title: 'Generating Final Report'.tr, duration: 6), 
+    AnalysisStep(title: 'uploadingDocuments'.tr, duration: 5), 
+    AnalysisStep(title: 'analyzingContractClauses'.tr, duration: 7), 
+    AnalysisStep(title: 'identifyingLegalRisks'.tr, duration: 6), 
+    AnalysisStep(title: 'evaluatingCompliance'.tr, duration: 6), 
+    AnalysisStep(title: 'generatingFinalReport'.tr, duration: 6), 
   ];
   
   int get totalStepsDuration => analysisSteps.fold(0, (sum, step) => sum + step.duration);
@@ -94,11 +94,10 @@ class ContractAnalysisController extends GetxController with GetSingleTickerProv
 
   Future<void> _uploadFilesToServer() async {
     try {
-      // ✅ Creating List<MapEntry<String, String>> for multiple files under same key 'files'
       final fileList = filesToUpload.map((file) => MapEntry('files', file.path)).toList();
 
       final response = await _networkCaller.multipartRequest(
-        Endpoints.fileUpload, // আপনার <<base_url>>/api/files/upload/ এর এন্ডপয়েন্ট
+        Endpoints.fileUpload,
         files: fileList,
         fields: {
           'law_country': lawCountry,
@@ -110,11 +109,11 @@ class ContractAnalysisController extends GetxController with GetSingleTickerProv
       if (response.isSuccess && response.responseData != null) {
         _tryNavigateToResult(response.responseData!);
       } else {
-        _handleError(response.errorMessage ?? 'Upload failed. Please try again.');
+        _handleError(response.errorMessage ?? 'uploadFailedPleaseTryAgain'.tr);
       }
     } catch (e) {
       _isUploadDone = true;
-      _handleError('An error occurred: $e');
+      _handleError('anErrorOccurred'.trParams({'error': e.toString()}));
     }
   }
 
@@ -122,10 +121,9 @@ class ContractAnalysisController extends GetxController with GetSingleTickerProv
     final elapsedSeconds = DateTime.now().difference(_startTime!).inSeconds;
     
     void navigateAction() {
-      // ✅ Parsing the JSON data to AnalysisResultModel
       final dataMap = responseData['data'] as Map<String, dynamic>?;
       if (dataMap == null) {
-        _handleError('Invalid response data format.');
+        _handleError('invalidResponseDataFormat'.tr);
         return;
       }
 
@@ -148,13 +146,13 @@ class ContractAnalysisController extends GetxController with GetSingleTickerProv
   void _handleError(String message) {
     _cancelTimers();
     Get.snackbar(
-      'Error',
+      'error'.tr, // 'Error' এর জন্য আগে থেকেই JSON এ আছে
       message,
       snackPosition: SnackPosition.TOP,
       backgroundColor: Colors.redAccent,
       colorText: Colors.white,
     );
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       Get.back();
     });
   }

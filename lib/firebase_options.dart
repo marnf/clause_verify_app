@@ -4,11 +4,22 @@ import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
+/// Default [FirebaseOptions] for use with your Firebase apps.
+///
+/// Example:
+/// ```dart
+/// import 'firebase_options.dart';
+/// // ...
+/// await Firebase.initializeApp(
+///   options: DefaultFirebaseOptions.currentPlatform,
+/// );
+/// ```
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
       throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web.',
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
       );
     }
     switch (defaultTargetPlatform) {
@@ -16,6 +27,21 @@ class DefaultFirebaseOptions {
         return android;
       case TargetPlatform.iOS:
         return ios;
+      case TargetPlatform.macOS:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
+      case TargetPlatform.windows:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
+      case TargetPlatform.linux:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for linux - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       default:
         throw UnsupportedError(
           'DefaultFirebaseOptions are not supported for this platform.',
@@ -24,20 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCTJt3RIm6VFkR4pLcQUL4eO1VbEkrVcHY',
-    appId: '1:1047128712830:android:18f181c4525993945f9a2f',
-    messagingSenderId: '1047128712830',
-    projectId: 'clauseverify-app',
-    storageBucket: 'clauseverify-app.firebasestorage.app',
+    apiKey: 'AIzaSyA5A9ZV_KyM39HV-5tRGiWTP1oeCHYC2WM',
+    appId: '1:929314773106:android:e5d38cb5bdc4b1766e4aeb',
+    messagingSenderId: '929314773106',
+    projectId: 'clauseverify-id',
+    storageBucket: 'clauseverify-id.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyB5p6MsirtQDoKHhc-uOPK_HFXgZhUc_LQ',
-    appId: '1:1047128712830:ios:1cd0da007decaae75f9a2f',
-    messagingSenderId: '1047128712830',
-    projectId: 'clauseverify-app',
-    storageBucket: 'clauseverify-app.firebasestorage.app',
-    iosClientId: '1047128712830-0chpauimk032t684pee8u2n8j8bbfd7v.apps.googleusercontent.com',
+    apiKey: 'AIzaSyDWbwIUIaGquDwHFYYDiod_NZ88ai3EHP8',
+    appId: '1:929314773106:ios:6e4f1c7ffc39a46a6e4aeb',
+    messagingSenderId: '929314773106',
+    projectId: 'clauseverify-id',
+    storageBucket: 'clauseverify-id.firebasestorage.app',
     iosBundleId: 'com.clauseverify.app',
   );
 }

@@ -66,8 +66,8 @@ class ReportWebViewController extends GetxController {
     } else {
       isLoading.value = false;
       Get.snackbar(
-        'Error',
-        'Analysis ID not found',
+        'error'.tr,
+        'analysisIdNotFound'.tr,
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red.shade100,
       );
@@ -83,14 +83,14 @@ class ReportWebViewController extends GetxController {
       if (AuthService.token == null || AuthService.token!.isEmpty) {
         print('⏳ Token not loaded, reinitializing AuthService...');
         await AuthService.init();
-        await Future.delayed(Duration(milliseconds: 100));
+        await Future.delayed(const Duration(milliseconds: 100));
       }
 
       if (AuthService.token == null || AuthService.token!.isEmpty) {
         isLoading.value = false;
         Get.snackbar(
-          'Error',
-          'Session expired. Please login again.',
+          'error'.tr,
+          'sessionExpiredPleaseLoginAgain'.tr,
           snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.red.shade100,
         );
@@ -115,8 +115,8 @@ class ReportWebViewController extends GetxController {
       isPdfReady.value = false;
       print('❌ Load report error: $e');
       Get.snackbar(
-        'Error',
-        'Failed to load report: $e',
+        'error'.tr,
+        'failedToLoadReport'.trParams({'error': e.toString()}),
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red.shade100,
       );
@@ -215,7 +215,7 @@ class ReportWebViewController extends GetxController {
       final qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ReportID:$reportId';
       
       final response = await http.get(Uri.parse(qrUrl)).timeout(
-        Duration(seconds: 10),
+        const Duration(seconds: 10),
       );
       
       if (response.statusCode == 200) {
@@ -251,7 +251,7 @@ class ReportWebViewController extends GetxController {
       print('⚠️ PDF generation called before data is ready, waiting...');
       int attempts = 0;
       while (!isPdfReady.value && attempts < 50) {
-        await Future.delayed(Duration(milliseconds: 100));
+        await Future.delayed(const Duration(milliseconds: 100));
         attempts++;
       }
       
@@ -313,7 +313,7 @@ class ReportWebViewController extends GetxController {
                     _drawCustomBorder(canvas, size, goldColor);
                   },
                   child: pw.Container(
-                    padding: pw.EdgeInsets.only(
+                    padding: const pw.EdgeInsets.only(
                       left: 55,
                       top: 30,
                       right: 55,
@@ -333,7 +333,7 @@ class ReportWebViewController extends GetxController {
                         // Main Title
                         pw.Center(
                           child: pw.Text(
-                            'AI Pre-Expertise Report',
+                            'pdfReportTitle'.tr,
                             style: pw.TextStyle(
                               fontSize: 16,
                               letterSpacing: 4.5,
@@ -512,7 +512,7 @@ class ReportWebViewController extends GetxController {
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
             pw.Text(
-              'Report ID: ${data.reportId}',
+              '${'pdfReportId'.tr}${data.reportId}',
               style: pw.TextStyle(
                 fontSize: 9,
                 font: regular,
@@ -521,7 +521,7 @@ class ReportWebViewController extends GetxController {
             ),
             pw.SizedBox(height: 2.5),
             pw.Text(
-              'Date of Issue: ${data.formattedCreatedDate}',
+              '${'pdfDateOfIssue'.tr}${data.formattedCreatedDate}',
               style: pw.TextStyle(
                 fontSize: 9,
                 font: regular,
@@ -581,7 +581,7 @@ class ReportWebViewController extends GetxController {
                 child: pw.Container(
                   width: 95,
                   height: 95,
-                  decoration: pw.BoxDecoration(shape: pw.BoxShape.circle),
+                  decoration: const pw.BoxDecoration(shape: pw.BoxShape.circle),
                   child: pw.ClipOval(
                     child: sealImage != null
                         ? pw.Image(
@@ -618,7 +618,7 @@ class ReportWebViewController extends GetxController {
         pw.SizedBox(
           width: totalWidth,
           child: pw.Text(
-            'Submitted Photos',
+            'pdfSubmittedPhotos'.tr,
             style: pw.TextStyle(
               fontSize: 12,
               font: bold,
@@ -634,13 +634,13 @@ class ReportWebViewController extends GetxController {
               String label = '';
               switch (index) {
                 case 0:
-                  label = 'Front View';
+                  label = 'pdfFrontView'.tr;
                   break;
                 case 1:
-                  label = 'Back View';
+                  label = 'pdfBackView'.tr;
                   break;
                 case 2:
-                  label = 'Bracelet View';
+                  label = 'pdfBraceletView'.tr;
                   break;
               }
 
@@ -682,7 +682,7 @@ class ReportWebViewController extends GetxController {
 
                     pw.SizedBox(height: 3.5),
                     pw.Container(
-                      padding: pw.EdgeInsets.symmetric(
+                      padding: const pw.EdgeInsets.symmetric(
                         horizontal: 9,
                         vertical: 2,
                       ),
@@ -721,7 +721,7 @@ class ReportWebViewController extends GetxController {
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.Text(
-          'Watch Information',
+          'pdfWatchInformation'.tr,
           style: pw.TextStyle(
             fontSize: 12,
             font: bold,
@@ -729,16 +729,16 @@ class ReportWebViewController extends GetxController {
           ),
         ),
         pw.SizedBox(height: 9),
-        _buildInfoRow('Brand', data.watchInformation.brand, regular, bold),
-        _buildInfoRow('Model', data.watchInformation.model, regular, bold),
+        _buildInfoRow('pdfBrand'.tr, data.watchInformation.brand, regular, bold),
+        _buildInfoRow('pdfModel'.tr, data.watchInformation.model, regular, bold),
         _buildInfoRow(
-          'Serial Ref No',
+          'pdfSerialRefNo'.tr,
           data.watchInformation.serialRefNo,
           regular,
           bold,
         ),
         _buildInfoRow(
-          'Date of Analysis',
+          'pdfDateOfAnalysis'.tr,
           data.watchInformation.dateOfAnalysis,
           regular,
           bold,
@@ -754,7 +754,7 @@ class ReportWebViewController extends GetxController {
     pw.Font bold,
   ) {
     return pw.Padding(
-      padding: pw.EdgeInsets.only(bottom: 3.2),
+      padding: const pw.EdgeInsets.only(bottom: 3.2),
       child: pw.Row(
         children: [
           pw.Container(
@@ -770,7 +770,7 @@ class ReportWebViewController extends GetxController {
           ),
           pw.Expanded(
             child: pw.Text(
-              value.isNotEmpty ? value : 'Unknown',
+              value.isNotEmpty ? value : 'pdfUnknown'.tr,
               style: pw.TextStyle(
                 fontSize: 10,
                 font: bold,
@@ -803,7 +803,7 @@ class ReportWebViewController extends GetxController {
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.Text(
-          'Detailed Analysis',
+          'pdfDetailedAnalysis'.tr,
           style: pw.TextStyle(
             fontSize: 12,
             font: bold,
@@ -813,7 +813,7 @@ class ReportWebViewController extends GetxController {
         pw.SizedBox(height: 3),
         pw.Table(
           border: pw.TableBorder.all(color: borderGrey, width: 0.8),
-          columnWidths: {
+          columnWidths: const {
             0: pw.FlexColumnWidth(2),
             1: pw.FlexColumnWidth(1.2),
             2: pw.FlexColumnWidth(5),
@@ -823,9 +823,9 @@ class ReportWebViewController extends GetxController {
             pw.TableRow(
               decoration: pw.BoxDecoration(color: creamBg),
               children: [
-                _buildTableCell('Component', bold, isHeader: true),
-                _buildTableCell('Match Score', bold, isHeader: true),
-                _buildTableCell('Observations', bold, isHeader: true),
+                _buildTableCell('pdfComponent'.tr, bold, isHeader: true),
+                _buildTableCell('pdfMatchScore'.tr, bold, isHeader: true),
+                _buildTableCell('pdfObservations'.tr, bold, isHeader: true),
               ],
             ),
             // Data rows
@@ -856,7 +856,7 @@ class ReportWebViewController extends GetxController {
     double fontSize = 9,
   }) {
     return pw.Padding(
-      padding: pw.EdgeInsets.symmetric(horizontal: 6.5, vertical: 5.5),
+      padding: const pw.EdgeInsets.symmetric(horizontal: 6.5, vertical: 5.5),
       child: pw.Text(
         text,
         style: pw.TextStyle(
@@ -878,7 +878,7 @@ class ReportWebViewController extends GetxController {
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.Text(
-          'Conclusion',
+          'pdfConclusion'.tr,
           style: pw.TextStyle(
             fontSize: 12,
             font: bold,
@@ -895,7 +895,7 @@ class ReportWebViewController extends GetxController {
             ),
             children: [
               pw.TextSpan(
-                text: 'Overall Authenticity Score: ',
+                text: 'pdfOverallAuthenticityScore'.tr,
                 style: pw.TextStyle(color: PdfColor.fromInt(0xFF937C49)),
               ),
               pw.TextSpan(
@@ -914,7 +914,7 @@ class ReportWebViewController extends GetxController {
               color: PdfColors.grey800,
             ),
             children: [
-              pw.TextSpan(text: 'Verdict: '),
+              pw.TextSpan(text: 'pdfVerdict'.tr),
               pw.TextSpan(
                 text: data.conclusion.verdict,
                 style: pw.TextStyle(font: bold, fontSize: 11),
@@ -931,7 +931,7 @@ class ReportWebViewController extends GetxController {
               color: PdfColors.grey800,
             ),
             children: [
-              pw.TextSpan(text: 'Authenticity Level: '),
+              pw.TextSpan(text: 'pdfAuthenticityLevel'.tr),
               pw.TextSpan(
                 text: data.conclusion.authenticityLevel,
                 style: pw.TextStyle(font: bold, fontSize: 11),
@@ -952,7 +952,7 @@ class ReportWebViewController extends GetxController {
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.Text(
-          'Expert Note',
+          'pdfExpertNote'.tr,
           style: pw.TextStyle(
             fontSize: 11,
             font: bold,
@@ -961,7 +961,7 @@ class ReportWebViewController extends GetxController {
         ),
         pw.SizedBox(height: 4),
         pw.Text(
-          data.expertNote.isNotEmpty ? data.expertNote : 'No expert note available.',
+          data.expertNote.isNotEmpty ? data.expertNote : 'pdfNoExpertNoteAvailable'.tr,
           style: pw.TextStyle(
             fontSize: 8,
             font: regular,
@@ -994,7 +994,7 @@ class ReportWebViewController extends GetxController {
               decoration: pw.BoxDecoration(
                 border: pw.Border.all(color: PdfColors.black, width: 1.5),
               ),
-              padding: pw.EdgeInsets.all(5),
+              padding: const pw.EdgeInsets.all(5),
               child: qrCodeImage != null
                   ? pw.Image(
                       pw.MemoryImage(qrCodeImage!),
@@ -1025,7 +1025,7 @@ class ReportWebViewController extends GetxController {
             ),
             pw.SizedBox(height: 3),
             pw.Text(
-              'Scan to verify this report',
+              'pdfScanToVerify'.tr,
               style: pw.TextStyle(
                 fontSize: 7,
                 font: regular,
@@ -1044,7 +1044,7 @@ class ReportWebViewController extends GetxController {
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Text(
-                'This report is generated by AI analysis and is not an official brand certificate. For official certification, contact the manufacturer directly.',
+                'pdfDisclaimer1'.tr,
                 style: pw.TextStyle(
                   fontSize: 10,
                   color: PdfColors.grey700,
@@ -1056,7 +1056,7 @@ class ReportWebViewController extends GetxController {
               pw.SizedBox(height: 6.5),
 
               pw.Text(
-                'This report and its contents are intended solely for the recipient. Unauthorized copying, distribution, or disclosure of this report in whole or in part is strictly prohibited. The information contained herein is confidential and may not be used for any purpose other than verifying the authenticity of the submitted watch.',
+                'pdfDisclaimer2'.tr,
                 style: pw.TextStyle(
                   fontSize: 10,
                   font: regular,
@@ -1078,9 +1078,9 @@ class ReportWebViewController extends GetxController {
                       color: PdfColors.grey800,
                     ),
                     children: [
-                      pw.TextSpan(text: 'Generated by '),
+                      pw.TextSpan(text: 'pdfGeneratedBy'.tr),
                       pw.TextSpan(
-                        text: 'clauseverify AI',
+                        text: 'pdfClauseVerifyAi'.tr,
                         style: pw.TextStyle(
                           font: bold,
                           color: PdfColor.fromInt(0xFF937C49),
@@ -1088,7 +1088,7 @@ class ReportWebViewController extends GetxController {
                         ),
                       ),
                       pw.TextSpan(
-                        text: ' on ${data.dateOfIssue}',
+                        text: '${'pdfOn'.tr}${data.dateOfIssue}',
                         style: pw.TextStyle(
                           color: PdfColor.fromInt(0xFF937C49),
                         ),
@@ -1109,8 +1109,8 @@ class ReportWebViewController extends GetxController {
     try {
       if (!isPdfReady.value) {
         Get.snackbar(
-          'Please Wait',
-          'Report is still loading...',
+          'pleaseWait'.tr,
+          'reportIsStillLoading'.tr,
           snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.orange.shade100,
         );
@@ -1131,24 +1131,24 @@ class ReportWebViewController extends GetxController {
       await file.writeAsBytes(bytes);
 
       Get.snackbar(
-        'Success',
-        'PDF saved successfully',
+        'success'.tr,
+        'pdfSavedSuccessfully'.tr,
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.green.shade100,
-        duration: Duration(seconds: 2),
+        duration: const Duration(seconds: 2),
       );
 
       await Share.shareXFiles([
         XFile(filePath),
-      ], text: 'clauseverify AI Pre-Expertise Report');
+      ], text: 'aiPreExpertiseReport'.tr);
 
       isDownloading.value = false;
     } catch (e) {
       isDownloading.value = false;
       print('❌ Download error: $e');
       Get.snackbar(
-        'Error',
-        'Failed to create PDF: $e',
+        'error'.tr,
+        'failedToCreatePdf'.trParams({'error': e.toString()}),
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red.shade100,
       );
@@ -1160,8 +1160,8 @@ class ReportWebViewController extends GetxController {
     try {
       if (!isPdfReady.value) {
         Get.snackbar(
-          'Please Wait',
-          'Report is still loading...',
+          'pleaseWait'.tr,
+          'reportIsStillLoading'.tr,
           snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.orange.shade100,
         );
@@ -1181,8 +1181,8 @@ class ReportWebViewController extends GetxController {
       isDownloading.value = false;
       print('❌ Print error: $e');
       Get.snackbar(
-        'Error',
-        'Failed to print: $e',
+        'error'.tr,
+        'failedToPrint'.trParams({'error': e.toString()}),
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red.shade100,
       );

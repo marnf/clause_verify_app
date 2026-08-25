@@ -46,6 +46,11 @@ class ProfileScreen extends StatelessWidget {
 
                       // ── Log Out ──
                       _buildLogoutButton(),
+                      
+                      // ✅ নতুন Delete Account Button
+                      SizedBox(height: 12.h),
+                      _buildDeleteAccountButton(),
+                      
                       SizedBox(height: 16.h),
 
                       // ── Version Footer ──
@@ -114,7 +119,6 @@ class ProfileScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-                // Avatar
                 Container(
                   width: 56.w,
                   height: 56.h,
@@ -129,7 +133,6 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 16.w),
-                // Name & Email
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,8 +158,6 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ],
             ),
-
-            // Premium Badge
             if (controller.isPremium.value) ...[
               SizedBox(height: 16.h),
               Container(
@@ -191,7 +192,7 @@ class ProfileScreen extends StatelessWidget {
   }
 
   // ══════════════════════════════════════
-  //  Language Row (tappable → opens modal)
+  //  Language Row
   // ══════════════════════════════════════
   Widget _buildLanguageRow() {
     return GestureDetector(
@@ -207,7 +208,6 @@ class ProfileScreen extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // Globe Icon
             Container(
               width: 42.w,
               height: 42.h,
@@ -218,8 +218,6 @@ class ProfileScreen extends StatelessWidget {
               child: Image.asset(IconPath.world, color: Colors.white),
             ),
             SizedBox(width: 12.w),
-
-            // "Language" label
             Expanded(
               child: Text(
                 'language'.tr,
@@ -230,8 +228,6 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
             ),
-
-            // Current language name (right side)
             GetBuilder<LocalizationController>(
               builder: (langController) {
                 return Text(
@@ -244,13 +240,7 @@ class ProfileScreen extends StatelessWidget {
               },
             ),
             SizedBox(width: 8.w),
-
-            // Chevron
-            Icon(
-              Icons.chevron_right,
-              color: AppColors.textMuted,
-              size: 20,
-            ),
+            Icon(Icons.chevron_right, color: AppColors.textMuted, size: 20),
           ],
         ),
       ),
@@ -269,23 +259,11 @@ class ProfileScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _buildLegalItem(
-            'privacyPolicy'.tr,
-            IconPath.security,
-            // onTap: () => Get.toNamed(AppRoute.privacyPolicyScreen),
-          ),
+          _buildLegalItem('privacyPolicy'.tr, IconPath.security),
           _buildDivider(),
-          _buildLegalItem(
-            'termsConditions'.tr,
-            IconPath.terms,
-            // onTap: () => Get.toNamed(AppRoute.termsOfUseScreen),
-          ),
+          _buildLegalItem('termsConditions'.tr, IconPath.terms),
           _buildDivider(),
-          _buildLegalItem(
-            'legalDisclaimer'.tr,
-            IconPath.ai,
-            // onTap: () => Get.toNamed(AppRoute.termsOfUseScreen),
-          ),
+          _buildLegalItem('legalDisclaimer'.tr, IconPath.ai),
         ],
       ),
     );
@@ -294,11 +272,7 @@ class ProfileScreen extends StatelessWidget {
   Widget _buildDivider() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: Divider(
-        color: AppColors.divider,
-        height: 1,
-        thickness: 1,
-      ),
+      child: Divider(color: AppColors.divider, height: 1, thickness: 1),
     );
   }
 
@@ -310,7 +284,6 @@ class ProfileScreen extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
         child: Row(
           children: [
-            // Icon container
             Container(
               width: 42.w,
               height: 42.h,
@@ -321,8 +294,6 @@ class ProfileScreen extends StatelessWidget {
               child: Image.asset(icon, color: Colors.white),
             ),
             SizedBox(width: 12.w),
-
-            // Title
             Expanded(
               child: Text(
                 title,
@@ -333,8 +304,6 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
             ),
-
-            // Chevron
             Icon(Icons.chevron_right, color: AppColors.textMuted, size: 20),
           ],
         ),
@@ -354,8 +323,7 @@ class ProfileScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: Color(0xFF1C0A0A),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-              color: AppColors.error.withOpacity(0.3), width: 1),
+          border: Border.all(color: AppColors.error.withOpacity(0.3), width: 1),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -377,20 +345,51 @@ class ProfileScreen extends StatelessWidget {
   }
 
   // ══════════════════════════════════════
+  //  ✅ নতুন Delete Account Button
+  // ══════════════════════════════════════
+  Widget _buildDeleteAccountButton() {
+    return GestureDetector(
+      onTap: () => _showDeleteAccountDialog(Get.context!),
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(vertical: 14.h),
+        decoration: BoxDecoration(
+          color: Colors.transparent, // Logout থেকে স্টাইল আলাদা করার জন্য ট্রান্সপারেন্ট
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.error.withOpacity(0.6), width: 1.5),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.delete_forever, color: AppColors.error, size: 20),
+            SizedBox(width: 8.w),
+            Text(
+              'Delete My Account',
+              style: TextStyle(
+                color: AppColors.error,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ══════════════════════════════════════
   //  Logout Dialog
   // ══════════════════════════════════════
   void _showLogoutDialog(BuildContext context) {
     Get.dialog(
       Dialog(
         backgroundColor: AppColors.surface,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Padding(
           padding: EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Icon
               Container(
                 width: 56,
                 height: 56,
@@ -401,8 +400,6 @@ class ProfileScreen extends StatelessWidget {
                 child: Icon(Icons.logout, color: AppColors.error, size: 28),
               ),
               SizedBox(height: 20),
-
-              // Title
               Text(
                 'logout'.tr,
                 style: TextStyle(
@@ -412,22 +409,14 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 8),
-
-              // Subtitle
               Text(
                 'readyToSignOut'.tr,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.textMuted,
-                  fontSize: 14.sp,
-                ),
+                style: TextStyle(color: AppColors.textMuted, fontSize: 14.sp),
               ),
               SizedBox(height: 24),
-
-              // Buttons
               Row(
                 children: [
-                  // Cancel
                   Expanded(
                     child: OutlinedButton(
                       style: OutlinedButton.styleFrom(
@@ -438,15 +427,11 @@ class ProfileScreen extends StatelessWidget {
                         ),
                       ),
                       onPressed: () => Get.back(),
-                      child: Text(
-                        'cancel'.tr,
-                        style: TextStyle(color: AppColors.textWhite),
-                      ),
+                      child: Text('cancel'.tr,
+                          style: TextStyle(color: AppColors.textWhite)),
                     ),
                   ),
                   SizedBox(width: 12),
-
-                  // Confirm Logout
                   Expanded(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
@@ -460,10 +445,8 @@ class ProfileScreen extends StatelessWidget {
                         Get.back();
                         controller.logout();
                       },
-                      child: Text(
-                        'logout'.tr,
-                        style: TextStyle(color: AppColors.textWhite),
-                      ),
+                      child: Text('logout'.tr,
+                          style: TextStyle(color: AppColors.textWhite)),
                     ),
                   ),
                 ],
@@ -473,6 +456,144 @@ class ProfileScreen extends StatelessWidget {
         ),
       ),
       barrierDismissible: true,
+    );
+  }
+
+  // ══════════════════════════════════════
+  //  ✅ নতুন Delete Account Dialog
+  // ══════════════════════════════════════
+  void _showDeleteAccountDialog(BuildContext context) {
+    controller.deleteConfirmController.clear(); // আগের লেখা ক্লিয়ার করার জন্য
+    Get.dialog(
+      Obx(() => Dialog(
+            backgroundColor: AppColors.surface,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            child: Padding(
+              padding: EdgeInsets.all(24),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Container(
+                        width: 56,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          color: AppColors.error.withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(Icons.warning_amber_rounded,
+                            color: AppColors.error, size: 28),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Center(
+                      child: Text(
+                        'Delete Account',
+                        style: TextStyle(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textWhite,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'This action is permanent. To confirm, please type exactly:',
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(color: AppColors.textMuted, fontSize: 14.sp),
+                    ),
+                    SizedBox(height: 8),
+                    Center(
+                      child: Text(
+                        '"i want to delete my account"',
+                        style: TextStyle(
+                          color: AppColors.error,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    TextField(
+                      controller: controller.deleteConfirmController,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: AppColors.textWhite),
+                      decoration: InputDecoration(
+                        hintText: 'Type here...',
+                        hintStyle:
+                            TextStyle(color: AppColors.textMuted, fontSize: 14),
+                        filled: true,
+                        fillColor: AppColors.background,
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: AppColors.cardBorder),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: AppColors.error),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 24),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(color: AppColors.cardBorder),
+                              padding: EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            onPressed: controller.isDeleting.value
+                                ? null
+                                : () => Get.back(),
+                            child: Text('cancel'.tr,
+                                style: TextStyle(color: AppColors.textWhite)),
+                          ),
+                        ),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.error,
+                              padding: EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            onPressed: controller.isDeleting.value
+                                ? null
+                                : () => controller.deleteAccount(),
+                            child: controller.isDeleting.value
+                                ? SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : Text('Delete',
+                                    style: TextStyle(color: AppColors.textWhite)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )),
+      barrierDismissible: false, // বাইরে ক্লিক করে বন্ধ না করার জন্য
     );
   }
 }

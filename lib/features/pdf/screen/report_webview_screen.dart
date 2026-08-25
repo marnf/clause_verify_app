@@ -9,40 +9,40 @@ class ReportWebViewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5),
+      backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
-        title: Text('AI Pre-Expertise Report'),
-        backgroundColor: Color(0xFF1A1A1A),
+        title: Text('aiPreExpertiseReport'.tr),
+        backgroundColor: const Color(0xFF1A1A1A),
         actions: [
           // Zoom Controls
           IconButton(
-            icon: Icon(Icons.zoom_out, color: Colors.white),
+            icon: const Icon(Icons.zoom_out, color: Colors.white),
             onPressed: controller.zoomOut,
-            tooltip: 'Zoom Out',
+            tooltip: 'zoomOut'.tr,
           ),
           Obx(() => Center(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
                     '${(controller.zoomLevel.value * 100).toInt()}%',
-                    style: TextStyle(color: Colors.white, fontSize: 14),
+                    style: const TextStyle(color: Colors.white, fontSize: 14),
                   ),
                 ),
               )),
           IconButton(
-            icon: Icon(Icons.zoom_in, color: Colors.white),
+            icon: const Icon(Icons.zoom_in, color: Colors.white),
             onPressed: controller.zoomIn,
-            tooltip: 'Zoom In',
+            tooltip: 'zoomIn'.tr,
           ),
           IconButton(
-            icon: Icon(Icons.refresh, color: Colors.white),
+            icon: const Icon(Icons.refresh, color: Colors.white),
             onPressed: controller.resetZoom,
-            tooltip: 'Reset Zoom',
+            tooltip: 'resetZoom'.tr,
           ),
 
           // Download/Print Menu
           Obx(() => controller.isDownloading.value
-              ? Padding(
+              ? const Padding(
                   padding: EdgeInsets.all(16),
                   child: SizedBox(
                     width: 24,
@@ -54,7 +54,7 @@ class ReportWebViewScreen extends StatelessWidget {
                   ),
                 )
               : PopupMenuButton<String>(
-                  icon: Icon(Icons.more_vert, color: Colors.white),
+                  icon: const Icon(Icons.more_vert, color: Colors.white),
                   onSelected: (value) {
                     if (value == 'download') {
                       controller.downloadAsPDF();
@@ -69,9 +69,9 @@ class ReportWebViewScreen extends StatelessWidget {
                       value: 'download',
                       child: Row(
                         children: [
-                          Icon(Icons.download, size: 20),
-                          SizedBox(width: 12),
-                          Text('Download PDF'),
+                          const Icon(Icons.download, size: 20),
+                          const SizedBox(width: 12),
+                          Text('downloadPdf'.tr),
                         ],
                       ),
                     ),
@@ -79,9 +79,9 @@ class ReportWebViewScreen extends StatelessWidget {
                       value: 'print',
                       child: Row(
                         children: [
-                          Icon(Icons.print, size: 20),
-                          SizedBox(width: 12),
-                          Text('Print PDF'),
+                          const Icon(Icons.print, size: 20),
+                          const SizedBox(width: 12),
+                          Text('printPdf'.tr),
                         ],
                       ),
                     ),
@@ -89,9 +89,9 @@ class ReportWebViewScreen extends StatelessWidget {
                       value: 'refresh',
                       child: Row(
                         children: [
-                          Icon(Icons.refresh, size: 20),
-                          SizedBox(width: 12),
-                          Text('Reload Report'),
+                          const Icon(Icons.refresh, size: 20),
+                          const SizedBox(width: 12),
+                          Text('reloadReport'.tr),
                         ],
                       ),
                     ),
@@ -106,17 +106,17 @@ class ReportWebViewScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircularProgressIndicator(
+                const CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFC9A961)),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Text(
-                  'Loading report data...',
+                  'loadingReportData'.tr,
                   style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
-                  'This may take a few moments',
+                  'thisMayTakeAFewMoments'.tr,
                   style: TextStyle(fontSize: 12, color: Colors.grey[500]),
                 ),
               ],
@@ -130,19 +130,19 @@ class ReportWebViewScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.description, size: 64, color: Colors.grey),
-                SizedBox(height: 16),
-                Text('No report data available',
-                    style: TextStyle(fontSize: 16)),
-                SizedBox(height: 24),
+                const Icon(Icons.description, size: 64, color: Colors.grey),
+                const SizedBox(height: 16),
+                Text('noReportDataAvailable'.tr,
+                    style: const TextStyle(fontSize: 16)),
+                const SizedBox(height: 24),
                 ElevatedButton.icon(
                   onPressed: () => controller.refreshData(),
-                  icon: Icon(Icons.refresh),
-                  label: Text('Reload Report'),
+                  icon: const Icon(Icons.refresh),
+                  label: Text('reloadReport'.tr),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFC9A961),
+                    backgroundColor: const Color(0xFFC9A961),
                     foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   ),
                 ),
               ],
@@ -156,17 +156,17 @@ class ReportWebViewScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircularProgressIndicator(
+                const CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFC9A961)),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Text(
-                  'Preparing PDF...',
+                  'preparingPdf'.tr,
                   style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
-                  'Loading images and assets',
+                  'loadingImagesAndAssets'.tr,
                   style: TextStyle(fontSize: 12, color: Colors.grey[500]),
                 ),
               ],
@@ -178,7 +178,7 @@ class ReportWebViewScreen extends StatelessWidget {
         return InteractiveViewer(
           minScale: 0.5,
           maxScale: 4.0,
-          boundaryMargin: EdgeInsets.all(20),
+          boundaryMargin: const EdgeInsets.all(20),
           child: Obx(
             () => Transform.scale(
               scale: controller.zoomLevel.value,
@@ -199,7 +199,7 @@ class ReportWebViewScreen extends StatelessWidget {
                 canChangeOrientation: false,
                 pdfFileName:
                     'clauseverify_Report_${controller.reportData.value?.reportId ?? 'UNKNOWN'}.pdf',
-                scrollViewDecoration: BoxDecoration(
+                scrollViewDecoration: const BoxDecoration(
                   color: Color(0xFFF5F5F5),
                 ),
                 // ✅ Add loading builder
@@ -207,13 +207,13 @@ class ReportWebViewScreen extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CircularProgressIndicator(
+                      const CircularProgressIndicator(
                         valueColor:
                             AlwaysStoppedAnimation<Color>(Color(0xFFC9A961)),
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       Text(
-                        'Generating PDF preview...',
+                        'generatingPdfPreview'.tr,
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                     ],
@@ -231,7 +231,7 @@ class ReportWebViewScreen extends StatelessWidget {
         if (controller.isLoading.value ||
             controller.reportData.value == null ||
             !controller.isPdfReady.value) {
-          return SizedBox.shrink();
+          return const SizedBox.shrink();
         }
 
         return Column(
@@ -239,9 +239,9 @@ class ReportWebViewScreen extends StatelessWidget {
           children: [
             FloatingActionButton(
               heroTag: 'download',
-              backgroundColor: Color(0xFFC9A961),
+              backgroundColor: const Color(0xFFC9A961),
               child: controller.isDownloading.value
-                  ? SizedBox(
+                  ? const SizedBox(
                       width: 24,
                       height: 24,
                       child: CircularProgressIndicator(
@@ -250,20 +250,20 @@ class ReportWebViewScreen extends StatelessWidget {
                             AlwaysStoppedAnimation<Color>(Colors.white),
                       ),
                     )
-                  : Icon(Icons.download, color: Colors.white),
+                  : const Icon(Icons.download, color: Colors.white),
               onPressed: controller.isDownloading.value
                   ? null
                   : controller.downloadAsPDF,
-              tooltip: 'Download PDF',
+              tooltip: 'downloadPdf'.tr,
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             FloatingActionButton(
               heroTag: 'print',
-              backgroundColor: Color(0xFF1A1A1A),
-              child: Icon(Icons.print, color: Colors.white),
+              backgroundColor: const Color(0xFF1A1A1A),
+              child: const Icon(Icons.print, color: Colors.white),
               onPressed:
                   controller.isDownloading.value ? null : controller.printPDF,
-              tooltip: 'Print PDF',
+              tooltip: 'printPdf'.tr,
             ),
           ],
         );

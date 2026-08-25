@@ -3,23 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>1047128712830-0chpauimk032t684pee8u2n8j8bbfd7v.apps.googleusercontent.com</string>
+	<string>929314773106-0adhq1do46a93p2csea4deg7bdprgp0r.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1047128712830-0chpauimk032t684pee8u2n8j8bbfd7v</string>
-	<key>ANDROID_CLIENT_ID</key>
-	<string>1047128712830-1924ncvbsu1boerl4nplrp2k7mrr5283.apps.googleusercontent.com</string>
+	<string>com.googleusercontent.apps.929314773106-0adhq1do46a93p2csea4deg7bdprgp0r</string>
 	<key>API_KEY</key>
-	<string>AIzaSyB5p6MsirtQDoKHhc-uOPK_HFXgZhUc_LQ</string>
+	<string>AIzaSyDWbwIUIaGquDwHFYYDiod_NZ88ai3EHP8</string>
 	<key>GCM_SENDER_ID</key>
-	<string>1047128712830</string>
+	<string>929314773106</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.clauseverify.app</string>
 	<key>PROJECT_ID</key>
-	<string>clauseverify-app</string>
+	<string>clauseverify-id</string>
 	<key>STORAGE_BUCKET</key>
-	<string>clauseverify-app.firebasestorage.app</string>
+	<string>clauseverify-id.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1047128712830:ios:1cd0da007decaae75f9a2f</string>
+	<string>1:929314773106:ios:6e4f1c7ffc39a46a6e4aeb</string>
 </dict>
 </plist>

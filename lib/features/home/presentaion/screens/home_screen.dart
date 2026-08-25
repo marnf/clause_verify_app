@@ -21,10 +21,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    // ✅ শুধু একবারই কন্ট্রোলার ইনিশিয়ালাইজ হবে
     if (Get.isRegistered<HomeController>()) {
       controller = Get.find<HomeController>();
-      controller.loadUserProfile(); // আবার ফেচ করো
+      controller.loadUserProfile();
     } else {
       controller = Get.put(HomeController());
     }
@@ -45,31 +44,36 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 20.h),
-                _buildHeader(),
-                SizedBox(height: 28.h),
-                _buildUploadCard(),
-                SizedBox(height: 14.h),
-                _buildScanCard(),
-                SizedBox(height: 28.h),
-                _buildHowItWorksSection(),
-                SizedBox(height: 16.h),
-                _buildExpertTipSection(),
-                SizedBox(height: 100.h),
-              ],
+    // ✅ পুরো স্ক্রিনটি LocalizationController দিয়ে র‍্যাপ করা হলো
+    return GetBuilder<LocalizationController>(
+      builder: (locController) {
+        return Scaffold(
+          backgroundColor: AppColors.background,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20.h),
+                    _buildHeader(),
+                    SizedBox(height: 28.h),
+                    _buildUploadCard(),
+                    SizedBox(height: 14.h),
+                    _buildScanCard(),
+                    SizedBox(height: 28.h),
+                    _buildHowItWorksSection(),
+                    SizedBox(height: 16.h),
+                    _buildExpertTipSection(),
+                    SizedBox(height: 100.h),
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -84,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Hello'.tr, style: TextStyle(color: AppColors.textWhite, fontSize: 22.sp, fontWeight: FontWeight.w700)),
+              Text('hello'.tr, style: TextStyle(color: AppColors.textWhite, fontSize: 22.sp, fontWeight: FontWeight.w700)),
               Obx(() {
                 final name = controller.userName.value;
                 if (name.isEmpty) return const SizedBox.shrink();
@@ -170,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             Container(width: 52.w, height: 52.h, decoration: BoxDecoration(color: AppColors.primaryColor.withOpacity(0.12), borderRadius: BorderRadius.circular(14)), child: Icon(Icons.upload_file_rounded, color: AppColors.primaryColor, size: 26.sp)),
             SizedBox(width: 16.w),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('uploadContract'.tr, style: TextStyle(color: AppColors.textWhite, fontSize: 16.sp, fontWeight: FontWeight.w600)), SizedBox(height: 4.h), Text('browseFromDevice'.tr, style: TextStyle(color: AppColors.textMuted, fontSize: 13.sp))])),
-            Icon(Icons.chevron_right, color: AppColors.textSubtle, size: 22),
+            const Icon(Icons.chevron_right, color: AppColors.textSubtle, size: 22),
           ],
         ),
       ),
@@ -192,7 +196,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             Container(width: 52.w, height: 52.h, decoration: BoxDecoration(color: AppColors.primaryColor.withOpacity(0.12), borderRadius: BorderRadius.circular(14)), child: Icon(Icons.camera_alt_rounded, color: AppColors.primaryColor, size: 26.sp)),
             SizedBox(width: 16.w),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('scanContract'.tr, style: TextStyle(color: AppColors.textWhite, fontSize: 16.sp, fontWeight: FontWeight.w600)), SizedBox(height: 4.h), Text('takePhotosDescription'.tr, style: TextStyle(color: AppColors.textMuted, fontSize: 13.sp))])),
-            Icon(Icons.chevron_right, color: AppColors.textSubtle, size: 22),
+            const Icon(Icons.chevron_right, color: AppColors.textSubtle, size: 22),
           ],
         ),
       ),
@@ -226,7 +230,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(width: 24.w, height: 24.w, decoration: BoxDecoration(color: AppColors.primaryColor, shape: BoxShape.circle), child: Center(child: Text(number, style: TextStyle(color: Colors.black, fontSize: 12.sp, fontWeight: FontWeight.w700)))),
+        Container(width: 24.w, height: 24.w, decoration: const BoxDecoration(color: AppColors.primaryColor, shape: BoxShape.circle), child: Center(child: Text(number, style: TextStyle(color: Colors.black, fontSize: 12.sp, fontWeight: FontWeight.w700)))),
         SizedBox(width: 12.w),
         Expanded(child: Padding(padding: EdgeInsets.only(top: 2.h), child: Text(text, style: TextStyle(color: AppColors.textSubtle, fontSize: 13.sp, height: 1.4)))),
       ],

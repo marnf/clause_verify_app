@@ -25,16 +25,16 @@ class ContractAnalysisScreen extends StatelessWidget {
                 height: 120.h,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Color(0xFFB8860B).withOpacity(0.1),
-                  border: Border.all(color: Color(0xFFB8860B).withOpacity(0.3), width: 2),
+                  color: const Color(0xFFB8860B).withOpacity(0.1),
+                  border: Border.all(color: const Color(0xFFB8860B).withOpacity(0.3), width: 2),
                 ),
-                child: Icon(Icons.gavel_rounded, color: Color(0xFFB8860B), size: 50.sp),
+                child: Icon(Icons.gavel_rounded, color: const Color(0xFFB8860B), size: 50.sp),
               ),
 
               SizedBox(height: 40.h),
 
               Text(
-                'Legal AI Analysis',
+                'legalAiAnalysis'.tr,
                 style: TextStyle(
                   fontSize: 22.sp,
                   fontWeight: FontWeight.w700,
@@ -64,8 +64,8 @@ class ContractAnalysisScreen extends StatelessWidget {
                       height: 8.h,
                       child: LinearProgressIndicator(
                         value: controller.overallProgress.value,
-                        backgroundColor: Color(0xFF2D2D2D),
-                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFB8860B)),
+                        backgroundColor: const Color(0xFF2D2D2D),
+                        valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFB8860B)),
                       ),
                     ),
                   ),
@@ -73,7 +73,7 @@ class ContractAnalysisScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Analyzing...'.tr, style: TextStyle(fontSize: 12.sp, color: Colors.white.withOpacity(0.5))),
+                      Text('analyzing'.tr, style: TextStyle(fontSize: 12.sp, color: Colors.white.withOpacity(0.5))),
                       Text('${(controller.overallProgress.value * 100).toInt()}%', style: TextStyle(fontSize: 12.sp, color: Colors.white.withOpacity(0.5))),
                     ],
                   ),
@@ -102,7 +102,7 @@ class ContractAnalysisScreen extends StatelessWidget {
                               height: 28.h,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: isCompleted ? Color(0xFF4CAF50) : isActive ? Color(0xFFB8860B) : Color(0xFF2D2D2D),
+                                color: isCompleted ? const Color(0xFF4CAF50) : isActive ? const Color(0xFFB8860B) : const Color(0xFF2D2D2D),
                               ),
                               child: isCompleted
                                   ? Icon(Icons.check, color: Colors.white, size: 18.sp)
@@ -112,7 +112,7 @@ class ContractAnalysisScreen extends StatelessWidget {
                                           height: 18.h,
                                           child: CircularProgressIndicator(
                                             strokeWidth: 2.w,
-                                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                            valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
                                           ),
                                         )
                                       : null,
@@ -120,7 +120,7 @@ class ContractAnalysisScreen extends StatelessWidget {
                             SizedBox(width: 16.w),
                             Expanded(
                               child: Text(
-                                step.title,
+                                step.title, // Note: এই step.title গুলো যদি কন্ট্রোলারে হার্ডকোড করা থাকে, তবে সেগুলোও .tr দিয়ে আপডেট করতে হবে
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   color: isCompleted || isActive ? Colors.white : Colors.white.withOpacity(0.3),
@@ -142,13 +142,13 @@ class ContractAnalysisScreen extends StatelessWidget {
                 height: 55.h,
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                 decoration: BoxDecoration(
-                  color: Color(0xFF1A1A1A),
+                  color: const Color(0xFF1A1A1A),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Color(0xFF2D2D2D), width: 1.w),
+                  border: Border.all(color: const Color(0xFF2D2D2D), width: 1.w),
                 ),
                 child: Center(
                   child: Text(
-                    'Estimated waiting time: ${controller.remainingSeconds.value} seconds',
+                    'estimatedWaitingTime'.trParams({'seconds': controller.remainingSeconds.value.toString()}),
                     style: TextStyle(fontSize: 12.sp, color: Colors.white.withOpacity(0.7)),
                     textAlign: TextAlign.center,
                   ),

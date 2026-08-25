@@ -1,233 +1,3 @@
-// import 'package:clause_verify/core/common/widgets/app_bar.dart';
-// import 'package:clause_verify/core/utils/constants/app_sizer.dart';
-// import 'package:clause_verify/core/utils/constants/icon_path.dart';
-// import 'package:clause_verify/features/auth/controller/otp_verification_controller_for_registraion.dart';
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:pinput/pinput.dart';
-
-// class OtpVerificationScreenForRegistration extends StatelessWidget {
-//   final OtpVerificationControllerForRegistraion controller = Get.put(
-//     OtpVerificationControllerForRegistraion(),
-//   );
-
-//   static Gradient linearGradient = LinearGradient(
-//     begin: Alignment.topCenter,
-//     end: Alignment.bottomCenter,
-//     colors: [Color(0xFF212121), Color(0xFF000000)],
-//   );
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Colors.black,
-//       body: SafeArea(
-//         child: Column(
-//           children: [
-//             /// ------------------ App Bar ------------------
-//             Padding(
-//               padding: EdgeInsets.symmetric(vertical: 30.h, horizontal: 24.w),
-//               child: CustomAppBar(
-//                 title: 'otpVerification'.tr,
-//                 centerTitle: true,
-//               ),
-//             ),
-
-//             /// ------------------ Gradient Container ------------------
-//             Expanded(
-//               child: Container(
-//                 width: double.infinity,
-//                 decoration: BoxDecoration(
-//                   gradient: linearGradient,
-//                   borderRadius: BorderRadius.only(
-//                     topLeft: Radius.circular(32),
-//                     topRight: Radius.circular(32),
-//                   ),
-//                 ),
-//                 child: Column(
-//                   children: [
-//                     /// 🔹 Scrollable content
-//                     Expanded(
-//                       child: SingleChildScrollView(
-//                         padding: EdgeInsets.all(24.w),
-//                         child: Column(
-//                           children: [
-//                             SizedBox(height: 32.h),
-
-//                             /// Icon
-//                             Container(
-//                               child: Image.asset(
-//                                 IconPath.otp,
-//                                 width: 80.w,
-//                                 height: 80.h,
-//                               ),
-//                             ),
-
-//                             SizedBox(height: 24.h),
-
-//                             Text(
-//                               'otpVerification'.tr,
-//                               textAlign: TextAlign.center,
-//                               style: TextStyle(
-//                                 color: Colors.white,
-//                                 fontWeight: FontWeight.bold,
-//                                 fontSize: 25.sp,
-//                               ),
-//                             ),
-
-//                             SizedBox(height: 14.h),
-
-//                             Text(
-//                               'enterTheOTPSentToYourEmailToVerifyYourIdentityOnceVerifiedYouCanProceedToSignIn'
-//                                   .tr,
-//                               textAlign: TextAlign.center,
-//                               style: TextStyle(
-//                                 color: Colors.grey[400],
-//                                 fontSize: 13.sp,
-//                               ),
-//                             ),
-
-//                             SizedBox(height: 32.h),
-
-//                             /// OTP Input
-//                             Pinput(
-//                               length: 6,
-//                               controller: controller.otpTEController,
-//                               focusNode: controller.focusNode,
-//                               onChanged: controller.updateOtpValue,
-//                               onCompleted: (_) => controller.verifyOtp,
-//                               defaultPinTheme: PinTheme(
-//                                 width: 48.w,
-//                                 height: 48.h,
-//                                 textStyle: TextStyle(
-//                                   fontSize: 22.sp,
-//                                   fontWeight: FontWeight.w600,
-//                                   color: Colors.black,
-//                                 ),
-//                                 decoration: BoxDecoration(
-//                                   color: Colors.white,
-//                                   borderRadius: BorderRadius.circular(8),
-//                                 ),
-//                               ),
-//                               separatorBuilder: (_) => SizedBox(width: 8.w),
-//                             ),
-
-//                             SizedBox(height: 24.h),
-
-//                             /// Resend Widget
-//                             Obx(() {
-//                               final minutes =
-//                                   controller.secondsRemaining.value ~/ 60;
-//                               final seconds =
-//                                   controller.secondsRemaining.value % 60;
-
-//                               return Row(
-//                                 mainAxisAlignment: MainAxisAlignment.center,
-//                                 children: [
-//                                   Text(
-//                                     controller.isClickable.value
-//                                         ? "haventReceivedTheCode".tr
-//                                         : "resendIn".tr +
-//                                               " ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')} ",
-//                                     style: TextStyle(
-//                                       color: Colors.grey[400],
-//                                       fontSize: 14.sp,
-//                                     ),
-//                                   ),
-//                                   if (controller.isClickable.value)
-//                                     GestureDetector(
-//                                       onTap: controller.resendOtp,
-//                                       child: Text(
-//                                         'resend'.tr,
-//                                         style: TextStyle(
-//                                           color: Color(0xFFD4AF37),
-//                                           fontWeight: FontWeight.bold,
-//                                           fontSize: 14.sp,
-//                                         ),
-//                                       ),
-//                                     ),
-//                                 ],
-//                               );
-//                             }),
-
-//                             SizedBox(height: 80.h),
-//                           ],
-//                         ),
-//                       ),
-//                     ),
-
-//                     /// 🔹 Fixed Bottom Button
-//                     Padding(
-//                       padding: EdgeInsets.all(24.w),
-//                       child: Obx(() {
-//                         return SizedBox(
-//                           width: double.infinity,
-//                           height: 56.h,
-//                           child: ElevatedButton(
-//                             onPressed: controller.isLoading.value
-//                                 ? null
-//                                 : controller.verifyOtp,
-//                             style: ElevatedButton.styleFrom(
-//                               backgroundColor: Color(0xFFD4AF37),
-//                               disabledBackgroundColor: Colors.grey[600],
-//                               elevation: 0,
-//                               side: BorderSide.none,
-//                               shape: RoundedRectangleBorder(
-//                                 borderRadius: BorderRadius.circular(16),
-//                               ),
-//                               padding: EdgeInsets.symmetric(
-//                                 horizontal: 16.w,
-//                                 vertical: 4.h,
-//                               ),
-//                               visualDensity: VisualDensity.compact,
-//                             ),
-//                             child: controller.isLoading.value
-//                                 ? SizedBox(
-//                                     width: 22.w,
-//                                     height: 22.h,
-//                                     child: CircularProgressIndicator(
-//                                       color: Colors.white,
-//                                       strokeWidth: 2.w,
-//                                     ),
-//                                   )
-//                                 : Row(
-//                                     mainAxisAlignment: MainAxisAlignment.center,
-//                                     mainAxisSize: MainAxisSize.min,
-//                                     crossAxisAlignment:
-//                                         CrossAxisAlignment.center,
-//                                     children: [
-//                                       Text(
-//                                         'verify'.tr,
-//                                         style: TextStyle(
-//                                           color: Colors.black,
-//                                           fontSize: 18.sp,
-//                                           fontWeight: FontWeight.bold,
-//                                           height: 1.1,
-//                                         ),
-//                                       ),
-//                                       SizedBox(width: 6.w),
-//                                       Icon(
-//                                         Icons.arrow_forward,
-//                                         color: Colors.black,
-//                                         size: 18.sp, // ✅ Icon এ sp ব্যবহার করা হলো
-//                                       ),
-//                                     ],
-//                                   ),
-//                           ),
-//                         );
-//                       }),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 
 
 import 'package:clause_verify/core/common/widgets/app_bar.dart';
@@ -432,26 +202,31 @@ class OtpVerificationScreenForRegistration extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             elevation: 0,
+                            padding: EdgeInsets.zero,
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
-                          child: controller.isLoading.value
-                              ? const SizedBox(
-                                  width: 22,
-                                  height: 22,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white),
+                          child: Center(
+                            child: controller.isLoading.value
+                                ? const SizedBox(
+                                    width: 22,
+                                    height: 22,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white),
+                                    ),
+                                  )
+                                : Text(
+                                    'verify'.tr,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: 0.5,
+                                    ),
                                   ),
-                                )
-                              : Text(
-                                'verify'.tr,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: 0.5,
-                                ),
-                              ),
+                          ),
                         ),
                       );
                     }),

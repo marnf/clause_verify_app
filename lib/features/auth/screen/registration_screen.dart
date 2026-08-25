@@ -556,45 +556,50 @@ class RegistrationScreen extends StatelessWidget {
 
               // ── Next Button ──
               Obx(
-                () => SizedBox(
-                  width: double.infinity,
-                  height: 54.h,
-                  child: ElevatedButton(
-                    onPressed: controller.isFormValid.value &&
-                            !controller.isLoading.value
-                        ? controller.onNextPressed
-                        : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFC9952A),
-                      disabledBackgroundColor:
-                          const Color(0xFFC9952A).withOpacity(0.45),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: controller.isLoading.value
-                        ? const SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
-                            ),
-                          )
-                        : Text(
-                            'next'.tr,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                  ),
+  () => SizedBox(
+    width: double.infinity,
+    height: 54.h,
+    child: ElevatedButton(
+      onPressed: controller.isFormValid.value &&
+              !controller.isLoading.value
+          ? controller.onNextPressed
+          : null,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFFC9952A),
+        disabledBackgroundColor:
+            const Color(0xFFC9952A).withOpacity(0.45),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        elevation: 0,
+        padding: EdgeInsets.zero, // 👈 extra padding remove
+        minimumSize: Size.zero,   // 👈 default min height constraint remove
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap, // 👈 extra tap area padding remove
+      ),
+      child: Center( // 👈 vertical centering নিশ্চিত করে
+        child: controller.isLoading.value
+            ? const SizedBox(
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              )
+            : Text(
+                'next'.tr,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.5,
                 ),
               ),
+      ),
+    ),
+  ),
+),
 
               SizedBox(height: 24.h),
 
