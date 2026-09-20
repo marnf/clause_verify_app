@@ -1,10 +1,13 @@
+
+
+
 name: clause_verify
 
 description: "Clause Verify."
 
 publish_to: 'none'
 
-version: 1.2.0+18
+version: 1.0.0+12
 
 environment:
   sdk: ^3.9.2
@@ -40,6 +43,7 @@ dependencies:
   percent_indicator: ^4.2.5
   flutter_rating_bar: ^4.0.1
   shimmer:
+  
 
   # ─────────────────────────────────────────────────────────────────────────
   # Media & File Handling
@@ -92,7 +96,7 @@ dependencies:
   # In-App Purchases (RevenueCat)
   # ─────────────────────────────────────────────────────────────────────────
 
-  purchases_flutter: ^8.0.0
+  purchases_flutter: ^10.13.1
 
   # ─────────────────────────────────────────────────────────────────────────
   # App Configuration & Build Tools
@@ -132,96 +136,3 @@ flutter:
     - assets/images/bg2.png
     - assets/images/bg3.png
     - assets/images/bg4.png
-
-
-# ─────────────────────────────────────────────────────────────────────────
-# Previous Configuration (Commented out for reference - DO NOT DELETE)
-# ─────────────────────────────────────────────────────────────────────────
-
-# name: clause_verify
-# description: "A new Flutter project."
-# publish_to: 'none'
-# version: 1.0.0+1
-#
-# environment:
-#   sdk: ^3.9.0
-#
-# dependencies:
-#   flutter:
-#     sdk: flutter
-#
-#   # Utility Packages
-#   http: ^1.6.0
-#   intl: ^0.20.0
-#   logger: ^2.6.2
-#   url_launcher: ^6.2.5
-#   google_fonts: ^6.3.3
-#   shared_preferences: ^2.5.4
-#
-#   # Icons
-#   cupertino_icons: ^1.0.8
-#   dotted_border: ^3.1.0
-#   flutter_svg: ^2.2.3
-#
-#   # State Management
-#   get: ^4.7.3
-#   gap: ^3.0.1
-#
-#   # UI Components
-#   pinput: ^6.0.1
-#   dotted_line: ^3.2.3
-#   flutter_spinkit: ^5.2.0
-#   percent_indicator: ^4.2.5
-#   flutter_rating_bar: ^4.0.1
-#
-#   # Media & Files
-#   image_picker: ^1.2.1
-#   cached_network_image: ^3.4.1
-#   file_picker: ^10.3.8
-#   screenshot: ^3.0.0
-#
-#   # Notifications & Messaging
-#   fluttertoast: ^9.0.0
-#   permission_handler: ^12.0.1
-#   firebase_messaging: ^16.1.0
-#
-#   # Date & Time
-#   month_picker_dialog: ^6.7.0
-#
-#   # PDF Generation & Viewing
-#   pdf: ^3.11.1
-#   printing: ^5.13.4
-#   share_plus: ^12.0.1
-#   path_provider: ^2.1.4
-#
-#   # Phone & Country
-#   country_code_picker: ^3.4.1
-#
-#   # Device & Network
-#   device_info_plus: ^12.3.0
-#   connectivity_plus: ^7.0.0
-#   mime: ^2.0.0
-#
-#   # Web Socket for Chat
-#   web_socket_channel: ^3.0.0
-#
-# dev_dependencies:
-#   flutter_test:
-#     sdk: flutter
-#
-#   flutter_lints: ^5.0.0
-#
-# flutter:
-#   uses-material-design: true
-#
-#   assets:
-#     - assets/language/
-#     - assets/images/
-#     - assets/icons/
-#     - assets/icons/splash/
-#     - assets/logos/
-#     - assets/will_be_delete/
-#     - assets/images/bg1.png
-#     - assets/images/bg2.png
-#     - assets/images/bg3.png
-#     - assets/images/bg4.png

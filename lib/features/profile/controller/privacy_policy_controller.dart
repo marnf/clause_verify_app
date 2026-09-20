@@ -10,7 +10,7 @@ class PrivacySection {
 class PrivacyPolicyController extends GetxController {
   final RxDouble scrollOffset = 0.0.obs;
 
- List<PrivacySection> get sections => [
+  List<PrivacySection> get sections => [
     PrivacySection(
       title: 'privacyTitle1'.tr,
       content: [

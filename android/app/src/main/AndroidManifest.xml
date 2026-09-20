@@ -1,25 +1,23 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-<!-- Internet --> 
-<uses-permission android:name="android.permission.INTERNET" />
-<!-- Billing -->
-<uses-permission android:name="com.android.vending.BILLING" />
-<!-- Notifications --> 
-<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-<!-- Camera --> 
-<uses-permission android:name="android.permission.CAMERA" />
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!-- Internet -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Billing -->
+    <uses-permission android:name="com.android.vending.BILLING" />
+    <!-- Notifications -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Camera -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Location -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-<!-- location -->
-<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- Google Play policy: gallery permission লাগবে না, বাইরে থেকে merge হলেও সরাও -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" tools:node="remove" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" tools:node="remove" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:node="remove" />
 
-<!-- Gallery access --> 
-<!-- <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> 
-<uses-permission android:name="android.permission.READ_MEDIA_IMAGES" /> -->
-
-
-<queries>
+    <queries>
         <intent>
             <action android:name="android.intent.action.VIEW" />
             <data android:scheme="https" />
@@ -28,8 +26,11 @@
             <action android:name="android.intent.action.VIEW" />
             <data android:scheme="http" />
         </intent>
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT"/>
+            <data android:mimeType="text/plain"/>
+        </intent>
     </queries>
-
 
     <application
         android:label="Clause Verify"
@@ -44,24 +45,16 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
-            <!-- Specifies an Android theme to apply to this Activity as soon as
-                 the Android process has started. This theme is visible to the user
-                 while the Flutter UI initializes. After that, this theme continues
-                 to determine the Window background behind the Flutter UI. -->
             <meta-data
-              android:name="io.flutter.embedding.android.NormalTheme"
-              android:resource="@style/NormalTheme"
-              />
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-
-
-
-         <activity
+        <activity
             android:name="com.aboutyou.dart_packages.sign_in_with_apple.SignInWithAppleCallback"
             android:exported="true">
             <intent-filter>
@@ -73,22 +66,9 @@
                     android:path="/callback" />
             </intent-filter>
         </activity>
-        
-
 
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
-    <!-- Required to query activities that can process text, see:
-         https://developer.android.com/training/package-visibility and
-         https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
-
-         In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.PROCESS_TEXT"/>
-            <data android:mimeType="text/plain"/>
-        </intent>
-    </queries>
 </manifest>

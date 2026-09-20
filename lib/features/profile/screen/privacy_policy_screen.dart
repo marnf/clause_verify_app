@@ -14,31 +14,31 @@ class PrivacyPolicyScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: CustomAppBar(title: 'Privacy Policy'.tr),
-     body: ListView(
-  padding: EdgeInsets.symmetric(horizontal: 16.h),
-  children: [
-    Text(
-      'Your Data Protection Rights'.tr,
-      style: const TextStyle(
-        color: AppColors.gold,
-        fontSize: 13,
-        fontWeight: FontWeight.w500,
+      appBar: CustomAppBar(title: 'privacyPolicy'.tr), // এখানে পরিবর্তন করা হয়েছে
+      body: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 16.h),
+        children: [
+          Text(
+            'yourDataProtectionRights'.tr, // এখানে পরিবর্তন করা হয়েছে
+            style: const TextStyle(
+              color: AppColors.gold,
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'privacyPolicyIntro'.tr, // এখানে পরিবর্তন করা হয়েছে
+            style: const TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 13,
+              height: 1.6,
+            ),
+          ),
+          const SizedBox(height: 20),
+          ...controller.sections.map((section) => _PrivacySectionWidget(section: section)),
+        ],
       ),
-    ),
-    const SizedBox(height: 8),
-    Text(
-      'clauseverify respects your privacy and is committed to protecting your personal data. This Privacy Policy explains how your information is collected, used, and protected when you use the clauseverify application and services.'.tr,
-      style: const TextStyle(
-        color: AppColors.textSecondary,
-        fontSize: 13,
-        height: 1.6,
-      ),
-    ),
-    const SizedBox(height: 20),
-    ...controller.sections.map((section) => _PrivacySectionWidget(section: section)),
-  ],
-),
     );
   }
 }
@@ -62,8 +62,14 @@ class _PrivacySectionWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        ...section.content.map((text) {
-          final isHighlighted = text.startsWith('We do not sell');
+        ...section.content.asMap().entries.map((entry) { // এখানে লজিক পরিবর্তন করা হয়েছে
+          final index = entry.key;
+          final text = entry.value;
+          
+          // যেহেতু "We do not sell" লাইনটি privacyTitle4 এর প্রথম content (privacyContent4_1)
+          // তাই আমরা ইনডেক্স দিয়ে চেক করছি, যাতে সব ভাষায় কাজ করে।
+          final isHighlighted = section.title == 'privacyTitle4'.tr && index == 0;
+
           return Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: isHighlighted

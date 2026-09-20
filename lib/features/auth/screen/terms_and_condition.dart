@@ -21,7 +21,7 @@ class TermsAndCondition extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
               child: CustomAppBar(
-                title: 'Terms & Conditions',
+                title: 'termsConditions'.tr,
                 centerTitle: true,
                 icon: Icons.arrow_back_rounded,
               ),
@@ -58,7 +58,7 @@ class TermsAndCondition extends StatelessWidget {
                         SizedBox(width: 12.w),
                         Expanded(
                           child: Text(
-                            'Terms of Use & AI Disclaimer',
+                            'termsOfUseAiDisclaimer'.tr,
                             style: TextStyle(
                               color: const Color(0xFFC9952A),
                               fontSize: 18.sp,
@@ -71,7 +71,7 @@ class TermsAndCondition extends StatelessWidget {
                     SizedBox(height: 8.h),
 
                     Text(
-                      'Please read carefully before proceeding.',
+                      'pleaseReadCarefullyBeforeProceeding'.tr,
                       style: TextStyle(
                         color: const Color(0xFFB0A090),
                         fontSize: 13.sp,
@@ -92,7 +92,7 @@ class TermsAndCondition extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Important Notice',
+                            'importantNotice'.tr,
                             style: TextStyle(
                               color: const Color(0xFFC9952A),
                               fontSize: 15.sp,
@@ -101,7 +101,7 @@ class TermsAndCondition extends StatelessWidget {
                           ),
                           SizedBox(height: 8.h),
                           Text(
-                            'ClauseVerify analyses contract language using artificial intelligence. Results do not constitute legal counsel and should not be relied upon as a substitute for advice from a qualified lawyer. Qlox Inc. accepts no liability for decisions made based on this analysis.',
+                            'disclaimerNoticeBody'.tr,
                             style: TextStyle(
                               color: const Color(0xFFB0A090),
                               fontSize: 13.sp,
@@ -114,93 +114,77 @@ class TermsAndCondition extends StatelessWidget {
                     SizedBox(height: 24.h),
 
                     // ── 1. Nature of the Service ──
-                    _buildSectionTitle('1. Nature of the Service'),
+                    _buildSectionTitle('disclaimerTitle1'.tr),
                     SizedBox(height: 10.h),
-                    _buildBodyText(
-                      'ClauseVerify is an AI-powered contract analysis tool operated by Qlox Inc. (Ontario, Canada). The application uses artificial intelligence to read, parse, and annotate contract documents. The output produced by ClauseVerify is generated automatically and has not been reviewed by a lawyer or legal professional.',
-                    ),
+                    _buildBodyText('disclaimerBody1'.tr),
                     SizedBox(height: 20.h),
 
                     // ── 2. Not Legal Advice ──
-                    _buildSectionTitle('2. Not Legal Advice'),
+                    _buildSectionTitle('disclaimerTitle2'.tr),
                     SizedBox(height: 10.h),
-                    _buildBodyText(
-                      'The analysis, reports, scores, flags, and recommendations provided by ClauseVerify are for informational purposes only. They do not constitute legal advice, legal opinion, or legal counsel of any kind. ClauseVerify is not a law firm and does not provide legal services.',
-                    ),
+                    _buildBodyText('disclaimerBody2'.tr),
                     SizedBox(height: 20.h),
 
                     // ── 3. Limitations of AI Analysis ──
-                    _buildSectionTitle('3. Limitations of AI Analysis'),
+                    _buildSectionTitle('disclaimerTitle3'.tr),
                     SizedBox(height: 10.h),
-                    _buildBodyText(
-                      'The identification of clauses as abusive, unusual, risky, or non-compliant is based on automated AI analysis and may be:',
-                    ),
+                    _buildBodyText('disclaimerBody3'.tr),
                     SizedBox(height: 8.h),
-                    _buildBulletPoint('Incomplete — not all clauses may be identified or analysed'),
-                    _buildBulletPoint('Inaccurate — AI interpretation may differ from legal interpretation'),
-                    _buildBulletPoint('Not applicable — results may not reflect your specific jurisdiction, province, or local laws'),
-                    _buildBulletPoint('Out of date — laws and regulations change and the AI may not reflect the most current legal standards'),
+                    _buildBulletPoint('disclaimerBullet3_1'.tr),
+                    _buildBulletPoint('disclaimerBullet3_2'.tr),
+                    _buildBulletPoint('disclaimerBullet3_3'.tr),
+                    _buildBulletPoint('disclaimerBullet3_4'.tr),
                     SizedBox(height: 20.h),
 
                     // ── 4. No Warranties ──
-                    _buildSectionTitle('4. No Warranties'),
+                    _buildSectionTitle('disclaimerTitle4'.tr),
                     SizedBox(height: 10.h),
-                    _buildBodyText(
-                      'Qlox Inc. makes no representations or warranties, express or implied, as to the accuracy, completeness, reliability, or fitness for purpose of any analysis produced by ClauseVerify.',
-                    ),
+                    _buildBodyText('disclaimerBody4'.tr),
                     SizedBox(height: 20.h),
 
                     // ── 5. Limitation of Liability ──
-                    _buildSectionTitle('5. Limitation of Liability'),
+                    _buildSectionTitle('disclaimerTitle5'.tr),
                     SizedBox(height: 10.h),
-                    _buildBodyText(
-                      'Qlox Inc. shall not be liable for any loss, damage, financial consequence, or legal outcome arising directly or indirectly from reliance on any analysis, report, score, or recommendation produced by ClauseVerify.',
-                    ),
+                    _buildBodyText('disclaimerBody5'.tr),
                     SizedBox(height: 20.h),
 
                     // ── 6. Consult a Lawyer ──
-                    _buildSectionTitle('6. Consult a Lawyer'),
+                    _buildSectionTitle('disclaimerTitle6'.tr),
                     SizedBox(height: 10.h),
-                    _buildBodyText(
-                      'If you have questions about a contract, its terms, or your legal rights and obligations, you should consult a licensed legal professional in your jurisdiction before signing or acting on any contract.',
-                    ),
+                    _buildBodyText('disclaimerBody6'.tr),
                     SizedBox(height: 20.h),
 
-                    // ── Data & Privacy ──
-                    _buildSectionTitle('7. Data & Privacy'),
+                    // ── 7. Data & Privacy ──
+                    _buildSectionTitle('disclaimerTitle7'.tr),
                     SizedBox(height: 10.h),
-                    _buildBulletPoint('Your uploaded documents are automatically deleted from our servers within 48 hours of the scan.'),
-                    _buildBulletPoint('We do not share your data with third parties without consent.'),
-                    _buildBulletPoint('You retain full ownership of your uploaded content.'),
-                    _buildBulletPoint('Documents are processed by AI only and are never read by any human employee.'),
+                    _buildBulletPoint('disclaimerBullet7_1'.tr),
+                    _buildBulletPoint('disclaimerBullet7_2'.tr),
+                    _buildBulletPoint('disclaimerBullet7_3'.tr),
+                    _buildBulletPoint('disclaimerBullet7_4'.tr),
                     SizedBox(height: 20.h),
 
                     // ── 8. Acceptable Use ──
-                    _buildSectionTitle('8. Acceptable Use'),
+                    _buildSectionTitle('disclaimerTitle8'.tr),
                     SizedBox(height: 10.h),
-                    _buildBodyText('You agree not to:'),
+                    _buildBodyText('disclaimerBody8'.tr),
                     SizedBox(height: 8.h),
-                    _buildBulletPoint('Use the App for any unlawful purpose'),
-                    _buildBulletPoint('Upload documents containing content that violates the rights of any third party'),
-                    _buildBulletPoint('Attempt to reverse-engineer, decompile, or extract the source code of the App'),
-                    _buildBulletPoint('Use automated tools to access the App in a manner that exceeds normal usage'),
-                    _buildBulletPoint('Impersonate any person or entity or misrepresent your affiliation'),
+                    _buildBulletPoint('disclaimerBullet8_1'.tr),
+                    _buildBulletPoint('disclaimerBullet8_2'.tr),
+                    _buildBulletPoint('disclaimerBullet8_3'.tr),
+                    _buildBulletPoint('disclaimerBullet8_4'.tr),
+                    _buildBulletPoint('disclaimerBullet8_5'.tr),
                     SizedBox(height: 20.h),
 
                     // ── 9. Governing Law ──
-                    _buildSectionTitle('9. Governing Law'),
+                    _buildSectionTitle('disclaimerTitle9'.tr),
                     SizedBox(height: 10.h),
-                    _buildBodyText(
-                      'These Terms shall be governed by and construed in accordance with the laws of the Province of Ontario and the federal laws of Canada. Any dispute arising under these Terms shall be subject to the exclusive jurisdiction of the courts of Ontario.',
-                    ),
+                    _buildBodyText('disclaimerBody9'.tr),
                     SizedBox(height: 20.h),
 
                     // ── 10. Acceptance ──
-                    _buildSectionTitle('10. Acceptance'),
+                    _buildSectionTitle('disclaimerTitle10'.tr),
                     SizedBox(height: 10.h),
-                    _buildBodyText(
-                      'By checking the box below and continuing, you acknowledge that you have read, understood, and agree to these Terms. You understand that the AI analysis is for informational purposes and that you are solely responsible for any decisions made based on the results.',
-                    ),
+                    _buildBodyText('disclaimerBody10'.tr),
                     SizedBox(height: 28.h),
 
                     // ── Divider ──
@@ -242,7 +226,7 @@ class TermsAndCondition extends StatelessWidget {
                             SizedBox(width: 12.w),
                             Expanded(
                               child: Text(
-                                'I have read and agree to the Terms of Use & AI Disclaimer.',
+                                'iHaveReadAndAgreeToTheTermsOfUseAiDisclaimer'.tr,
                                 style: TextStyle(
                                   color: const Color(0xFFB0A090),
                                   fontSize: 14.sp,
@@ -257,7 +241,7 @@ class TermsAndCondition extends StatelessWidget {
                     SizedBox(height: 24.h),
 
                     // ── Accept Button ──
-                    Obx(
+                   Obx(
                       () => SizedBox(
                         width: double.infinity,
                         height: 54.h,
@@ -273,16 +257,20 @@ class TermsAndCondition extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             elevation: 0,
+                            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 0), 
                           ),
-                          child: Text(
-                            'Accept & Continue',
-                            style: TextStyle(
-                              color: controller.isAgreed.value
-                                  ? Colors.white
-                                  : Colors.white38,
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.5,
+                          child: FittedBox( 
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              'acceptContinue'.tr,
+                              style: TextStyle(
+                                color: controller.isAgreed.value
+                                    ? Colors.white
+                                    : Colors.white38,
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.5,
+                              ),
                             ),
                           ),
                         ),

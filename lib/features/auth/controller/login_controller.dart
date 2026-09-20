@@ -120,7 +120,7 @@ class LoginController extends GetxController {
     }
   }
 
-  void loginWithGoogle() async {
+ void loginWithGoogle() async {
     if (isGoogleLoading.value) return;
     isGoogleLoading.value = true;
 
@@ -157,10 +157,11 @@ class LoginController extends GetxController {
       } else {
         Get.snackbar(
           'error'.tr,
-          'Google login was cancelled or failed. Please try again.',
+          'Google login failed: ${AuthService.lastGoogleError ?? "unknown reason"}',
           snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.red,
           colorText: Colors.white,
+          duration: const Duration(seconds: 6),
         );
       }
     } catch (e) {
@@ -170,6 +171,7 @@ class LoginController extends GetxController {
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red,
         colorText: Colors.white,
+        duration: const Duration(seconds: 6),
       );
     } finally {
       isGoogleLoading.value = false;

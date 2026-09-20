@@ -385,6 +385,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
+import 'package:clause_verify/core/common/widgets/ai_consent_modal.dart';
+
 
 class UploadController extends GetxController {
   final RxList<File> selectedFiles = <File>[].obs;
@@ -661,28 +663,34 @@ class UploadController extends GetxController {
     return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
   }
 
-  // ══════════════════════════════════════
-  //  SUBMIT FLOW
-  // ══════════════════════════════════════
-  Future<void> submitForAnalysis() async {
-    if (selectedFiles.isEmpty) {
-      Get.snackbar(
-        'noFiles'.tr,
-        'noFilesMessage'.tr,
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: AppColors.error,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(16),
-        borderRadius: 8,
-      );
-      return;
-    }
 
-    final Country? confirmedCountry = await _showCountryConfirmation();
-    if (confirmedCountry == null) return; // User cancelled
-
-    _performUpload(confirmedCountry);
+// ══════════════════════════════════════
+//  SUBMIT FLOW
+// ══════════════════════════════════════
+Future<void> submitForAnalysis() async {
+  if (selectedFiles.isEmpty) {
+    Get.snackbar(
+      'noFiles'.tr,
+      'noFilesMessage'.tr,
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: AppColors.error,
+      colorText: Colors.white,
+      margin: const EdgeInsets.all(16),
+      borderRadius: 8,
+    );
+    return;
   }
+
+  // ১. আগে country select
+  final Country? confirmedCountry = await _showCountryConfirmation();
+  if (confirmedCountry == null) return; // User cancelled
+
+  // ২. তারপর AI consent (প্রতিবার দেখাবে)
+  final agreed = await AIConsentModal.show();
+  if (!agreed) return;
+
+  _performUpload(confirmedCountry);
+}
 
   Future<Country?> _showCountryConfirmation() async {
     final defaultCountry = detectedCountry.value ?? Country.parse('CA');

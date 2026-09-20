@@ -36,6 +36,10 @@
     <string>ClauseVerify needs your location to suggest the correct jurisdiction for contract analysis.</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
     <string>ClauseVerify needs your location to suggest the correct jurisdiction for contract analysis.</string>
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

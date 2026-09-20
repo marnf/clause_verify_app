@@ -1,9 +1,11 @@
+
 import 'package:clause_verify/core/common/widgets/language_modal.dart';
 import 'package:clause_verify/core/localization/localization_controller.dart';
 import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:clause_verify/core/utils/constants/app_sizer.dart';
 import 'package:clause_verify/core/utils/constants/icon_path.dart';
 import 'package:clause_verify/features/profile/controller/profile_controller.dart';
+import 'package:clause_verify/routes/app_routes.dart'; // 👈 AppRoute ব্যবহার করার জন্য ইম্পোর্ট
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -38,13 +40,15 @@ class ProfileScreen extends StatelessWidget {
                       _buildLanguageRow(),
                       SizedBox(height: 32.h),
 
-                      // ── Legal & Privacy ──
+                       // ── Legal & Privacy ──
                       _buildSectionTitle('legalAndPrivacy'.tr),
                       SizedBox(height: 12.h),
                       _buildLegalCard(),
-                      SizedBox(height: 40.h),
+                      SizedBox(height: 32.h), 
 
-                      // ── Log Out ──
+                      // ── Account / Logout Section ──
+                      _buildSectionTitle('Account'), 
+                      SizedBox(height: 12.h),
                       _buildLogoutButton(),
                       
                       // ✅ নতুন Delete Account Button
@@ -248,26 +252,38 @@ class ProfileScreen extends StatelessWidget {
   }
 
   // ══════════════════════════════════════
-  //  Legal & Privacy Card
+  //  Legal & Privacy Card (Modified)
   // ══════════════════════════════════════
   Widget _buildLegalCard() {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.cardBorder, width: 1),
-      ),
-      child: Column(
-        children: [
-          _buildLegalItem('privacyPolicy'.tr, IconPath.security),
-          _buildDivider(),
-          _buildLegalItem('termsConditions'.tr, IconPath.terms),
-          _buildDivider(),
-          _buildLegalItem('legalDisclaimer'.tr, IconPath.ai),
-        ],
-      ),
-    );
-  }
+  return Container(
+    decoration: BoxDecoration(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(color: AppColors.cardBorder, width: 1),
+    ),
+    child: Column(
+      children: [
+        _buildLegalItem(
+          'termsOfUse'.tr,
+          IconPath.terms,
+          onTap: () => Get.toNamed(AppRoute.termsOfUseScreen), 
+        ),
+        _buildDivider(),
+        _buildLegalItem(
+          'privacyPolicy'.tr,
+          IconPath.security,
+          onTap: () => Get.toNamed(AppRoute.privacyPolicyScreen), 
+        ),
+        _buildDivider(),
+        _buildLegalItem(
+          'helpFaq'.tr,
+          IconPath.ai,
+          onTap: () => Get.toNamed(AppRoute.helpFaqScreen), 
+        ),
+      ],
+    ),
+  );
+}
 
   Widget _buildDivider() {
     return Padding(
@@ -354,7 +370,7 @@ class ProfileScreen extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.symmetric(vertical: 14.h),
         decoration: BoxDecoration(
-          color: Colors.transparent, // Logout থেকে স্টাইল আলাদা করার জন্য ট্রান্সপারেন্ট
+          color: Colors.transparent, 
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: AppColors.error.withOpacity(0.6), width: 1.5),
         ),
@@ -593,7 +609,7 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
           )),
-      barrierDismissible: false, // বাইরে ক্লিক করে বন্ধ না করার জন্য
+      barrierDismissible: false, 
     );
   }
 }

@@ -390,6 +390,7 @@ class AuthService {
   static String? _refreshToken;
   static Map<String, dynamic>? _userData;
   static String _selectedCurrency = 'USD';
+   static String? lastGoogleError; 
 
   // ─────────────────────────────────────────
   // Init & Ensure Initialized
@@ -627,10 +628,15 @@ class AuthService {
   // ─────────────────────────────────────────
 
   static Future<bool> signInWithGoogle() async {
+    lastGoogleError = null;
     try {
       final googleSignIn = GoogleSignIn(scopes: ['email']);
       final googleUser = await googleSignIn.signIn();
-      if (googleUser == null) return false;
+      if (googleUser == null) {
+        lastGoogleError = 'User cancelled or Google account picker failed to open';
+        print('❌ Google Sign-In: User cancelled or returned null');
+        return false;
+      }
 
       final googleAuth = await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
@@ -640,25 +646,31 @@ class AuthService {
 
       final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
       final idToken = await userCredential.user?.getIdToken();
-      if (idToken == null) return false;
+      if (idToken == null) {
+        lastGoogleError = 'Firebase idToken was null';
+        print('❌ Google Sign-In: idToken is null');
+        return false;
+      }
 
-      // ✅ নতুন API তে id_token পাঠানো হচ্ছে
       final networkCaller = NetworkCaller();
       final response = await networkCaller.postRequest(
         Endpoints.googleAuth,
         body: {'id_token': idToken},
-        requiresAuth: false, // লগইনের সময় কোনো Auth header লাগবে না
+        requiresAuth: false,
       );
 
       if (response.isSuccess && response.responseData != null) {
         await saveGoogleLoginData(response.responseData!);
         return true;
       } else {
+        lastGoogleError = 'Backend error: ${response.errorMessage}';
         print('❌ Google Backend Error: ${response.errorMessage}');
         return false;
       }
-    } catch (e) {
+    } catch (e, stack) {
+      lastGoogleError = e.toString();
       print('❌ Google login error: $e');
+      print('❌ Stack trace: $stack');
       return false;
     }
   }

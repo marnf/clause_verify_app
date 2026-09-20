@@ -14,12 +14,12 @@ class TermsOfUseScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: CustomAppBar(title: 'Terms of Use'.tr),
+      appBar: CustomAppBar(title: 'termsOfUse'.tr), // এখানে পরিবর্তন করা হয়েছে
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 16.h),
         children: [
           Text(
-            'clauseverify – Legal Terms and Conditions'.tr,
+            'termsLegalIntro'.tr, // এখানে পরিবর্তন করা হয়েছে
             style: const TextStyle(
               color: AppColors.textSecondary,
               fontSize: 13,
@@ -28,8 +28,7 @@ class TermsOfUseScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'By accessing or using the clauseverify application, you agree to these Terms of Use. If you do not agree, you must discontinue use of the Application.'
-                .tr,
+            'termsIntroBody'.tr, // এখানে পরিবর্তন করা হয়েছে
             style: const TextStyle(
               color: AppColors.textSecondary,
               fontSize: 13,

@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:clause_verify/core/utils/constants/app_sizer.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:file_picker/file_picker.dart'; // ✅ flutter_file_dialog এর বদলে file_picker ব্যবহার করা হচ্ছে
 
 class PdfViewerScreen extends StatefulWidget {
   const PdfViewerScreen({Key? key}) : super(key: key);
@@ -21,7 +22,7 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
   final RxBool isPdfRendering = true.obs;
   final RxBool hasError = false.obs;
   final RxBool isSavingToDevice = false.obs;
-  
+
   int totalPages = 0;
   int currentPage = 0;
 
@@ -39,7 +40,7 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
 
       final headers = {'ngrok-skip-browser-warning': 'true'};
       final response = await http.get(Uri.parse(pdfUrl), headers: headers);
-      
+
       bool isPdf = response.headers['content-type']?.contains('pdf') ?? false;
       if (!isPdf && response.bodyBytes.length > 5) {
         isPdf = String.fromCharCodes(response.bodyBytes.sublist(0, 5)) == '%PDF-';
@@ -49,65 +50,61 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
         final dir = await getTemporaryDirectory();
         final file = File('${dir.path}/downloaded_report.pdf');
         await file.writeAsBytes(response.bodyBytes);
-        
+
         localPath.value = file.path;
         isDownloadingFile.value = false;
       } else {
         throw Exception('Invalid file received.');
       }
-    } catch (e) {
+    } catch (e, stack) {
+      debugPrint('Download error: $e');
+      debugPrint('$stack');
       hasError.value = true;
       isDownloadingFile.value = false;
     }
   }
 
+  // ══════════════════════════════════════
+  //  ✅ FIXED: file_picker দিয়ে cross-platform save
+  //  (flutter_file_dialog এর বদলে — Android + iOS দুটোতেই কাজ করে)
+  // ══════════════════════════════════════
   Future<void> _saveToDevice() async {
     if (localPath.value.isEmpty || isSavingToDevice.value) return;
     try {
       isSavingToDevice.value = true;
-      
-      // Try saving to Downloads folder
-      try {
-        final directory = Directory('/storage/emulated/0/Download');
-        if (await directory.exists()) {
-          final timestamp = DateTime.now().millisecondsSinceEpoch;
-          final newFilePath = '${directory.path}/ClauseVerify_Report_$timestamp.pdf';
-          await File(localPath.value).copy(newFilePath);
-          
-          _showPremiumNotification(
-            title: 'downloaded'.tr, 
-            message: 'reportSavedToDownloads'.tr,
-            isSuccess: true,
-          );
-          return; // Exit if successful
-        }
-      } catch (e) {
-        print('❌ Android Download folder failed: $e');
-      }
 
-      // Fallback for Android 11+ or if Downloads folder fails
-      final externalDir = await getExternalStorageDirectory();
-      if (externalDir != null) {
-        final timestamp = DateTime.now().millisecondsSinceEpoch;
-        final newFilePath = '${externalDir.path}/ClauseVerify_Report_$timestamp.pdf';
-        await File(localPath.value).copy(newFilePath);
-        
+      final file = File(localPath.value);
+      final bytes = await file.readAsBytes();
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final fileName = 'ClauseVerify_Report_$timestamp.pdf';
+
+      // bytes পাস করা must — এটা ছাড়া মোবাইল প্ল্যাটফর্মে ফাইল আসলে write হয় না,
+      // শুধু dialog খুলে কিন্তু কিছু save হয় না
+      final String? outputPath = await FilePicker.platform.saveFile(
+        dialogTitle: 'saveReport'.tr,
+        fileName: fileName,
+        bytes: bytes,
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+      );
+
+      if (outputPath != null) {
         _showPremiumNotification(
-          title: 'saved'.tr, 
-          message: 'reportSavedToAppStorage'.tr,
+          title: 'downloaded'.tr,
+          message: 'reportSavedToDownloads'.tr,
           isSuccess: true,
         );
-      } else {
-         _showPremiumNotification(
-          title: 'error'.tr, 
-          message: 'couldNotSaveFile'.tr,
-          isSuccess: false,
-        );
       }
-    } catch (e) {
-       _showPremiumNotification(
-        title: 'error'.tr, 
-        message: 'somethingWentWrong'.tr,
+      // outputPath == null মানে সাধারণত user নিজে cancel করেছে,
+      // এটাকে error হিসেবে না দেখানোই ভালো
+    } catch (e, stack) {
+      debugPrint('Save error: $e');
+      debugPrint('$stack');
+      _showPremiumNotification(
+        title: 'error'.tr,
+        // 👇 ডিবাগ করার জন্য আপাতত raw error দেখাচ্ছি, exact কারণ বের করতে সাহায্য করবে।
+        // প্রোডাকশনে release দেওয়ার আগে এটা আবার 'somethingWentWrong'.tr করে দিন।
+        message: 'Something went wrong: $e',
         isSuccess: false,
       );
     } finally {
@@ -121,7 +118,7 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
       await Share.shareXFiles([XFile(localPath.value)], text: 'clauseverifyAnalysisReport'.tr);
     } catch (e) {
       _showPremiumNotification(
-        title: 'error'.tr, 
+        title: 'error'.tr,
         message: 'couldNotShareFile'.tr,
         isSuccess: false,
       );
@@ -222,6 +219,7 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
                         isPdfRendering.value = false;
                       },
                       onError: (error) {
+                        debugPrint('PDFView render error: $error');
                         hasError.value = true;
                         isDownloadingFile.value = false;
                       },
@@ -233,14 +231,14 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
                       },
                     ),
                     if (isPdfRendering.value)
-                      const Center(child: CircularProgressIndicator(color: const Color(0xFFB8860B))),
+                      const Center(child: CircularProgressIndicator(color: Color(0xFFB8860B))),
                   ],
                 );
               }
               return const SizedBox.shrink();
             }),
           ),
-          
+
           // ✅ নিচে কমপ্যাক্ট বাটন বার
           Obx(() {
             if (isDownloadingFile.value || hasError.value || localPath.value.isEmpty) return const SizedBox.shrink();
@@ -293,7 +291,7 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
                             children: [
                               Icon(Icons.share_rounded, color: const Color(0xFFB8860B), size: 16.sp),
                               SizedBox(width: 6.w),
-                              Text('share'.tr, style:  TextStyle(color: Color(0xFFB8860B), fontSize: 13.sp, fontWeight: FontWeight.w700)),
+                              Text('share'.tr, style: TextStyle(color: Color(0xFFB8860B), fontSize: 13.sp, fontWeight: FontWeight.w700)),
                             ],
                           ),
                         ),

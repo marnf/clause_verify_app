@@ -14,13 +14,13 @@ class HelpFaqScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: CustomAppBar(title: 'Help & FAQ'.tr),
+      appBar: CustomAppBar(title: 'helpFaq'.tr), // এখানে পরিবর্তন করা হয়েছে
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         children: [
           const SizedBox(height: 4),
           Text(
-            'Find answers to common questions about clauseverify'.tr,
+            'findAnswersClauseverify'.tr, // এখানে পরিবর্তন করা হয়েছে
             style: const TextStyle(
               color: AppColors.textSecondary,
               fontSize: 13,

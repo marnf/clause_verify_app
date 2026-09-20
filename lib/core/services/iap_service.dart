@@ -48,7 +48,8 @@ class IAPService {
 
   Future<CustomerInfo?> purchasePackage(Package package) async {
     try {
-      return await Purchases.purchasePackage(package);
+      final result = await Purchases.purchasePackage(package);
+      return result.customerInfo;
     } catch (e) {
       print('❌ purchasePackage error: $e');
       rethrow;
@@ -65,7 +66,8 @@ class IAPService {
         print('❌ Product not found: $productId');
         return null;
       }
-      return await Purchases.purchaseStoreProduct(products.first);
+      final result = await Purchases.purchaseStoreProduct(products.first);
+      return result.customerInfo;
     } catch (e) {
       print('❌ purchaseProduct error: $e');
       rethrow;
