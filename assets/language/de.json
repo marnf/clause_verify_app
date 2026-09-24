@@ -490,7 +490,44 @@
   "disclaimerTitle9": "9. Anwendbares Recht",
   "disclaimerBody9": "Diese Bedingungen unterliegen den Gesetzen der Provinz Ontario und den Bundesgesetzen Kanadas und sind in Übereinstimmung mit diesen auszulegen. Alle Streitigkeiten, die im Rahmen dieser Bedingungen entstehen, unterliegen der ausschließlichen Zuständigkeit der Gerichte von Ontario.",
   "disclaimerTitle10": "10. Zustimmung",
-  "disclaimerBody10": "Durch das Ankreuzen des untenstehenden Kästchens und das Fortfahren bestätigen Sie, dass Sie diese Bedingungen gelesen, verstanden und akzeptiert haben. Sie verstehen, dass die KI-Analyse nur Informationszwecken dient und dass Sie allein für Entscheidungen verantwortlich sind, die auf den Ergebnissen basieren."
+  "disclaimerBody10": "Durch das Ankreuzen des untenstehenden Kästchens und das Fortfahren bestätigen Sie, dass Sie diese Bedingungen gelesen, verstanden und akzeptiert haben. Sie verstehen, dass die KI-Analyse nur Informationszwecken dient und dass Sie allein für Entscheidungen verantwortlich sind, die auf den Ergebnissen basieren.",
+
+
+
+
+  "subscriptionTitle": "Abonnement",
+"currentPlanLabel": "AKTUELLER PLAN",
+"oneTimePurchases": "Einmalige Käufe",
+"oneTimePurchasesSubtitle": "Wird nach dem Kauf automatisch Ihrem Konto hinzugefügt — keine Verpflichtung.",
+"subscriptionPlans": "Abo-Pläne",
+"subscriptionPlansSubtitle": "Erhalten Sie jeden Monat mehr Scans zu einem besseren Preis.",
+"singleScanTitle": "Einzelscan",
+"singleScanFeature1": "1 Vertragsscan-Guthaben",
+"singleScanFeature2": "Nur bezahlen, wenn Sie es brauchen",
+"pdfAddonTitle": "PDF-Bericht",
+"pdfAddonFeature1": "1 herunterladbarer PDF-Bericht",
+"pdfAddonFeature2": "Zusatz für einen abgeschlossenen Scan",
+"monthlyPlanTitle": "Monatlich",
+"monthlyFeature1": "50 Scans pro Monat",
+"monthlyFeature2": "Nicht genutzte Scans verfallen",
+"cancelAnytime": "Jederzeit kündbar",
+"unlimitedPlanTitle": "Unbegrenzt",
+"unlimitedFeature1": "Unbegrenzte Scans",
+"unlimitedFeature2": "Faire Nutzung: bis zu 200 Scans/Monat",
+"bestValueBadge": "BESTER WERT",
+"buyButtonLabel": "Kaufen",
+"subscribeButtonLabel": "Abonnieren",
+"currentPlanButton": "Aktueller Plan",
+"manageSectionTitle": "Verwalten",
+"cancelSubscriptionButton": "Abo kündigen",
+"restorePurchasesButton": "Käufe wiederherstellen",
+"subscriptionFooterNote": "Abonnements verlängern sich automatisch bis zur Kündigung. Verwalten oder kündigen Sie jederzeit in Google Play.",
+"tryAgainButton": "Erneut versuchen",
+"renewsOn": "Verlängert sich am @date",
+"cancelledAccessUntil": "Gekündigt — Zugriff bis @date",
+"cancelSubDialogTitle": "Abo kündigen?",
+"cancelSubDialogBody": "Sie werden zu Google Play weitergeleitet, um zu kündigen. Ihre Vorteile bleiben bis zum Ende des aktuellen Abrechnungszeitraums bestehen.",
+"keepPlanButton": "Plan behalten"
   
 
   

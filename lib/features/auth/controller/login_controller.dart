@@ -1,8 +1,7 @@
-
 import 'package:clause_verify/core/localization/localization_controller.dart';
-import 'package:clause_verify/core/services/Auth_service.dart';
+import 'package:clause_verify/core/services/auth_service.dart';
 import 'package:clause_verify/core/services/endpoints.dart';
-import 'package:clause_verify/core/services/iap_service.dart';
+
 import 'package:clause_verify/core/services/network_caller.dart';
 import 'package:clause_verify/routes/app_routes.dart';
 import 'package:flutter/material.dart';
@@ -75,16 +74,8 @@ class LoginController extends GetxController {
 
       if (response.isSuccess && response.responseData != null) {
         // Save all login data via AuthService
+        // (RevenueCat login এখন AuthService.saveLoginData-এর ভেতরেই হয়)
         await AuthService.saveLoginData(response.responseData!);
-
-        // RevenueCat identify
-        try {
-          final iapService = IAPService();
-          await iapService.initialize();
-          await iapService.loginUser(email);
-        } catch (e) {
-          print('⚠️ RevenueCat identify failed (continuing): $e');
-        }
 
         // Language sync
         try {
@@ -128,16 +119,7 @@ class LoginController extends GetxController {
       final success = await AuthService.signInWithGoogle();
 
       if (success == true) {
-        final userEmail = AuthService.userEmail;
-        if (userEmail != null && userEmail.isNotEmpty) {
-          try {
-            final iapService = IAPService();
-            await iapService.initialize();
-            await iapService.loginUser(userEmail);
-          } catch (e) {
-            print('⚠️ RevenueCat identify failed (continuing): $e');
-          }
-        }
+        // (RevenueCat login এখন AuthService.saveGoogleLoginData-এর ভেতরেই হয়)
 
         try {
           final localizationController = Get.find<LocalizationController>();
@@ -186,16 +168,7 @@ class LoginController extends GetxController {
       final success = await AuthService.signInWithApple();
 
       if (success == true) {
-        final userEmail = AuthService.userEmail;
-        if (userEmail != null && userEmail.isNotEmpty) {
-          try {
-            final iapService = IAPService();
-            await iapService.initialize();
-            await iapService.loginUser(userEmail);
-          } catch (e) {
-            print('⚠️ RevenueCat identify failed (continuing): $e');
-          }
-        }
+        // (RevenueCat login এখন AuthService.saveGoogleLoginData-এর ভেতরেই হয়)
 
         try {
           final localizationController = Get.find<LocalizationController>();

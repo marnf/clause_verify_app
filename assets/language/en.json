@@ -490,5 +490,42 @@
   "disclaimerTitle9": "9. Governing Law",
   "disclaimerBody9": "These Terms shall be governed by and construed in accordance with the laws of the Province of Ontario and the federal laws of Canada. Any dispute arising under these Terms shall be subject to the exclusive jurisdiction of the courts of Ontario.",
   "disclaimerTitle10": "10. Acceptance",
-  "disclaimerBody10": "By checking the box below and continuing, you acknowledge that you have read, understood, and agree to these Terms. You understand that the AI analysis is for informational purposes and that you are solely responsible for any decisions made based on the results."
+  "disclaimerBody10": "By checking the box below and continuing, you acknowledge that you have read, understood, and agree to these Terms. You understand that the AI analysis is for informational purposes and that you are solely responsible for any decisions made based on the results.",
+
+
+
+
+  "subscriptionTitle": "Subscription",
+"currentPlanLabel": "CURRENT PLAN",
+"oneTimePurchases": "One-time purchases",
+"oneTimePurchasesSubtitle": "Added to your account automatically after purchase — no commitment.",
+"subscriptionPlans": "Subscription plans",
+"subscriptionPlansSubtitle": "Get more scans every month at a better value.",
+"singleScanTitle": "Single Scan",
+"singleScanFeature1": "1 contract scan credit",
+"singleScanFeature2": "Pay only when you need it",
+"pdfAddonTitle": "PDF Report",
+"pdfAddonFeature1": "1 downloadable PDF report",
+"pdfAddonFeature2": "Add-on for a completed scan",
+"monthlyPlanTitle": "Monthly",
+"monthlyFeature1": "50 scans per month",
+"monthlyFeature2": "Unused scans do not roll over",
+"cancelAnytime": "Cancel anytime",
+"unlimitedPlanTitle": "Unlimited",
+"unlimitedFeature1": "Unlimited scans",
+"unlimitedFeature2": "Fair use: up to 200 scans per month",
+"bestValueBadge": "BEST VALUE",
+"buyButtonLabel": "Buy",
+"subscribeButtonLabel": "Subscribe",
+"currentPlanButton": "Current plan",
+"manageSectionTitle": "Manage",
+"cancelSubscriptionButton": "Cancel Subscription",
+"restorePurchasesButton": "Restore Purchases",
+"subscriptionFooterNote": "Subscriptions renew automatically until cancelled. Manage or cancel anytime in Google Play.",
+"tryAgainButton": "Try again",
+"renewsOn": "Renews on @date",
+"cancelledAccessUntil": "Cancelled — access until @date",
+"cancelSubDialogTitle": "Cancel Subscription?",
+"cancelSubDialogBody": "You will be taken to Google Play to cancel. You keep your plan benefits until the end of the current billing period.",
+"keepPlanButton": "Keep plan"
 }

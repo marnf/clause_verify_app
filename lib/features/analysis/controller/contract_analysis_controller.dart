@@ -1,6 +1,7 @@
 import 'package:clause_verify/core/services/endpoints.dart';
 import 'package:clause_verify/core/services/network_caller.dart';
 import 'package:clause_verify/features/analysis/model/analysis_result_model.dart';
+import 'package:clause_verify/features/subscription/utils/paywall_guard.dart';
 import 'package:clause_verify/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,37 +10,34 @@ import 'dart:io';
 
 class ContractAnalysisController extends GetxController with GetSingleTickerProviderStateMixin {
   late AnimationController progressController;
-  
   final NetworkCaller _networkCaller = NetworkCaller();
-  
+
   List<File> filesToUpload = [];
   String lawCountry = '';
-  
-  // এখানে .tr যুক্ত করা হয়েছে
+
   List<AnalysisStep> get analysisSteps => [
-    AnalysisStep(title: 'uploadingDocuments'.tr, duration: 5), 
-    AnalysisStep(title: 'analyzingContractClauses'.tr, duration: 7), 
-    AnalysisStep(title: 'identifyingLegalRisks'.tr, duration: 6), 
-    AnalysisStep(title: 'evaluatingCompliance'.tr, duration: 6), 
-    AnalysisStep(title: 'generatingFinalReport'.tr, duration: 6), 
+    AnalysisStep(title: 'uploadingDocuments'.tr, duration: 5),
+    AnalysisStep(title: 'analyzingContractClauses'.tr, duration: 7),
+    AnalysisStep(title: 'identifyingLegalRisks'.tr, duration: 6),
+    AnalysisStep(title: 'evaluatingCompliance'.tr, duration: 6),
+    AnalysisStep(title: 'generatingFinalReport'.tr, duration: 6),
   ];
-  
+
   int get totalStepsDuration => analysisSteps.fold(0, (sum, step) => sum + step.duration);
-  
+
   RxInt currentStepIndex = 0.obs;
   RxDouble overallProgress = 0.0.obs;
   RxInt remainingSeconds = 30.obs;
   RxString currentStepTitle = ''.obs;
-  
+
   Timer? _stepTimer;
   Timer? _countdownTimer;
   DateTime? _startTime;
-  bool _isUploadDone = false;
 
   @override
   void onInit() {
     super.onInit();
-    
+
     final args = Get.arguments;
     if (args != null && args is Map) {
       filesToUpload = List<File>.from(args['files'] ?? []);
@@ -53,18 +51,18 @@ class ContractAnalysisController extends GetxController with GetSingleTickerProv
 
   void _startAnalysisAnimation() {
     remainingSeconds.value = totalStepsDuration;
-    
+
     progressController = AnimationController(
       duration: Duration(seconds: totalStepsDuration),
       vsync: this,
     );
-    
+
     progressController.addListener(() {
       overallProgress.value = progressController.value;
     });
-    
+
     progressController.forward();
-    
+
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (remainingSeconds.value > 0) {
         remainingSeconds.value--;
@@ -72,7 +70,7 @@ class ContractAnalysisController extends GetxController with GetSingleTickerProv
         timer.cancel();
       }
     });
-    
+
     _processNextStep();
   }
 
@@ -80,9 +78,10 @@ class ContractAnalysisController extends GetxController with GetSingleTickerProv
     if (currentStepIndex.value < analysisSteps.length) {
       final step = analysisSteps[currentStepIndex.value];
       currentStepTitle.value = step.title;
-      
+
       _stepTimer = Timer(Duration(seconds: step.duration), () {
         currentStepIndex.value++;
+
         if (currentStepIndex.value < analysisSteps.length) {
           _processNextStep();
         } else {
@@ -104,31 +103,34 @@ class ContractAnalysisController extends GetxController with GetSingleTickerProv
         },
       );
 
-      _isUploadDone = true;
-
       if (response.isSuccess && response.responseData != null) {
         _tryNavigateToResult(response.responseData!);
+      } else if (response.statusCode == 402) {
+        // Backend বলছে scan credit/plan নেই: Subscription page-এ পাঠাও
+        _cancelTimers();
+        await PaywallGuard.handle(response);
+        Get.back();
       } else {
-        _handleError(response.errorMessage ?? 'uploadFailedPleaseTryAgain'.tr);
+        _handleError(response.errorMessage);
       }
     } catch (e) {
-      _isUploadDone = true;
       _handleError('anErrorOccurred'.trParams({'error': e.toString()}));
     }
   }
 
   void _tryNavigateToResult(Map<String, dynamic> responseData) {
     final elapsedSeconds = DateTime.now().difference(_startTime!).inSeconds;
-    
+
     void navigateAction() {
       final dataMap = responseData['data'] as Map<String, dynamic>?;
+
       if (dataMap == null) {
         _handleError('invalidResponseDataFormat'.tr);
         return;
       }
 
       final resultModel = AnalysisResultModel.fromJson(dataMap);
-      
+
       Get.offNamed(
         AppRoute.analysisResultScreen,
         arguments: resultModel,
@@ -145,13 +147,15 @@ class ContractAnalysisController extends GetxController with GetSingleTickerProv
 
   void _handleError(String message) {
     _cancelTimers();
+
     Get.snackbar(
-      'error'.tr, // 'Error' এর জন্য আগে থেকেই JSON এ আছে
+      'error'.tr,
       message,
       snackPosition: SnackPosition.TOP,
       backgroundColor: Colors.redAccent,
       colorText: Colors.white,
     );
+
     Future.delayed(const Duration(seconds: 2), () {
       Get.back();
     });
@@ -177,5 +181,6 @@ class ContractAnalysisController extends GetxController with GetSingleTickerProv
 class AnalysisStep {
   final String title;
   final int duration;
+
   AnalysisStep({required this.title, required this.duration});
 }

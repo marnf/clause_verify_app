@@ -1,6 +1,3 @@
-
-// lib/routes/app_routes.dart
-
 import 'package:clause_verify/features/analysis/controller/analysis_result_controller.dart';
 import 'package:clause_verify/features/analysis/screen/analysis_result_screen.dart';
 import 'package:clause_verify/features/analysis/screen/contract_analysis_screen.dart';
@@ -13,45 +10,31 @@ import 'package:clause_verify/features/auth/screen/email_verification_screen.dar
 import 'package:clause_verify/features/auth/screen/otp_verification_screen_for_registration.dart';
 import 'package:clause_verify/features/auth/screen/reset_password_screen.dart';
 import 'package:clause_verify/features/camera/screens/camera_screen.dart';
-import 'package:clause_verify/features/history/controller/history_controller.dart';
 import 'package:clause_verify/features/history/screen/history_screen.dart';
 import 'package:clause_verify/features/home/controllers/home_controller.dart';
 import 'package:clause_verify/features/nav_bar/controllers/nav_bar_controller.dart';
 import 'package:clause_verify/features/onboarding/controller/onboarding_controller.dart';
-import 'package:clause_verify/features/pricing/controller/subscription_controller.dart';
-import 'package:clause_verify/features/pricing/screen/subscription_screen.dart';
 import 'package:clause_verify/features/profile/controller/profile_controller.dart';
 import 'package:clause_verify/features/profile/screen/help_faq_screen.dart';
 import 'package:clause_verify/features/profile/screen/privacy_policy_screen.dart';
 import 'package:clause_verify/features/profile/screen/terms_of_use_screen.dart';
 import 'package:clause_verify/features/splash/controller/splash_controller.dart';
+import 'package:clause_verify/features/subscription/controller/subscription_controller.dart';
+import 'package:clause_verify/features/subscription/screen/subscription_screen.dart';
 import 'package:clause_verify/features/upload/screens/upload_screen.dart';
 import 'package:get/get.dart';
-
-// Home & Others
 import '../features/home/presentaion/screens/home_screen.dart';
 import '../features/nav_bar/presentation/screens/nav_bar.dart';
-
-// Onboarding
 import '../features/onboarding/screen/onboarding_screen.dart';
-
-// Auth
 import '../features/auth/screen/login_screen.dart';
 import '../features/auth/screen/registration_screen.dart';
 import '../features/auth/screen/terms_and_condition.dart';
 import '../features/auth/screen/otp_verification_screen.dart';
-
-// Splash
 import '../features/splash/view/splash_screen.dart';
-
-// Profile
 import '../features/profile/screen/profile_screen.dart';
-
-// PDF
 import '../features/pdf/screen/report_webview_screen.dart';
 
 class AppRoute {
-  // ----------------- Route Names -----------------
   static String init = "/";
   static String splashScreen = "/splashScreen";
   static String onboardingScreen = "/onboardingScreen";
@@ -68,7 +51,6 @@ class AppRoute {
   static String photoInstructionsScreen = "/photoInstructionsScreen";
   static String watchCaptureScreen = "/watchCaptureScreen";
   static String accessoriesScreen = "/accessoriesScreen";
-
   static String subscriptionScreen = "/subscriptionScreen";
   static String aiAnalysisScreen = "/aiAnalysisScreen";
   static String analysisCompleteScreen = "/analysisCompleteScreen";
@@ -87,7 +69,6 @@ class AppRoute {
   static const String pdfViewerScreen = '/pdf-viewer-screen';
 
   static List<GetPage> routes = [
-    // Splash & Onboarding
     GetPage(
       name: splashScreen,
       page: () => SplashScreen(),
@@ -102,8 +83,6 @@ class AppRoute {
         Get.lazyPut(() => OnboardingController());
       }),
     ),
-
-    // Auth Section
     GetPage(
       name: loginScreen,
       page: () => LoginScreen(),
@@ -142,8 +121,6 @@ class AppRoute {
         Get.lazyPut(() => LoginController(), fenix: true);
       }),
     ),
-
-    // Main Section
     GetPage(
       name: homeScreen,
       page: () => HomeScreen(),
@@ -159,13 +136,10 @@ class AppRoute {
         Get.lazyPut(() => NavBarController(), fenix: true);
       }),
     ),
-
     GetPage(
       name: AppRoute.contractAnalysisScreen,
       page: () => const ContractAnalysisScreen(),
     ),
-
-    // ✅ Analysis Result Screen — used by BOTH fresh analysis & history detail
     GetPage(
       name: AppRoute.analysisResultScreen,
       page: () => const AnalysisResultScreen(),
@@ -173,8 +147,6 @@ class AppRoute {
         Get.lazyPut(() => AnalysisResultController());
       }),
     ),
-
-    // Profile & Reports
     GetPage(
       name: profileScreen,
       page: () => ProfileScreen(),
@@ -183,17 +155,24 @@ class AppRoute {
         Get.lazyPut(() => NavBarController(), fenix: true);
       }),
     ),
+    // Home-এর Upgrade বোতাম আর scan-এর 402 dialog এই route-এ আসে
+    GetPage(
+      name: subscriptionScreen,
+      page: () => SubscriptionScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut(() => SubscriptionController());
+      }),
+    ),
     GetPage(name: reportWebViewScreen, page: () => ReportWebViewScreen()),
     GetPage(name: privacyPolicyScreen, page: () => PrivacyPolicyScreen()),
     GetPage(name: termsOfUseScreen, page: () => TermsOfUseScreen()),
     GetPage(name: helpFaqScreen, page: () => HelpFaqScreen()),
-
     GetPage(name: AppRoute.uploadScreen, page: () => UploadScreen()),
     GetPage(name: AppRoute.cameraScreen, page: () => CameraScreen()),
     GetPage(name: AppRoute.history, page: () => HistoryScreen()),
     GetPage(
-  name: AppRoute.pdfViewerScreen,
-  page: () => const PdfViewerScreen(),
-),
+      name: AppRoute.pdfViewerScreen,
+      page: () => const PdfViewerScreen(),
+    ),
   ];
 }

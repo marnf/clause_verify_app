@@ -490,5 +490,42 @@
   "disclaimerTitle9": "9. Ley aplicable",
   "disclaimerBody9": "Estos Términos se regirán e interpretarán de acuerdo con las leyes de la Provincia de Ontario y las leyes federales de Canadá. Cualquier disputa que surja bajo estos Términos estará sujeta a la jurisdicción exclusiva de los tribunales de Ontario.",
   "disclaimerTitle10": "10. Aceptación",
-  "disclaimerBody10": "Al marcar la casilla a continuación y continuar, usted reconoce que ha leído, comprendido y acepta estos Términos. Usted entiende que el análisis de IA es solo para fines informativos y que usted es el único responsable de las decisiones tomadas en base a los resultados."
+  "disclaimerBody10": "Al marcar la casilla a continuación y continuar, usted reconoce que ha leído, comprendido y acepta estos Términos. Usted entiende que el análisis de IA es solo para fines informativos y que usted es el único responsable de las decisiones tomadas en base a los resultados.",
+
+
+
+
+  "subscriptionTitle": "Suscripción",
+"currentPlanLabel": "PLAN ACTUAL",
+"oneTimePurchases": "Compras únicas",
+"oneTimePurchasesSubtitle": "Se añade a tu cuenta automáticamente tras la compra — sin compromiso.",
+"subscriptionPlans": "Planes de suscripción",
+"subscriptionPlansSubtitle": "Obtén más escaneos cada mes a un mejor precio.",
+"singleScanTitle": "Escaneo único",
+"singleScanFeature1": "1 crédito de escaneo de contrato",
+"singleScanFeature2": "Paga solo cuando lo necesites",
+"pdfAddonTitle": "Informe en PDF",
+"pdfAddonFeature1": "1 informe PDF descargable",
+"pdfAddonFeature2": "Complemento para un escaneo completado",
+"monthlyPlanTitle": "Mensual",
+"monthlyFeature1": "50 escaneos al mes",
+"monthlyFeature2": "Los escaneos no usados no se acumulan",
+"cancelAnytime": "Cancela cuando quieras",
+"unlimitedPlanTitle": "Ilimitado",
+"unlimitedFeature1": "Escaneos ilimitados",
+"unlimitedFeature2": "Uso justo: hasta 200 escaneos/mes",
+"bestValueBadge": "MEJOR VALOR",
+"buyButtonLabel": "Comprar",
+"subscribeButtonLabel": "Suscribirse",
+"currentPlanButton": "Plan actual",
+"manageSectionTitle": "Gestionar",
+"cancelSubscriptionButton": "Cancelar suscripción",
+"restorePurchasesButton": "Restaurar compras",
+"subscriptionFooterNote": "Las suscripciones se renuevan automáticamente hasta que las canceles. Gestiónalas o cancélalas en Google Play en cualquier momento.",
+"tryAgainButton": "Intentar de nuevo",
+"renewsOn": "Se renueva el @date",
+"cancelledAccessUntil": "Cancelada — acceso hasta @date",
+"cancelSubDialogTitle": "¿Cancelar suscripción?",
+"cancelSubDialogBody": "Serás dirigido a Google Play para cancelar. Conservarás los beneficios del plan hasta el final del periodo de facturación actual.",
+"keepPlanButton": "Mantener plan"
 }

@@ -1,6 +1,5 @@
 
 
-
 // import 'dart:convert';
 // import 'package:clause_verify/core/services/endpoints.dart';
 // import 'package:clause_verify/core/services/network_caller.dart';
@@ -21,6 +20,7 @@
 //   static String? _refreshToken;
 //   static Map<String, dynamic>? _userData;
 //   static String _selectedCurrency = 'USD';
+//    static String? lastGoogleError; 
 
 //   // ─────────────────────────────────────────
 //   // Init & Ensure Initialized
@@ -258,10 +258,15 @@
 //   // ─────────────────────────────────────────
 
 //   static Future<bool> signInWithGoogle() async {
+//     lastGoogleError = null;
 //     try {
 //       final googleSignIn = GoogleSignIn(scopes: ['email']);
 //       final googleUser = await googleSignIn.signIn();
-//       if (googleUser == null) return false;
+//       if (googleUser == null) {
+//         lastGoogleError = 'User cancelled or Google account picker failed to open';
+//         print('❌ Google Sign-In: User cancelled or returned null');
+//         return false;
+//       }
 
 //       final googleAuth = await googleUser.authentication;
 //       final credential = GoogleAuthProvider.credential(
@@ -271,21 +276,31 @@
 
 //       final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
 //       final idToken = await userCredential.user?.getIdToken();
-//       if (idToken == null) return false;
+//       if (idToken == null) {
+//         lastGoogleError = 'Firebase idToken was null';
+//         print('❌ Google Sign-In: idToken is null');
+//         return false;
+//       }
 
 //       final networkCaller = NetworkCaller();
 //       final response = await networkCaller.postRequest(
 //         Endpoints.googleAuth,
 //         body: {'id_token': idToken},
+//         requiresAuth: false,
 //       );
 
 //       if (response.isSuccess && response.responseData != null) {
 //         await saveGoogleLoginData(response.responseData!);
 //         return true;
+//       } else {
+//         lastGoogleError = 'Backend error: ${response.errorMessage}';
+//         print('❌ Google Backend Error: ${response.errorMessage}');
+//         return false;
 //       }
-//       return false;
-//     } catch (e) {
+//     } catch (e, stack) {
+//       lastGoogleError = e.toString();
 //       print('❌ Google login error: $e');
+//       print('❌ Stack trace: $stack');
 //       return false;
 //     }
 //   }
@@ -318,17 +333,21 @@
 //       final idToken = await userCredential.user?.getIdToken();
 //       if (idToken == null) return false;
 
+//       // ✅ একই API তে id_token পাঠানো হচ্ছে
 //       final networkCaller = NetworkCaller();
 //       final response = await networkCaller.postRequest(
-//         Endpoints.googleAuth,
+//         Endpoints.googleAuth, // একই endpoint ব্যবহার করা হচ্ছে
 //         body: {'id_token': idToken},
+//         requiresAuth: false, // লগইনের সময় কোনো Auth header লাগবে না
 //       );
 
 //       if (response.isSuccess && response.responseData != null) {
 //         await saveGoogleLoginData(response.responseData!);
 //         return true;
+//       } else {
+//         print('❌ Apple Backend Error: ${response.errorMessage}');
+//         return false;
 //       }
-//       return false;
 //     } catch (e) {
 //       print('❌ Apple login error: $e');
 //       return false;
@@ -369,10 +388,10 @@
 
 
 
-
 import 'dart:convert';
 import 'package:clause_verify/core/services/endpoints.dart';
 import 'package:clause_verify/core/services/network_caller.dart';
+import 'package:clause_verify/core/services/purchase_service.dart'; // ✅ নতুন
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -429,6 +448,21 @@ class AuthService {
   static bool get isLoggedIn => _token != null && _token!.isNotEmpty;
 
   // ─────────────────────────────────────────
+  // ✅ RevenueCat user sync (নতুন)
+  // Backend user ID-ই RevenueCat-এর app_user_id হবে।
+  // Login সফল হলে, আর app খুলে saved session পেলে এটা call হয়।
+  // ─────────────────────────────────────────
+
+  static Future<void> syncPurchaseUser() async {
+    final id = userId;
+    if (!isLoggedIn || id == null || id.isEmpty || id == 'null') {
+      print('⚠️ RevenueCat sync skipped: loggedIn=$isLoggedIn, userId=$id');
+      return;
+    }
+    await PurchaseService.login(id);
+  }
+
+  // ─────────────────────────────────────────
   // Save Login Data
   // ─────────────────────────────────────────
 
@@ -450,6 +484,9 @@ class AuthService {
       if (userData != null) {
         await saveUserData(userData);
       }
+
+      // ✅ নতুন: email login-এর পর RevenueCat-এ login
+      await syncPurchaseUser();
     } catch (e) {
       print('❌ Error saving login data: $e');
       rethrow;
@@ -482,6 +519,9 @@ class AuthService {
       if (userData != null) {
         await saveUserData(userData);
       }
+
+      // ✅ নতুন: Google/Apple login-এর পর RevenueCat-এ login
+      await syncPurchaseUser();
     } catch (e) {
       print('❌ Error saving Google login data: $e');
       rethrow;
@@ -579,6 +619,10 @@ class AuthService {
   static Future<void> logoutUser() async {
     try {
       await _ensureInitialized();
+
+      // ✅ নতুন: RevenueCat থেকে logout (error হলেও এখানে throw করে না)
+      await PurchaseService.logout();
+
       await _preferences!.clear();
       _token = null;
       _refreshToken = null;
@@ -708,7 +752,7 @@ class AuthService {
       final response = await networkCaller.postRequest(
         Endpoints.googleAuth, // একই endpoint ব্যবহার করা হচ্ছে
         body: {'id_token': idToken},
-        requiresAuth: false, // লগইনের সময় কোনো Auth header লাগবে না
+        requiresAuth: false, // লগইনের সময় কোনো Auth header লাগবে না
       );
 
       if (response.isSuccess && response.responseData != null) {

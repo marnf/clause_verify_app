@@ -1,10 +1,12 @@
 
+
 import 'package:clause_verify/core/common/widgets/language_modal.dart';
 import 'package:clause_verify/core/localization/localization_controller.dart';
 import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:clause_verify/core/utils/constants/app_sizer.dart';
 import 'package:clause_verify/core/utils/constants/icon_path.dart';
 import 'package:clause_verify/features/profile/controller/profile_controller.dart';
+import 'package:clause_verify/features/subscription/screen/subscription_screen.dart'; // ✅ নতুন
 import 'package:clause_verify/routes/app_routes.dart'; // 👈 AppRoute ব্যবহার করার জন্য ইম্পোর্ট
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,6 +34,12 @@ class ProfileScreen extends StatelessWidget {
 
                       // ── Profile Card ──
                       _buildProfileCard(),
+                      SizedBox(height: 32.h),
+
+                      // ── ✅ Subscription ──
+                      _buildSectionTitle('Subscription'),
+                      SizedBox(height: 12.h),
+                      _buildSubscriptionRow(),
                       SizedBox(height: 32.h),
 
                       // ── Preferences ──
@@ -193,6 +201,73 @@ class ProfileScreen extends StatelessWidget {
         ),
       );
     });
+  }
+
+  // ══════════════════════════════════════
+  //  ✅ Subscription Row (নতুন)
+  // ══════════════════════════════════════
+  Widget _buildSubscriptionRow() {
+    return GestureDetector(
+      onTap: () async {
+        await Get.to(() => SubscriptionScreen());
+        // ফিরে আসার পর premium status refresh
+        controller.refreshFromAPI();
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.cardBorder, width: 1),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 42.w,
+              height: 42.h,
+              decoration: BoxDecoration(
+                color: Color(0xFF13233D),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                Icons.workspace_premium_rounded,
+                color: AppColors.goldLight,
+                size: 22,
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Upgrade / Manage Plan',
+                    style: TextStyle(
+                      color: AppColors.textWhite,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  SizedBox(height: 2.h),
+                  Obx(
+                    () => Text(
+                      controller.isPremium.value
+                          ? 'View or cancel your plan'
+                          : 'Get more scans and PDF reports',
+                      style: TextStyle(
+                        color: AppColors.textMuted,
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_right, color: AppColors.textMuted, size: 20),
+          ],
+        ),
+      ),
+    );
   }
 
   // ══════════════════════════════════════
@@ -479,7 +554,7 @@ class ProfileScreen extends StatelessWidget {
   //  ✅ নতুন Delete Account Dialog
   // ══════════════════════════════════════
   void _showDeleteAccountDialog(BuildContext context) {
-    controller.deleteConfirmController.clear(); // আগের লেখা ক্লিয়ার করার জন্য
+    controller.deleteConfirmController.clear(); // আগের লেখা ক্লিয়ার করার জন্য
     Get.dialog(
       Obx(() => Dialog(
             backgroundColor: AppColors.surface,

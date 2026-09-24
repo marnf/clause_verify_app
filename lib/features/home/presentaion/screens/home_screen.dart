@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    // ✅ পুরো স্ক্রিনটি LocalizationController দিয়ে র‍্যাপ করা হলো
+    // পুরো স্ক্রিনটি LocalizationController দিয়ে র‍্যাপ করা
     return GetBuilder<LocalizationController>(
       builder: (locController) {
         return Scaffold(
@@ -111,25 +111,41 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // ── Scan Limit Badge ──
-                Obx(() => GestureDetector(
-                      onTap: controller.isPremiumUser.value ? null : () => controller.navigateToPremium(),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-                        decoration: BoxDecoration(
-                          color: AppColors.surface,
-                          border: Border.all(color: controller.scanLimit.value > 0 ? AppColors.primaryColor.withOpacity(0.5) : AppColors.error.withOpacity(0.5), width: 1),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(Icons.document_scanner_outlined, color: controller.scanLimit.value > 0 ? AppColors.primaryColor : AppColors.error, size: 14.sp),
-                            SizedBox(width: 4.w),
-                            Text('${controller.scanLimit.value}', style: TextStyle(color: controller.scanLimit.value > 0 ? AppColors.textSubtle : AppColors.error, fontSize: 12.sp, fontWeight: FontWeight.w600)),
-                          ],
-                        ),
+                // ── Upgrade / Premium Badge ──
+                Obx(() {
+                  final isPremium = controller.isPremiumUser.value;
+                  return GestureDetector(
+                    onTap: () => controller.navigateToPremium(),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                      decoration: BoxDecoration(
+                        color: isPremium
+                            ? AppColors.primaryColor.withValues(alpha: 0.15)
+                            : AppColors.primaryColor,
+                        border: Border.all(color: AppColors.primaryColor, width: 1),
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    )),
+                      child: Row(
+                        children: [
+                          Icon(
+                            isPremium ? Icons.workspace_premium_rounded : Icons.bolt_rounded,
+                            color: isPremium ? AppColors.primaryColor : Colors.black,
+                            size: 14.sp,
+                          ),
+                          SizedBox(width: 4.w),
+                          Text(
+                            isPremium ? 'Premium' : 'Upgrade',
+                            style: TextStyle(
+                              color: isPremium ? AppColors.primaryColor : Colors.black,
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
                 SizedBox(width: 8.w),
                 // ── Language Selector ──
                 GetBuilder<LocalizationController>(
@@ -171,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppColors.cardBorder, width: 1)),
         child: Row(
           children: [
-            Container(width: 52.w, height: 52.h, decoration: BoxDecoration(color: AppColors.primaryColor.withOpacity(0.12), borderRadius: BorderRadius.circular(14)), child: Icon(Icons.upload_file_rounded, color: AppColors.primaryColor, size: 26.sp)),
+            Container(width: 52.w, height: 52.h, decoration: BoxDecoration(color: AppColors.primaryColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(14)), child: Icon(Icons.upload_file_rounded, color: AppColors.primaryColor, size: 26.sp)),
             SizedBox(width: 16.w),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('uploadContract'.tr, style: TextStyle(color: AppColors.textWhite, fontSize: 16.sp, fontWeight: FontWeight.w600)), SizedBox(height: 4.h), Text('browseFromDevice'.tr, style: TextStyle(color: AppColors.textMuted, fontSize: 13.sp))])),
             const Icon(Icons.chevron_right, color: AppColors.textSubtle, size: 22),
@@ -190,10 +206,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 22.h),
-        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppColors.primaryColor.withOpacity(0.3), width: 1)),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppColors.primaryColor.withValues(alpha: 0.3), width: 1)),
         child: Row(
           children: [
-            Container(width: 52.w, height: 52.h, decoration: BoxDecoration(color: AppColors.primaryColor.withOpacity(0.12), borderRadius: BorderRadius.circular(14)), child: Icon(Icons.camera_alt_rounded, color: AppColors.primaryColor, size: 26.sp)),
+            Container(width: 52.w, height: 52.h, decoration: BoxDecoration(color: AppColors.primaryColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(14)), child: Icon(Icons.camera_alt_rounded, color: AppColors.primaryColor, size: 26.sp)),
             SizedBox(width: 16.w),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('scanContract'.tr, style: TextStyle(color: AppColors.textWhite, fontSize: 16.sp, fontWeight: FontWeight.w600)), SizedBox(height: 4.h), Text('takePhotosDescription'.tr, style: TextStyle(color: AppColors.textMuted, fontSize: 13.sp))])),
             const Icon(Icons.chevron_right, color: AppColors.textSubtle, size: 22),
@@ -248,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(padding: EdgeInsets.all(8.w), decoration: BoxDecoration(color: AppColors.primaryColor.withOpacity(0.12), borderRadius: BorderRadius.circular(8)), child: Icon(Icons.auto_awesome, color: AppColors.primaryColor, size: 20.sp)),
+          Container(padding: EdgeInsets.all(8.w), decoration: BoxDecoration(color: AppColors.primaryColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(8)), child: Icon(Icons.auto_awesome, color: AppColors.primaryColor, size: 20.sp)),
           SizedBox(width: 12.w),
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

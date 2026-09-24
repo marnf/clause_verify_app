@@ -23,9 +23,9 @@ android {
 
     defaultConfig {
         applicationId = "com.clauseverify.app"
-        minSdk = flutter.minSdkVersion
+        minSdk = 24
         targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
+        versionCode = flutter.versionCode   
         versionName = flutter.versionName
     }
 
@@ -36,16 +36,16 @@ android {
         keystoreProperties.load(keystorePropertiesFile.inputStream())
     }
 
-   signingConfigs {
-    create("release") {
-        if (keystorePropertiesFile.exists()) {
-            keyAlias = keystoreProperties.getProperty("keyAlias")
-            keyPassword = keystoreProperties.getProperty("keyPassword")
-            storeFile = file(keystoreProperties.getProperty("storeFile"))
-            storePassword = keystoreProperties.getProperty("storePassword")
+    signingConfigs {
+        create("release") {
+            if (keystorePropertiesFile.exists()) {
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+                storeFile = file(keystoreProperties.getProperty("storeFile"))
+                storePassword = keystoreProperties.getProperty("storePassword")
+            }
         }
     }
-}
 
     buildTypes {
         getByName("release") {

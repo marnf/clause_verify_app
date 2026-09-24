@@ -371,7 +371,6 @@
 // }
 
 
-
 import 'package:country_picker/country_picker.dart';
 import 'package:clause_verify/core/services/endpoints.dart';
 import 'package:clause_verify/core/services/network_caller.dart';
@@ -380,6 +379,7 @@ import 'package:clause_verify/core/utils/constants/country_confirmation_modal.da
 import 'package:clause_verify/core/utils/constants/country_helper.dart';
 import 'package:clause_verify/core/utils/image_converter.dart';
 import 'package:clause_verify/features/analysis/model/analysis_result_model.dart';
+import 'package:clause_verify/features/subscription/utils/paywall_guard.dart';
 import 'package:clause_verify/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -387,20 +387,13 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 import 'package:clause_verify/core/common/widgets/ai_consent_modal.dart';
 
-
 class UploadController extends GetxController {
   final RxList<File> selectedFiles = <File>[].obs;
   final RxList<String> fileNames = <String>[].obs;
   final RxList<int> fileSizes = <int>[].obs;
   final RxBool isUploading = false.obs;
-
-  // 👇👇👇 নতুন যোগ করা: image pick + convert হওয়ার সময় loading দেখানোর জন্য
   final RxBool isProcessingImages = false.obs;
-  // 👆👆👆
-
   final Rx<bool?> isDocumentMode = Rx<bool?>(null);
-
-  // ✅ Country Variables
   final Rx<Country?> detectedCountry = Rx<Country?>(null);
 
   static const int maxFileSizeMB = 20;
@@ -424,7 +417,7 @@ class UploadController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _fetchUserCountry(); // ✅ Fetch country in background
+    _fetchUserCountry(); // Fetch country in background
   }
 
   Future<void> _fetchUserCountry() async {
@@ -432,18 +425,14 @@ class UploadController extends GetxController {
       final country = await CountryHelper.getCurrentCountry();
       if (country != null) {
         detectedCountry.value = country;
-        print('✅ Detected Country: ${country.name}');
       } else {
         detectedCountry.value = Country.parse('CA');
-        print('⚠️ Location denied, defaulting to Canada');
       }
     } catch (e) {
-      print('❌ Error fetching country: $e');
       detectedCountry.value = Country.parse('CA');
     }
   }
 
-  // ── Browse files from device ──
   Future<void> browseFiles() async {
     if (!canAddMore) {
       Get.snackbar(
@@ -472,6 +461,7 @@ class UploadController extends GetxController {
         for (var file in result.files) {
           final ext = file.name.split('.').last.toLowerCase();
           final isDoc = docExtensions.contains(ext);
+
           if (pickedIsDoc == null) {
             pickedIsDoc = isDoc;
           } else if (pickedIsDoc != isDoc) {
@@ -506,6 +496,7 @@ class UploadController extends GetxController {
         }
 
         final remaining = remainingSlots;
+
         if (pickedIsDoc == true && result.files.length > 1) {
           Get.snackbar(
             'limitExceeded'.tr,
@@ -535,12 +526,9 @@ class UploadController extends GetxController {
           return;
         }
 
-        // 👇👇👇 নতুন যোগ করা: শুধু image mode হলেই loading দেখানো হবে
-        // (PDF/DOC এর জন্য conversion লাগে না, তাই loading এর ও দরকার নেই)
         if (pickedIsDoc == false) {
           isProcessingImages.value = true;
         }
-        // 👆👆👆
 
         final newFiles = <File>[];
         final newNames = <String>[];
@@ -549,15 +537,17 @@ class UploadController extends GetxController {
         try {
           for (var platformFile in result.files) {
             if (platformFile.path == null) continue;
-            File file = File(platformFile.path!);
 
+            File file = File(platformFile.path!);
             final ext = platformFile.name.split('.').last.toLowerCase();
+
             if (imageExtensions.contains(ext)) {
               file = await ImageConverter.convertToJpegIfNeeded(file);
             }
 
             final fileSize = await file.length();
             final fileSizeMB = fileSize / (1024 * 1024);
+
             if (fileSizeMB > maxFileSizeMB) {
               Get.snackbar(
                 'fileTooLarge'.tr,
@@ -574,14 +564,13 @@ class UploadController extends GetxController {
               );
               continue;
             }
+
             newFiles.add(file);
             newNames.add(platformFile.name);
             newSizes.add(fileSize);
           }
         } finally {
-          // 👇👇👇 নতুন যোগ করা
           isProcessingImages.value = false;
-          // 👆👆👆
         }
 
         if (newFiles.isNotEmpty) {
@@ -592,7 +581,6 @@ class UploadController extends GetxController {
         }
       }
     } catch (e) {
-      print('❌ Error picking files: $e');
       Get.snackbar(
         'error'.tr,
         'filePickFailed'.tr,
@@ -610,6 +598,7 @@ class UploadController extends GetxController {
       selectedFiles.removeAt(index);
       fileNames.removeAt(index);
       fileSizes.removeAt(index);
+
       if (selectedFiles.isEmpty) {
         isDocumentMode.value = null;
       }
@@ -663,37 +652,32 @@ class UploadController extends GetxController {
     return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
   }
 
+  Future<void> submitForAnalysis() async {
+    if (selectedFiles.isEmpty) {
+      Get.snackbar(
+        'noFiles'.tr,
+        'noFilesMessage'.tr,
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: AppColors.error,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(16),
+        borderRadius: 8,
+      );
+      return;
+    }
 
-// ══════════════════════════════════════
-//  SUBMIT FLOW
-// ══════════════════════════════════════
-Future<void> submitForAnalysis() async {
-  if (selectedFiles.isEmpty) {
-    Get.snackbar(
-      'noFiles'.tr,
-      'noFilesMessage'.tr,
-      snackPosition: SnackPosition.TOP,
-      backgroundColor: AppColors.error,
-      colorText: Colors.white,
-      margin: const EdgeInsets.all(16),
-      borderRadius: 8,
-    );
-    return;
+    final Country? confirmedCountry = await _showCountryConfirmation();
+    if (confirmedCountry == null) return; // User cancelled
+
+    final agreed = await AIConsentModal.show();
+    if (!agreed) return;
+
+    _performUpload(confirmedCountry);
   }
-
-  // ১. আগে country select
-  final Country? confirmedCountry = await _showCountryConfirmation();
-  if (confirmedCountry == null) return; // User cancelled
-
-  // ২. তারপর AI consent (প্রতিবার দেখাবে)
-  final agreed = await AIConsentModal.show();
-  if (!agreed) return;
-
-  _performUpload(confirmedCountry);
-}
 
   Future<Country?> _showCountryConfirmation() async {
     final defaultCountry = detectedCountry.value ?? Country.parse('CA');
+
     return await Get.dialog<Country>(
       CountryConfirmationModal(initialCountry: defaultCountry),
       barrierDismissible: true,
@@ -717,13 +701,14 @@ Future<void> submitForAnalysis() async {
 
       if (response.isSuccess && response.responseData != null) {
         final dataMap = response.responseData!['data'] as Map<String, dynamic>?;
+
         if (dataMap == null) {
           Get.snackbar(
-            'error'.tr, 
+            'error'.tr,
             'invalidResponseFormat'.tr,
             snackPosition: SnackPosition.TOP,
             backgroundColor: Colors.redAccent,
-            colorText: Colors.white
+            colorText: Colors.white,
           );
           return;
         }
@@ -732,17 +717,27 @@ Future<void> submitForAnalysis() async {
         clearAll();
         Get.toNamed(AppRoute.analysisResultScreen, arguments: resultModel);
       } else {
-        // ✅ Low resolution check
+        // Backend বলছে scan credit/plan নেই: Subscription page-এ পাঠাও
+        if (response.statusCode == 402) {
+          isUploading.value = false;
+          await PaywallGuard.handle(response);
+          return;
+        }
+
         final errorData = response.responseData;
-        if (errorData != null && errorData['status'] == 'fail' && errorData['reason'] == 'low_resolution') {
+
+        if (errorData != null &&
+            errorData['status'] == 'fail' &&
+            errorData['reason'] == 'low_resolution') {
           final width = errorData['width'];
           final height = errorData['height'];
           final minRes = errorData['min_resolution'] ?? '300x300';
+
           Get.snackbar(
             'imageResolutionTooLow'.tr,
             'imageResolutionTooLowMessage'.trParams({
-              'width': width.toString(), 
-              'height': height.toString(), 
+              'width': width.toString(),
+              'height': height.toString(),
               'minRes': minRes.toString()
             }),
             snackPosition: SnackPosition.TOP,
@@ -754,21 +749,21 @@ Future<void> submitForAnalysis() async {
           );
         } else {
           Get.snackbar(
-            'error'.tr, 
-            response.errorMessage ?? 'uploadFailed'.tr,
+            'error'.tr,
+            response.errorMessage,
             snackPosition: SnackPosition.TOP,
             backgroundColor: Colors.redAccent,
-            colorText: Colors.white
+            colorText: Colors.white,
           );
         }
       }
     } catch (e) {
       Get.snackbar(
-        'error'.tr, 
+        'error'.tr,
         'somethingWentWrong'.trParams({'error': e.toString()}),
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.redAccent,
-        colorText: Colors.white
+        colorText: Colors.white,
       );
     } finally {
       isUploading.value = false;
