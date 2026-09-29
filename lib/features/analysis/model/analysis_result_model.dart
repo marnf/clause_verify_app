@@ -1,4 +1,13 @@
-// // lib/models/analysis_result_model.dart
+
+// // lib/features/analysis/model/analysis_result_model.dart
+
+// int _toInt(dynamic value) {
+//   if (value == null) return 0;
+//   if (value is num) return value.toInt();
+//   return int.tryParse(value.toString()) ?? 0;
+// }
+
+// String _toStr(dynamic value) => value?.toString().trim() ?? '';
 
 // class AnalysisResultModel {
 //   final String id;
@@ -15,10 +24,12 @@
 
 //   factory AnalysisResultModel.fromJson(Map<String, dynamic> json) {
 //     return AnalysisResultModel(
-//       id: json['id'] ?? '',
-//       totalPages: json['total_pages'] ?? 0,
-//       createdAt: json['created_at'] ?? '',
-//       aiResponse: AiResponse.fromJson(json['ai_response'] ?? {}),
+//       id: _toStr(json['id']),
+//       totalPages: _toInt(json['total_pages']),
+//       createdAt: _toStr(json['created_at']),
+//       aiResponse: AiResponse.fromJson(
+//         (json['ai_response'] as Map<String, dynamic>?) ?? {},
+//       ),
 //     );
 //   }
 
@@ -45,11 +56,19 @@
 
 //   factory AiResponse.fromJson(Map<String, dynamic> json) {
 //     return AiResponse(
-//       summary: AnalysisSummary.fromJson(json['summary'] ?? {}),
-//       riskBreakdown: RiskBreakdown.fromJson(json['risk_breakdown'] ?? {}),
-//       positivePoints: List<String>.from(json['positive_points'] ?? []),
+//       summary: AnalysisSummary.fromJson(
+//         (json['summary'] as Map<String, dynamic>?) ?? {},
+//       ),
+//       riskBreakdown: RiskBreakdown.fromJson(
+//         (json['risk_breakdown'] as Map<String, dynamic>?) ?? {},
+//       ),
+//       positivePoints: (json['positive_points'] as List<dynamic>? ?? [])
+//           .map((e) => _toStr(e))
+//           .where((e) => e.isNotEmpty)
+//           .toList(),
 //       importantTerms: (json['important_terms'] as List<dynamic>? ?? [])
-//           .map((e) => ImportantTerm.fromJson(e as Map<String, dynamic>))
+//           .whereType<Map<String, dynamic>>()
+//           .map(ImportantTerm.fromJson)
 //           .toList(),
 //     );
 //   }
@@ -64,14 +83,12 @@
 
 // class AnalysisSummary {
 //   final String country;
-//   final int confidenceScore;
 //   final String overallRisk;
 //   final String recommendation;
 //   final String recommendationGuidance;
 
 //   AnalysisSummary({
 //     required this.country,
-//     required this.confidenceScore,
 //     required this.overallRisk,
 //     required this.recommendation,
 //     required this.recommendationGuidance,
@@ -79,17 +96,15 @@
 
 //   factory AnalysisSummary.fromJson(Map<String, dynamic> json) {
 //     return AnalysisSummary(
-//       country: json['country'] ?? '',
-//       confidenceScore: json['confidence_score'] ?? 0,
-//       overallRisk: json['overall_risk'] ?? '',
-//       recommendation: json['recommendation'] ?? '',
-//       recommendationGuidance: json['recommendation_guidance'] ?? '',
+//       country: _toStr(json['country']),
+//       overallRisk: _toStr(json['overall_risk']),
+//       recommendation: _toStr(json['recommendation']),
+//       recommendationGuidance: _toStr(json['recommendation_guidance']),
 //     );
 //   }
 
 //   Map<String, dynamic> toJson() => {
 //         'country': country,
-//         'confidence_score': confidenceScore,
 //         'overall_risk': overallRisk,
 //         'recommendation': recommendation,
 //         'recommendation_guidance': recommendationGuidance,
@@ -100,20 +115,26 @@
 //   final int highRisk;
 //   final int mediumRisk;
 //   final int lowRisk;
+//   final int foundClause;
+//   final int missingClause;
 
 //   RiskBreakdown({
 //     required this.highRisk,
 //     required this.mediumRisk,
 //     required this.lowRisk,
+//     required this.foundClause,
+//     required this.missingClause,
 //   });
 
 //   int get total => highRisk + mediumRisk + lowRisk;
 
 //   factory RiskBreakdown.fromJson(Map<String, dynamic> json) {
 //     return RiskBreakdown(
-//       highRisk: json['high_risk'] ?? 0,
-//       mediumRisk: json['medium_risk'] ?? 0,
-//       lowRisk: json['low_risk'] ?? 0,
+//       highRisk: _toInt(json['high_risk']),
+//       mediumRisk: _toInt(json['medium_risk']),
+//       lowRisk: _toInt(json['low_risk']),
+//       foundClause: _toInt(json['found_clause']),
+//       missingClause: _toInt(json['missing_clause']),
 //     );
 //   }
 
@@ -121,6 +142,8 @@
 //         'high_risk': highRisk,
 //         'medium_risk': mediumRisk,
 //         'low_risk': lowRisk,
+//         'found_clause': foundClause,
+//         'missing_clause': missingClause,
 //       };
 // }
 
@@ -132,7 +155,6 @@
 //   final String aiExplanation;
 //   final String aiRecommendation;
 //   final String lawReference;
-//   final int confidenceScore;
 
 //   ImportantTerm({
 //     required this.termTitle,
@@ -142,19 +164,31 @@
 //     required this.aiExplanation,
 //     required this.aiRecommendation,
 //     required this.lawReference,
-//     required this.confidenceScore,
 //   });
+
+//   /// "high" | "medium" | "low" — risk_level না এলে status থেকে বের করা হয়
+//   String get level {
+//     final r = riskLevel.toLowerCase();
+//     if (r == 'high' || r == 'medium' || r == 'low') return r;
+//     switch (status.toLowerCase()) {
+//       case 'red':
+//         return 'high';
+//       case 'warning':
+//         return 'medium';
+//       default:
+//         return 'low';
+//     }
+//   }
 
 //   factory ImportantTerm.fromJson(Map<String, dynamic> json) {
 //     return ImportantTerm(
-//       termTitle: json['term_title'] ?? '',
-//       status: json['status'] ?? 'green',
-//       riskLevel: json['risk_level'] ?? 'low',
-//       extractedText: json['extracted_text'] ?? '',
-//       aiExplanation: json['ai_explanation'] ?? '',
-//       aiRecommendation: json['ai_recommendation'] ?? '',
-//       lawReference: json['law_reference'] ?? '',
-//       confidenceScore: json['confidence_score'] ?? 0,
+//       termTitle: _toStr(json['term_title']),
+//       status: _toStr(json['status']),
+//       riskLevel: _toStr(json['risk_level']),
+//       extractedText: _toStr(json['extracted_text']),
+//       aiExplanation: _toStr(json['ai_explanation']),
+//       aiRecommendation: _toStr(json['ai_recommendation']),
+//       lawReference: _toStr(json['law_reference']),
 //     );
 //   }
 
@@ -166,14 +200,23 @@
 //         'ai_explanation': aiExplanation,
 //         'ai_recommendation': aiRecommendation,
 //         'law_reference': lawReference,
-//         'confidence_score': confidenceScore,
 //       };
 // }
 
 
 
 
+
+
 // lib/features/analysis/model/analysis_result_model.dart
+
+int _toInt(dynamic value) {
+  if (value == null) return 0;
+  if (value is num) return value.toInt();
+  return int.tryParse(value.toString()) ?? 0;
+}
+
+String _toStr(dynamic value) => value?.toString().trim() ?? '';
 
 class AnalysisResultModel {
   final String id;
@@ -181,33 +224,22 @@ class AnalysisResultModel {
   final String createdAt;
   final AiResponse aiResponse;
 
-  /// ✅ নতুন: user-এর কাছে এখন কয়টা PDF credit আছে (backend থেকে আসে)।
-  /// `null` মানে backend এখনো এই field পাঠায়নি — তখন PDF button unlock ধরা হয়
-  /// (আসল সিদ্ধান্ত backend-ই নেয়, PDF generate API-তে 402 দিয়ে)।
-  final int? pdfCredits;
-
   AnalysisResultModel({
     required this.id,
     required this.totalPages,
     required this.createdAt,
     required this.aiResponse,
-    this.pdfCredits,
   });
 
   factory AnalysisResultModel.fromJson(Map<String, dynamic> json) {
     return AnalysisResultModel(
-      id: json['id'] ?? '',
-      totalPages: json['total_pages'] ?? 0,
-      createdAt: json['created_at'] ?? '',
-      aiResponse: AiResponse.fromJson(json['ai_response'] ?? {}),
-      pdfCredits: _toIntOrNull(json['pdf_credits']),
+      id: _toStr(json['id']),
+      totalPages: _toInt(json['total_pages']),
+      createdAt: _toStr(json['created_at']),
+      aiResponse: AiResponse.fromJson(
+        (json['ai_response'] as Map<String, dynamic>?) ?? {},
+      ),
     );
-  }
-
-  static int? _toIntOrNull(dynamic value) {
-    if (value == null) return null;
-    if (value is num) return value.toInt();
-    return int.tryParse(value.toString());
   }
 
   Map<String, dynamic> toJson() => {
@@ -215,7 +247,6 @@ class AnalysisResultModel {
         'total_pages': totalPages,
         'created_at': createdAt,
         'ai_response': aiResponse.toJson(),
-        'pdf_credits': pdfCredits,
       };
 }
 
@@ -234,11 +265,19 @@ class AiResponse {
 
   factory AiResponse.fromJson(Map<String, dynamic> json) {
     return AiResponse(
-      summary: AnalysisSummary.fromJson(json['summary'] ?? {}),
-      riskBreakdown: RiskBreakdown.fromJson(json['risk_breakdown'] ?? {}),
-      positivePoints: List<String>.from(json['positive_points'] ?? []),
+      summary: AnalysisSummary.fromJson(
+        (json['summary'] as Map<String, dynamic>?) ?? {},
+      ),
+      riskBreakdown: RiskBreakdown.fromJson(
+        (json['risk_breakdown'] as Map<String, dynamic>?) ?? {},
+      ),
+      positivePoints: (json['positive_points'] as List<dynamic>? ?? [])
+          .map((e) => _toStr(e))
+          .where((e) => e.isNotEmpty)
+          .toList(),
       importantTerms: (json['important_terms'] as List<dynamic>? ?? [])
-          .map((e) => ImportantTerm.fromJson(e as Map<String, dynamic>))
+          .whereType<Map<String, dynamic>>()
+          .map(ImportantTerm.fromJson)
           .toList(),
     );
   }
@@ -253,14 +292,12 @@ class AiResponse {
 
 class AnalysisSummary {
   final String country;
-  final int confidenceScore;
   final String overallRisk;
   final String recommendation;
   final String recommendationGuidance;
 
   AnalysisSummary({
     required this.country,
-    required this.confidenceScore,
     required this.overallRisk,
     required this.recommendation,
     required this.recommendationGuidance,
@@ -268,17 +305,15 @@ class AnalysisSummary {
 
   factory AnalysisSummary.fromJson(Map<String, dynamic> json) {
     return AnalysisSummary(
-      country: json['country'] ?? '',
-      confidenceScore: json['confidence_score'] ?? 0,
-      overallRisk: json['overall_risk'] ?? '',
-      recommendation: json['recommendation'] ?? '',
-      recommendationGuidance: json['recommendation_guidance'] ?? '',
+      country: _toStr(json['country']),
+      overallRisk: _toStr(json['overall_risk']),
+      recommendation: _toStr(json['recommendation']),
+      recommendationGuidance: _toStr(json['recommendation_guidance']),
     );
   }
 
   Map<String, dynamic> toJson() => {
         'country': country,
-        'confidence_score': confidenceScore,
         'overall_risk': overallRisk,
         'recommendation': recommendation,
         'recommendation_guidance': recommendationGuidance,
@@ -289,20 +324,26 @@ class RiskBreakdown {
   final int highRisk;
   final int mediumRisk;
   final int lowRisk;
+  final int foundClause;
+  final int missingClause;
 
   RiskBreakdown({
     required this.highRisk,
     required this.mediumRisk,
     required this.lowRisk,
+    required this.foundClause,
+    required this.missingClause,
   });
 
   int get total => highRisk + mediumRisk + lowRisk;
 
   factory RiskBreakdown.fromJson(Map<String, dynamic> json) {
     return RiskBreakdown(
-      highRisk: json['high_risk'] ?? 0,
-      mediumRisk: json['medium_risk'] ?? 0,
-      lowRisk: json['low_risk'] ?? 0,
+      highRisk: _toInt(json['high_risk']),
+      mediumRisk: _toInt(json['medium_risk']),
+      lowRisk: _toInt(json['low_risk']),
+      foundClause: _toInt(json['found_clause']),
+      missingClause: _toInt(json['missing_clause']),
     );
   }
 
@@ -310,6 +351,8 @@ class RiskBreakdown {
         'high_risk': highRisk,
         'medium_risk': mediumRisk,
         'low_risk': lowRisk,
+        'found_clause': foundClause,
+        'missing_clause': missingClause,
       };
 }
 
@@ -321,7 +364,6 @@ class ImportantTerm {
   final String aiExplanation;
   final String aiRecommendation;
   final String lawReference;
-  final int confidenceScore;
 
   ImportantTerm({
     required this.termTitle,
@@ -331,19 +373,34 @@ class ImportantTerm {
     required this.aiExplanation,
     required this.aiRecommendation,
     required this.lawReference,
-    required this.confidenceScore,
   });
+
+  /// extracted_text খালি মানে contract-এ এই clause নেই (missing)
+  bool get isMissing => extractedText.isEmpty;
+
+  /// "high" | "medium" | "low" — risk_level না এলে status থেকে বের করা হয়
+  String get level {
+    final r = riskLevel.toLowerCase();
+    if (r == 'high' || r == 'medium' || r == 'low') return r;
+    switch (status.toLowerCase()) {
+      case 'red':
+        return 'high';
+      case 'warning':
+        return 'medium';
+      default:
+        return 'low';
+    }
+  }
 
   factory ImportantTerm.fromJson(Map<String, dynamic> json) {
     return ImportantTerm(
-      termTitle: json['term_title'] ?? '',
-      status: json['status'] ?? 'green',
-      riskLevel: json['risk_level'] ?? 'low',
-      extractedText: json['extracted_text'] ?? '',
-      aiExplanation: json['ai_explanation'] ?? '',
-      aiRecommendation: json['ai_recommendation'] ?? '',
-      lawReference: json['law_reference'] ?? '',
-      confidenceScore: json['confidence_score'] ?? 0,
+      termTitle: _toStr(json['term_title']),
+      status: _toStr(json['status']),
+      riskLevel: _toStr(json['risk_level']),
+      extractedText: _toStr(json['extracted_text']),
+      aiExplanation: _toStr(json['ai_explanation']),
+      aiRecommendation: _toStr(json['ai_recommendation']),
+      lawReference: _toStr(json['law_reference']),
     );
   }
 
@@ -355,6 +412,5 @@ class ImportantTerm {
         'ai_explanation': aiExplanation,
         'ai_recommendation': aiRecommendation,
         'law_reference': lawReference,
-        'confidence_score': confidenceScore,
       };
 }

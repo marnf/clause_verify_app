@@ -5,7 +5,7 @@ import 'package:clause_verify/features/profile/screen/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/services/auth_service.dart';
-import '../../home/presentaion/screens/home_screen.dart';
+import '../../home/screens/home_screen.dart';
 
 class NavBarController extends GetxController with WidgetsBindingObserver {
   var selectedIndex = 0.obs;

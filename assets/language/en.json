@@ -527,5 +527,56 @@
 "cancelledAccessUntil": "Cancelled — access until @date",
 "cancelSubDialogTitle": "Cancel Subscription?",
 "cancelSubDialogBody": "You will be taken to Google Play to cancel. You keep your plan benefits until the end of the current billing period.",
-"keepPlanButton": "Keep plan"
+"keepPlanButton": "Keep plan",
+
+
+
+"availableAfterPlanEnds": "Available after your plan ends",
+"planSwitchBlockedBody": "Your current plan is still active. You can buy a single scan, or subscribe again after it ends.",
+
+
+
+"confirmJurisdiction": "Confirm Jurisdiction",
+"jurisdictionDescription": "We'll analyze your contract under the laws of the country you select below. To do this, your document is securely shared with a trusted third-party AI service (Anthropic's Claude), only to generate your report and never to train AI models. By tapping Confirm, you agree to this sharing.",
+"jurisdictionAiNotice": "To analyze it, your uploaded contract will be securely sent to a trusted third-party AI service (Anthropic's Claude AI), solely to generate your clause-by-clause report. Your document is not used to train any AI models. By tapping Confirm, you agree to this data sharing.",
+"tapToChangeCountry": "Tap to change country",
+"selectScanType": "Select scan type",
+"scanTypeSingle": "Single",
+"scanTypeMonthly": "Monthly",
+"scanTypeUnlimited": "Unlimited",
+"noScansAvailable": "You have no scans available.",
+"scanDeductedFromSelected": "This scan will be deducted from the selected type.",
+"chooseScanBalance": "Choose which scan balance to use.",
+"confirm": "Confirm",
+"clausesFound": "Clauses Found",
+"clausesMissing": "Clauses Missing",
+
+
+
+"legalReviewRequired": "Legal Review Required",
+
+
+
+"errorTitle": "Error",
+"iapUnavailableMessage": "In-app purchases are not available on this device right now.",
+"plansUnavailableMessage": "Plans are currently unavailable. Please try again later.",
+"genericErrorBody": "Something went wrong. Please try again.",
+"alreadyPurchasedTitle": "Already Purchased",
+"alreadyPurchasedBody": "You already own this item. Try restoring your purchases.",
+"paymentPendingTitle": "Payment Pending",
+"paymentPendingBody": "Your payment is being processed. Your plan will be activated once it is confirmed.",
+"purchaseFailedTitle": "Purchase Failed",
+"purchaseFailedGenericBody": "The purchase could not be completed. Please try again.",
+"purchaseErrorBody": "Purchase error: @error",
+"purchaseSuccessTitle": "Purchase Successful 🎉",
+"purchaseSuccessBody": "Thank you! Your purchase has been added to your account.",
+"restoredTitle": "Restored",
+"restoredBody": "Your purchases have been restored.",
+"nothingToRestoreTitle": "Nothing to Restore",
+"nothingToRestoreBody": "No active subscriptions were found to restore.",
+"restoreFailedTitle": "Restore Failed",
+"couldNotOpenPlayBody": "Could not open Google Play. Please open it manually to manage your subscription.",
+"freePlanLabel": "Free Plan",
+"monthlyPlanLabelFull": "Monthly Plan",
+"unlimitedPlanLabelFull": "Unlimited Plan"
 }

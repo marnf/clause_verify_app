@@ -1,25 +1,27 @@
+
 // import 'package:country_picker/country_picker.dart';
 // import 'package:clause_verify/core/services/endpoints.dart';
 // import 'package:clause_verify/core/services/network_caller.dart';
 // import 'package:clause_verify/core/utils/constants/app_colors.dart';
 // import 'package:clause_verify/core/utils/constants/country_confirmation_modal.dart';
 // import 'package:clause_verify/core/utils/constants/country_helper.dart';
+// import 'package:clause_verify/core/utils/image_converter.dart';
 // import 'package:clause_verify/features/analysis/model/analysis_result_model.dart';
+// import 'package:clause_verify/features/subscription/utils/paywall_guard.dart';
 // import 'package:clause_verify/routes/app_routes.dart';
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
 // import 'package:file_picker/file_picker.dart';
 // import 'dart:io';
+// import 'package:clause_verify/core/common/widgets/ai_consent_modal.dart';
 
 // class UploadController extends GetxController {
 //   final RxList<File> selectedFiles = <File>[].obs;
 //   final RxList<String> fileNames = <String>[].obs;
 //   final RxList<int> fileSizes = <int>[].obs;
 //   final RxBool isUploading = false.obs;
-
+//   final RxBool isProcessingImages = false.obs;
 //   final Rx<bool?> isDocumentMode = Rx<bool?>(null);
-
-//   // ✅ Country Variables
 //   final Rx<Country?> detectedCountry = Rx<Country?>(null);
 
 //   static const int maxFileSizeMB = 20;
@@ -43,7 +45,7 @@
 //   @override
 //   void onInit() {
 //     super.onInit();
-//     _fetchUserCountry(); // ✅ Fetch country in background
+//     _fetchUserCountry(); // Fetch country in background
 //   }
 
 //   Future<void> _fetchUserCountry() async {
@@ -51,18 +53,14 @@
 //       final country = await CountryHelper.getCurrentCountry();
 //       if (country != null) {
 //         detectedCountry.value = country;
-//         print('✅ Detected Country: ${country.name}');
 //       } else {
 //         detectedCountry.value = Country.parse('CA');
-//         print('⚠️ Location denied, defaulting to Canada');
 //       }
 //     } catch (e) {
-//       print('❌ Error fetching country: $e');
 //       detectedCountry.value = Country.parse('CA');
 //     }
 //   }
 
-//   // ── Browse files from device ──
 //   Future<void> browseFiles() async {
 //     if (!canAddMore) {
 //       Get.snackbar(
@@ -91,6 +89,7 @@
 //         for (var file in result.files) {
 //           final ext = file.name.split('.').last.toLowerCase();
 //           final isDoc = docExtensions.contains(ext);
+
 //           if (pickedIsDoc == null) {
 //             pickedIsDoc = isDoc;
 //           } else if (pickedIsDoc != isDoc) {
@@ -125,6 +124,7 @@
 //         }
 
 //         final remaining = remainingSlots;
+
 //         if (pickedIsDoc == true && result.files.length > 1) {
 //           Get.snackbar(
 //             'limitExceeded'.tr,
@@ -154,34 +154,51 @@
 //           return;
 //         }
 
+//         if (pickedIsDoc == false) {
+//           isProcessingImages.value = true;
+//         }
+
 //         final newFiles = <File>[];
 //         final newNames = <String>[];
 //         final newSizes = <int>[];
 
-//         for (var platformFile in result.files) {
-//           if (platformFile.path == null) continue;
-//           final file = File(platformFile.path!);
-//           final fileSize = await file.length();
-//           final fileSizeMB = fileSize / (1024 * 1024);
-//           if (fileSizeMB > maxFileSizeMB) {
-//             Get.snackbar(
-//               'fileTooLarge'.tr,
-//               'fileTooLargeMessageDetails'.trParams({
-//                 'name': platformFile.name,
-//                 'size': fileSizeMB.toStringAsFixed(1),
-//                 'max': maxFileSizeMB.toString()
-//               }),
-//               snackPosition: SnackPosition.TOP,
-//               backgroundColor: AppColors.error,
-//               colorText: Colors.white,
-//               margin: const EdgeInsets.all(16),
-//               borderRadius: 8,
-//             );
-//             continue;
+//         try {
+//           for (var platformFile in result.files) {
+//             if (platformFile.path == null) continue;
+
+//             File file = File(platformFile.path!);
+//             final ext = platformFile.name.split('.').last.toLowerCase();
+
+//             if (imageExtensions.contains(ext)) {
+//               file = await ImageConverter.convertToJpegIfNeeded(file);
+//             }
+
+//             final fileSize = await file.length();
+//             final fileSizeMB = fileSize / (1024 * 1024);
+
+//             if (fileSizeMB > maxFileSizeMB) {
+//               Get.snackbar(
+//                 'fileTooLarge'.tr,
+//                 'fileTooLargeMessageDetails'.trParams({
+//                   'name': platformFile.name,
+//                   'size': fileSizeMB.toStringAsFixed(1),
+//                   'max': maxFileSizeMB.toString()
+//                 }),
+//                 snackPosition: SnackPosition.TOP,
+//                 backgroundColor: AppColors.error,
+//                 colorText: Colors.white,
+//                 margin: const EdgeInsets.all(16),
+//                 borderRadius: 8,
+//               );
+//               continue;
+//             }
+
+//             newFiles.add(file);
+//             newNames.add(platformFile.name);
+//             newSizes.add(fileSize);
 //           }
-//           newFiles.add(file);
-//           newNames.add(platformFile.name);
-//           newSizes.add(fileSize);
+//         } finally {
+//           isProcessingImages.value = false;
 //         }
 
 //         if (newFiles.isNotEmpty) {
@@ -192,7 +209,6 @@
 //         }
 //       }
 //     } catch (e) {
-//       print('❌ Error picking files: $e');
 //       Get.snackbar(
 //         'error'.tr,
 //         'filePickFailed'.tr,
@@ -210,6 +226,7 @@
 //       selectedFiles.removeAt(index);
 //       fileNames.removeAt(index);
 //       fileSizes.removeAt(index);
+
 //       if (selectedFiles.isEmpty) {
 //         isDocumentMode.value = null;
 //       }
@@ -263,9 +280,6 @@
 //     return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
 //   }
 
-//   // ══════════════════════════════════════
-//   //  SUBMIT FLOW
-//   // ══════════════════════════════════════
 //   Future<void> submitForAnalysis() async {
 //     if (selectedFiles.isEmpty) {
 //       Get.snackbar(
@@ -283,11 +297,15 @@
 //     final Country? confirmedCountry = await _showCountryConfirmation();
 //     if (confirmedCountry == null) return; // User cancelled
 
+//     final agreed = await AIConsentModal.show();
+//     if (!agreed) return;
+
 //     _performUpload(confirmedCountry);
 //   }
 
 //   Future<Country?> _showCountryConfirmation() async {
 //     final defaultCountry = detectedCountry.value ?? Country.parse('CA');
+
 //     return await Get.dialog<Country>(
 //       CountryConfirmationModal(initialCountry: defaultCountry),
 //       barrierDismissible: true,
@@ -311,13 +329,14 @@
 
 //       if (response.isSuccess && response.responseData != null) {
 //         final dataMap = response.responseData!['data'] as Map<String, dynamic>?;
+
 //         if (dataMap == null) {
 //           Get.snackbar(
-//             'error'.tr, 
+//             'error'.tr,
 //             'invalidResponseFormat'.tr,
 //             snackPosition: SnackPosition.TOP,
 //             backgroundColor: Colors.redAccent,
-//             colorText: Colors.white
+//             colorText: Colors.white,
 //           );
 //           return;
 //         }
@@ -326,17 +345,27 @@
 //         clearAll();
 //         Get.toNamed(AppRoute.analysisResultScreen, arguments: resultModel);
 //       } else {
-//         // ✅ Low resolution check
+//         // Backend বলছে scan credit/plan নেই: Subscription page-এ পাঠাও
+//         if (response.statusCode == 402) {
+//           isUploading.value = false;
+//           await PaywallGuard.handle(response);
+//           return;
+//         }
+
 //         final errorData = response.responseData;
-//         if (errorData != null && errorData['status'] == 'fail' && errorData['reason'] == 'low_resolution') {
+
+//         if (errorData != null &&
+//             errorData['status'] == 'fail' &&
+//             errorData['reason'] == 'low_resolution') {
 //           final width = errorData['width'];
 //           final height = errorData['height'];
 //           final minRes = errorData['min_resolution'] ?? '300x300';
+
 //           Get.snackbar(
 //             'imageResolutionTooLow'.tr,
 //             'imageResolutionTooLowMessage'.trParams({
-//               'width': width.toString(), 
-//               'height': height.toString(), 
+//               'width': width.toString(),
+//               'height': height.toString(),
 //               'minRes': minRes.toString()
 //             }),
 //             snackPosition: SnackPosition.TOP,
@@ -348,27 +377,29 @@
 //           );
 //         } else {
 //           Get.snackbar(
-//             'error'.tr, 
-//             response.errorMessage ?? 'uploadFailed'.tr,
+//             'error'.tr,
+//             response.errorMessage,
 //             snackPosition: SnackPosition.TOP,
 //             backgroundColor: Colors.redAccent,
-//             colorText: Colors.white
+//             colorText: Colors.white,
 //           );
 //         }
 //       }
 //     } catch (e) {
 //       Get.snackbar(
-//         'error'.tr, 
+//         'error'.tr,
 //         'somethingWentWrong'.trParams({'error': e.toString()}),
 //         snackPosition: SnackPosition.TOP,
 //         backgroundColor: Colors.redAccent,
-//         colorText: Colors.white
+//         colorText: Colors.white,
 //       );
 //     } finally {
 //       isUploading.value = false;
 //     }
 //   }
 // }
+
+
 
 
 import 'package:country_picker/country_picker.dart';
@@ -385,7 +416,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
-import 'package:clause_verify/core/common/widgets/ai_consent_modal.dart';
 
 class UploadController extends GetxController {
   final RxList<File> selectedFiles = <File>[].obs;
@@ -666,25 +696,23 @@ class UploadController extends GetxController {
       return;
     }
 
-    final Country? confirmedCountry = await _showCountryConfirmation();
-    if (confirmedCountry == null) return; // User cancelled
+    // Country + scan type + AI consent — সবই এই একটা modal-এ
+    final ScanSelection? selection = await _showScanConfirmation();
+    if (selection == null) return; // User cancelled
 
-    final agreed = await AIConsentModal.show();
-    if (!agreed) return;
-
-    _performUpload(confirmedCountry);
+    _performUpload(selection);
   }
 
-  Future<Country?> _showCountryConfirmation() async {
+  Future<ScanSelection?> _showScanConfirmation() async {
     final defaultCountry = detectedCountry.value ?? Country.parse('CA');
 
-    return await Get.dialog<Country>(
+    return await Get.dialog<ScanSelection>(
       CountryConfirmationModal(initialCountry: defaultCountry),
       barrierDismissible: true,
     );
   }
 
-  Future<void> _performUpload(Country country) async {
+  Future<void> _performUpload(ScanSelection selection) async {
     try {
       isUploading.value = true;
 
@@ -696,7 +724,10 @@ class UploadController extends GetxController {
       final response = await networkCaller.multipartRequest(
         Endpoints.fileUpload,
         files: fileList,
-        fields: {'law_country': country.name},
+        fields: {
+          'law_country': selection.country.name,
+          'scan_type': selection.scanType.apiValue,
+        },
       );
 
       if (response.isSuccess && response.responseData != null) {

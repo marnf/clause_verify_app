@@ -1,7 +1,7 @@
 class Endpoints {
    static const String baseUrl = "https://app.clauseverify.app";
-  // static const String baseUrl =
-  //     "https://unheated-overuse-abrasive.ngrok-free.dev";
+  //  static const String baseUrl = "https://unheated-overuse-abrasive.ngrok-free.dev";
+  //  static const String baseUrl = "http://167.114.114.172:8005";
 
   // ================= AUTH =================
 

@@ -527,8 +527,55 @@
 "cancelledAccessUntil": "Gekündigt — Zugriff bis @date",
 "cancelSubDialogTitle": "Abo kündigen?",
 "cancelSubDialogBody": "Sie werden zu Google Play weitergeleitet, um zu kündigen. Ihre Vorteile bleiben bis zum Ende des aktuellen Abrechnungszeitraums bestehen.",
-"keepPlanButton": "Plan behalten"
-  
+"keepPlanButton": "Plan behalten",
 
-  
+
+
+"availableAfterPlanEnds": "Verfügbar nach Ablauf Ihres Plans",
+"planSwitchBlockedBody": "Ihr aktueller Plan ist noch aktiv. Sie können einen einzelnen Scan kaufen oder sich nach dessen Ende erneut abonnieren."
+  ,
+
+
+  "confirmJurisdiction": "Rechtsordnung bestätigen",
+"jurisdictionDescription": "Wir analysieren Ihren Vertrag nach dem Recht des unten gewählten Landes. Dazu wird Ihr Dokument sicher an einen vertrauenswürdigen KI-Dienst eines Drittanbieters (Claude von Anthropic) übermittelt, nur zur Erstellung Ihres Berichts und nie zum Training von KI-Modellen. Mit „Bestätigen“ stimmen Sie dieser Weitergabe zu.",
+"jurisdictionAiNotice": "Zur Analyse wird Ihr hochgeladener Vertrag sicher an einen vertrauenswürdigen KI-Dienst eines Drittanbieters (Claude AI von Anthropic) gesendet, ausschließlich um Ihren klauselweisen Bericht zu erstellen. Ihr Dokument wird nicht zum Training von KI-Modellen verwendet. Mit dem Tippen auf „Bestätigen“ stimmen Sie dieser Datenweitergabe zu.",
+"tapToChangeCountry": "Tippen, um das Land zu ändern",
+"selectScanType": "Scan-Typ auswählen",
+"scanTypeSingle": "Einzeln",
+"scanTypeMonthly": "Monatlich",
+"scanTypeUnlimited": "Unbegrenzt",
+"noScansAvailable": "Sie haben keine Scans verfügbar.",
+"scanDeductedFromSelected": "Dieser Scan wird vom ausgewählten Typ abgezogen.",
+"chooseScanBalance": "Wählen Sie, welches Scan-Guthaben verwendet werden soll.",
+"confirm": "Bestätigen",
+"clausesFound": "Gefundene Klauseln",
+"clausesMissing": "Fehlende Klauseln"
+
+  ,
+
+  "legalReviewRequired": "Rechtsprüfung erforderlich",
+
+
+  "errorTitle": "Fehler",
+"iapUnavailableMessage": "In-App-Käufe sind auf diesem Gerät derzeit nicht verfügbar.",
+"plansUnavailableMessage": "Die Tarife sind derzeit nicht verfügbar. Bitte versuchen Sie es später erneut.",
+"genericErrorBody": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+"alreadyPurchasedTitle": "Bereits gekauft",
+"alreadyPurchasedBody": "Sie besitzen diesen Artikel bereits. Versuchen Sie, Ihre Käufe wiederherzustellen.",
+"paymentPendingTitle": "Zahlung ausstehend",
+"paymentPendingBody": "Ihre Zahlung wird verarbeitet. Ihr Tarif wird nach der Bestätigung aktiviert.",
+"purchaseFailedTitle": "Kauf fehlgeschlagen",
+"purchaseFailedGenericBody": "Der Kauf konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut.",
+"purchaseErrorBody": "Kauffehler: @error",
+"purchaseSuccessTitle": "Kauf erfolgreich 🎉",
+"purchaseSuccessBody": "Vielen Dank! Ihr Kauf wurde Ihrem Konto hinzugefügt.",
+"restoredTitle": "Wiederhergestellt",
+"restoredBody": "Ihre Käufe wurden wiederhergestellt.",
+"nothingToRestoreTitle": "Nichts wiederherzustellen",
+"nothingToRestoreBody": "Es wurden keine aktiven Abonnements zum Wiederherstellen gefunden.",
+"restoreFailedTitle": "Wiederherstellung fehlgeschlagen",
+"couldNotOpenPlayBody": "Google Play konnte nicht geöffnet werden. Bitte öffnen Sie es manuell, um Ihr Abonnement zu verwalten.",
+"freePlanLabel": "Kostenloser Tarif",
+"monthlyPlanLabelFull": "Monatstarif",
+"unlimitedPlanLabelFull": "Unbegrenzter Tarif"
 }

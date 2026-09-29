@@ -23,7 +23,7 @@ import 'package:clause_verify/features/subscription/controller/subscription_cont
 import 'package:clause_verify/features/subscription/screen/subscription_screen.dart';
 import 'package:clause_verify/features/upload/screens/upload_screen.dart';
 import 'package:get/get.dart';
-import '../features/home/presentaion/screens/home_screen.dart';
+import '../features/home/screens/home_screen.dart';
 import '../features/nav_bar/presentation/screens/nav_bar.dart';
 import '../features/onboarding/screen/onboarding_screen.dart';
 import '../features/auth/screen/login_screen.dart';

@@ -526,5 +526,56 @@
 "cancelledAccessUntil": "Annullato — accesso fino al @date",
 "cancelSubDialogTitle": "Annullare l'abbonamento?",
 "cancelSubDialogBody": "Verrai indirizzato a Google Play per annullare. Manterrai i vantaggi del piano fino alla fine del periodo di fatturazione corrente.",
-"keepPlanButton": "Mantieni piano"
+"keepPlanButton": "Mantieni piano",
+
+
+
+
+"availableAfterPlanEnds": "Disponibile dopo la fine del tuo piano",
+"planSwitchBlockedBody": "Il tuo piano attuale è ancora attivo. Puoi acquistare una singola scansione o abbonarti di nuovo dopo la sua fine.",
+
+
+
+"confirmJurisdiction": "Conferma giurisdizione",
+"jurisdictionDescription": "Analizzeremo il tuo contratto secondo le leggi del paese selezionato qui sotto. A tal fine, il documento viene condiviso in modo sicuro con un servizio di IA di terze parti affidabile (Claude di Anthropic), solo per generare il report e mai per addestrare modelli di IA. Toccando Conferma, accetti questa condivisione.",
+"jurisdictionAiNotice": "Per analizzarlo, il contratto caricato verrà inviato in modo sicuro a un servizio di IA di terze parti affidabile (Claude AI di Anthropic), esclusivamente per generare il tuo report clausola per clausola. Il tuo documento non viene utilizzato per addestrare alcun modello di IA. Toccando Conferma, accetti questa condivisione dei dati.",
+"tapToChangeCountry": "Tocca per cambiare paese",
+"selectScanType": "Seleziona il tipo di scansione",
+"scanTypeSingle": "Singola",
+"scanTypeMonthly": "Mensile",
+"scanTypeUnlimited": "Illimitata",
+"noScansAvailable": "Non hai scansioni disponibili.",
+"scanDeductedFromSelected": "Questa scansione verrà detratta dal tipo selezionato.",
+"chooseScanBalance": "Scegli quale saldo di scansioni utilizzare.",
+"confirm": "Conferma",
+"clausesFound": "Clausole trovate",
+"clausesMissing": "Clausole mancanti",
+
+
+"legalReviewRequired": "Revisione legale richiesta",
+
+
+
+"errorTitle": "Errore",
+"iapUnavailableMessage": "Gli acquisti in-app non sono al momento disponibili su questo dispositivo.",
+"plansUnavailableMessage": "I piani non sono al momento disponibili. Riprova più tardi.",
+"genericErrorBody": "Qualcosa è andato storto. Riprova.",
+"alreadyPurchasedTitle": "Già acquistato",
+"alreadyPurchasedBody": "Possiedi già questo articolo. Prova a ripristinare i tuoi acquisti.",
+"paymentPendingTitle": "Pagamento in sospeso",
+"paymentPendingBody": "Il pagamento è in elaborazione. Il tuo piano verrà attivato dopo la conferma.",
+"purchaseFailedTitle": "Acquisto non riuscito",
+"purchaseFailedGenericBody": "Non è stato possibile completare l'acquisto. Riprova.",
+"purchaseErrorBody": "Errore di acquisto: @error",
+"purchaseSuccessTitle": "Acquisto completato 🎉",
+"purchaseSuccessBody": "Grazie! Il tuo acquisto è stato aggiunto al tuo account.",
+"restoredTitle": "Ripristinato",
+"restoredBody": "I tuoi acquisti sono stati ripristinati.",
+"nothingToRestoreTitle": "Niente da ripristinare",
+"nothingToRestoreBody": "Non sono stati trovati abbonamenti attivi da ripristinare.",
+"restoreFailedTitle": "Ripristino non riuscito",
+"couldNotOpenPlayBody": "Impossibile aprire Google Play. Aprilo manualmente per gestire il tuo abbonamento.",
+"freePlanLabel": "Piano gratuito",
+"monthlyPlanLabelFull": "Piano mensile",
+"unlimitedPlanLabelFull": "Piano illimitato"
 }

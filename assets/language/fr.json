@@ -524,5 +524,57 @@
 "cancelledAccessUntil": "Annulé — accès jusqu'au @date",
 "cancelSubDialogTitle": "Annuler l'abonnement ?",
 "cancelSubDialogBody": "Vous serez redirigé vers Google Play pour annuler. Vous conservez les avantages de votre forfait jusqu'à la fin de la période de facturation en cours.",
-"keepPlanButton": "Conserver le forfait"
+"keepPlanButton": "Conserver le forfait",
+
+
+
+
+"availableAfterPlanEnds": "Disponible après la fin de votre plan",
+"planSwitchBlockedBody": "Votre plan actuel est toujours actif. Vous pouvez acheter un scan unique ou vous réabonner après sa fin.",
+
+
+
+
+
+"confirmJurisdiction": "Confirmer la juridiction",
+"jurisdictionDescription": "Nous analyserons votre contrat selon les lois du pays sélectionné ci-dessous. Pour cela, votre document est partagé de manière sécurisée avec un service d'IA tiers de confiance (Claude d'Anthropic), uniquement pour générer votre rapport et jamais pour entraîner des modèles d'IA. En appuyant sur Confirmer, vous acceptez ce partage.",
+"jurisdictionAiNotice": "Pour l'analyser, votre contrat téléversé sera envoyé de manière sécurisée à un service d'IA tiers de confiance (Claude AI d'Anthropic), uniquement afin de générer votre rapport clause par clause. Votre document n'est pas utilisé pour entraîner des modèles d'IA. En appuyant sur Confirmer, vous acceptez ce partage de données.",
+"tapToChangeCountry": "Appuyez pour changer de pays",
+"selectScanType": "Sélectionnez le type d'analyse",
+"scanTypeSingle": "Unique",
+"scanTypeMonthly": "Mensuel",
+"scanTypeUnlimited": "Illimité",
+"noScansAvailable": "Vous n'avez aucune analyse disponible.",
+"scanDeductedFromSelected": "Cette analyse sera déduite du type sélectionné.",
+"chooseScanBalance": "Choisissez le solde d'analyses à utiliser.",
+"confirm": "Confirmer",
+"clausesFound": "Clauses trouvées",
+"clausesMissing": "Clauses manquantes",
+
+
+"legalReviewRequired": "Examen juridique requis",
+
+
+"errorTitle": "Erreur",
+"iapUnavailableMessage": "Les achats intégrés ne sont pas disponibles sur cet appareil pour le moment.",
+"plansUnavailableMessage": "Les forfaits sont actuellement indisponibles. Veuillez réessayer plus tard.",
+"genericErrorBody": "Une erreur s'est produite. Veuillez réessayer.",
+"alreadyPurchasedTitle": "Déjà acheté",
+"alreadyPurchasedBody": "Vous possédez déjà cet article. Essayez de restaurer vos achats.",
+"paymentPendingTitle": "Paiement en attente",
+"paymentPendingBody": "Votre paiement est en cours de traitement. Votre forfait sera activé dès sa confirmation.",
+"purchaseFailedTitle": "Échec de l'achat",
+"purchaseFailedGenericBody": "L'achat n'a pas pu être finalisé. Veuillez réessayer.",
+"purchaseErrorBody": "Erreur d'achat : @error",
+"purchaseSuccessTitle": "Achat réussi 🎉",
+"purchaseSuccessBody": "Merci ! Votre achat a été ajouté à votre compte.",
+"restoredTitle": "Restauré",
+"restoredBody": "Vos achats ont été restaurés.",
+"nothingToRestoreTitle": "Rien à restaurer",
+"nothingToRestoreBody": "Aucun abonnement actif à restaurer n'a été trouvé.",
+"restoreFailedTitle": "Échec de la restauration",
+"couldNotOpenPlayBody": "Impossible d'ouvrir Google Play. Ouvrez-le manuellement pour gérer votre abonnement.",
+"freePlanLabel": "Forfait gratuit",
+"monthlyPlanLabelFull": "Forfait mensuel",
+"unlimitedPlanLabelFull": "Forfait illimité"
 }

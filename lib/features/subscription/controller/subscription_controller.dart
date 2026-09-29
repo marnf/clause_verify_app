@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:clause_verify/core/services/purchase_service.dart';
+import 'package:clause_verify/features/home/controllers/home_controller.dart';
 import 'package:clause_verify/features/nav_bar/controllers/nav_bar_controller.dart';
+import 'package:clause_verify/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -17,7 +20,8 @@ class SubscriptionIds {
   static const String scanSinglePackage = 'scan_single';
   static const String pdfReportPackage = 'pdf_report';
 
-  // Entitlement identifier
+  // Entitlement identifier — এগুলো RevenueCat dashboard-এর
+  // Entitlements-এর identifier-এর সাথে অক্ষরে অক্ষরে (case-sensitive) মিলতে হবে
   static const String monthlyEntitlement = 'monthly_access';
   static const String unlimitedEntitlement = 'unlimited_access';
 
@@ -41,10 +45,13 @@ class SubscriptionController extends GetxController
   final Rxn<DateTime> planExpiresAt = Rxn<DateTime>();
   final willRenew = true.obs;
 
+  // কেনার পরপরই lifecycle-resume এসে ভুলভাবে "খালি" দেখানো ঠেকাতে এই cooldown।
+  DateTime? _lastPurchaseAt;
+  static const Duration _postPurchaseCooldown = Duration(seconds: 10);
+
   bool get hasActivePlan =>
       activePlan.value == 'monthly' || activePlan.value == 'unlimited';
 
-  // ✅ এখন ৫টা ভাষাতেই translate হয় (assets/language/*.json)
   String get planLabel {
     switch (activePlan.value) {
       case 'monthly':
@@ -69,14 +76,18 @@ class SubscriptionController extends GetxController
     super.onClose();
   }
 
-  // Google Play থেকে ফিরে এলে (cancel করার পর) status নিজে refresh হয়
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed &&
-        !isPurchasing.value &&
-        !isLoading.value) {
-      refreshCustomerInfo(force: true);
+    if (state != AppLifecycleState.resumed) return;
+    if (isPurchasing.value || isLoading.value) return;
+
+    final lastPurchase = _lastPurchaseAt;
+    if (lastPurchase != null &&
+        DateTime.now().difference(lastPurchase) < _postPurchaseCooldown) {
+      return; // এইমাত্র কেনা হয়েছে, local ফলাফলই বিশ্বাসযোগ্য
     }
+
+    refreshCustomerInfo(force: true);
   }
 
   Future<void> loadAll() async {
@@ -86,12 +97,34 @@ class SubscriptionController extends GetxController
     if (!PurchaseService.isConfigured) {
       errorMessage.value = 'iapUnavailableMessage'.tr;
       isLoading.value = false;
+      _debugLog('PurchaseService.isConfigured == false — RevenueCat '
+          'configure হয়নি, তাই কোনো plan/entitlement দেখানো যাবে না।');
       return;
     }
 
+    await _debugLogIdentity();
     await _loadOfferings();
-    await refreshCustomerInfo();
+
+    final withinPostPurchaseCooldown = _lastPurchaseAt != null &&
+        DateTime.now().difference(_lastPurchaseAt!) < _postPurchaseCooldown;
+    await refreshCustomerInfo(force: !withinPostPurchaseCooldown);
+
     isLoading.value = false;
+  }
+
+  /// ── DEBUG: root cause বের করার জন্য সাময়িক log ──
+  Future<void> _debugLogIdentity() async {
+    if (!kDebugMode) return;
+    try {
+      final appUserId = await Purchases.appUserID;
+      final isAnon = await Purchases.isAnonymous;
+      debugPrint(
+        '🔍 [Subscription] RevenueCat app_user_id = "$appUserId" '
+        '(anonymous: $isAnon)',
+      );
+    } catch (e) {
+      debugPrint('🔍 [Subscription] app_user_id পড়তে সমস্যা: $e');
+    }
   }
 
   Future<void> _loadOfferings() async {
@@ -102,6 +135,8 @@ class SubscriptionController extends GetxController
 
       if (offering == null) {
         errorMessage.value = 'plansUnavailableMessage'.tr;
+        _debugLog('Offering "${SubscriptionIds.offeringId}" পাওয়া যায়নি, '
+            'আর current offering-ও null। RevenueCat → Offerings চেক করো।');
         return;
       }
 
@@ -115,7 +150,7 @@ class SubscriptionController extends GetxController
         errorMessage.value = 'plansUnavailableMessage'.tr;
       }
     } on PlatformException catch (e) {
-      errorMessage.value = e.message ?? 'somethingWentWrong'.tr;
+      errorMessage.value = e.message ?? 'genericErrorBody'.tr;
     } catch (e) {
       errorMessage.value = 'plansUnavailableMessage'.tr;
     }
@@ -129,8 +164,8 @@ class SubscriptionController extends GetxController
       }
       final info = await Purchases.getCustomerInfo();
       _applyCustomerInfo(info);
-    } catch (_) {
-      // নীরবে ব্যর্থ হলে আগের অবস্থাই থাকবে
+    } catch (e) {
+      _debugLog('getCustomerInfo ব্যর্থ হলো: $e');
     }
   }
 
@@ -149,19 +184,44 @@ class SubscriptionController extends GetxController
     final expiry = entitlement?.expirationDate;
     planExpiresAt.value =
         expiry != null ? DateTime.tryParse(expiry)?.toLocal() : null;
+
+    if (kDebugMode) {
+      debugPrint('🔍 [Subscription] active entitlements = '
+          '${active.keys.toList()}');
+      debugPrint('🔍 [Subscription] all entitlements (active+inactive) = '
+          '${info.entitlements.all.keys.toList()}');
+      debugPrint('🔍 [Subscription] expected identifiers = '
+          '["${SubscriptionIds.monthlyEntitlement}", '
+          '"${SubscriptionIds.unlimitedEntitlement}"] → resolved plan = '
+          '${activePlan.value}');
+    }
+  }
+
+  void _debugLog(String message) {
+    if (kDebugMode) debugPrint('🔍 [Subscription] $message');
   }
 
   bool isSubscriptionPackage(String id) =>
       id == SubscriptionIds.monthlyPackage ||
       id == SubscriptionIds.unlimitedPackage;
 
+  /// এই মুহূর্তে চালু থাকা plan-টাই কিনা
   bool isCurrentPlan(String id) {
     final plan = activePlan.value;
     return (id == SubscriptionIds.monthlyPackage && plan == 'monthly') ||
         (id == SubscriptionIds.unlimitedPackage && plan == 'unlimited');
   }
 
+  /// কোনো subscription চালু থাকলে অন্য subscription lock থাকবে।
+  /// (Single scan ও PDF এর উপর এর কোনো প্রভাব নেই)
+  bool isSubscriptionLocked(String id) =>
+      isSubscriptionPackage(id) && hasActivePlan && !isCurrentPlan(id);
+
   /// কেনা সফল হলে true ফেরত দেয়। Screen ফেরার কাজ caller-এর।
+  ///
+  /// - Subscription চালু থাকলে অন্য কোনো subscription কেনা যাবে না
+  ///   (plan switch/product change বন্ধ)।
+  /// - Single scan ও PDF যেকোনো সময় কেনা যাবে।
   Future<bool> buy(String packageId) async {
     if (isPurchasing.value) return false;
 
@@ -176,13 +236,14 @@ class SubscriptionController extends GetxController
       return false;
     }
 
-    // দুটো subscription একসাথে কেনা আটকানো (টাকা দুবার কাটা ঠেকাতে)
-    if (isSubscriptionPackage(packageId) && hasActivePlan) {
-      _snack(
-        'alreadyHavePlanTitle'.tr,
-        'alreadyHavePlanBody'.tr,
-        isError: true,
-      );
+    // একই plan যেটা এখন active সেটাই আবার কেনার চেষ্টা: কিছু করার নেই
+    if (isCurrentPlan(packageId)) {
+      return false;
+    }
+
+    // Plan চালু থাকা অবস্থায় অন্য subscription কেনা আটকানো
+    if (isSubscriptionLocked(packageId)) {
+      _snack('errorTitle'.tr, 'planSwitchBlockedBody'.tr, isError: true);
       return false;
     }
 
@@ -191,8 +252,11 @@ class SubscriptionController extends GetxController
     bool success = false;
 
     try {
-      final result = await Purchases.purchase(PurchaseParams.package(package));
+      final params = PurchaseParams.package(package);
+
+      final result = await Purchases.purchase(params);
       _applyCustomerInfo(result.customerInfo);
+      _lastPurchaseAt = DateTime.now();
       success = true;
     } on PlatformException catch (e) {
       final code = PurchasesErrorHelper.getErrorCode(e);
@@ -230,12 +294,29 @@ class SubscriptionController extends GetxController
     _snack('purchaseSuccessTitle'.tr, 'purchaseSuccessBody'.tr);
   }
 
-  /// সব page বন্ধ করে প্রথম route-এ ফেরে, আর nav bar-এর Home tab খোলে।
-  /// (আগে শুধু Get.until ছিল, তাই Profile থেকে এলে Profile tab-এ নামত)
+  /// ✅ FIX: আগে `route.isFirst` পর্যন্ত pop হতো — stack-এর প্রথম route
+  /// Login হলে কেনার পর Login-এ চলে যেত।
+  /// এখন NavBar (বা Home) route পর্যন্তই pop করা হয়। যদি stack-এ
+  /// NavBar/Home না-ই থাকে, তাহলে stack পরিষ্কার করে সরাসরি NavBar-এ যায়।
   void goHome() {
-    Get.until((route) => route.isFirst);
+    bool _isHomeRoute(String? name) =>
+        name == AppRoute.navBar || name == AppRoute.homeScreen;
+
+    Get.until((route) => _isHomeRoute(route.settings.name) || route.isFirst);
+
+    // pop করার পরেও NavBar/Home-এ না পৌঁছালে (মানে stack-এ ছিলই না)
+    // Login-এ না গিয়ে সরাসরি NavBar-এ পাঠাও
+    if (!_isHomeRoute(Get.currentRoute)) {
+      Get.offAllNamed(AppRoute.navBar);
+    }
+
     if (Get.isRegistered<NavBarController>()) {
       Get.find<NavBarController>().backToHome();
+    }
+
+    // backend webhook update হওয়া পর্যন্ত poll করে Home refresh
+    if (Get.isRegistered<HomeController>()) {
+      Get.find<HomeController>().refreshAfterPurchase();
     }
   }
 
@@ -264,8 +345,8 @@ class SubscriptionController extends GetxController
         );
       }
     } on PlatformException catch (e) {
-      _snack('restoreFailedTitle'.tr, e.message ?? 'somethingWentWrong'.tr,
-          isError: true);
+     _snack('restoreFailedTitle'.tr, e.message ?? 'genericErrorBody'.tr,
+    isError: true);
     } catch (e) {
       _snack(
         'restoreFailedTitle'.tr,

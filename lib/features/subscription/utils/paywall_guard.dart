@@ -7,8 +7,7 @@ import 'package:get/get.dart';
 class PaywallGuard {
   PaywallGuard._();
 
-  /// Response-এর status 402 হলে dialog দেখায়, "View plans" চাপলে
-  /// Subscription page খোলে। 402 হলে true ফেরত দেয়, না হলে false।
+ 
   static Future<bool> handle(ResponseData response) async {
     if (response.statusCode != 402) return false;
 

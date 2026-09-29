@@ -2,51 +2,43 @@
 
 class HistoryModel {
   final String id;
-  final String? createdAt;
-  final String? country;
-  final int? confidenceScore;
-  final String? overallRisk;
-  final String? isPaidScan;
-  final String? isPaidReport;
-  final String? recommendation;
+  final String country;
+  final String overallRisk;
+  final String recommendation;
 
   HistoryModel({
     required this.id,
-    this.createdAt,
-    this.country,
-    this.confidenceScore,
-    this.overallRisk,
-    this.isPaidScan,
-    this.isPaidReport,
-    this.recommendation,
+    required this.country,
+    required this.overallRisk,
+    required this.recommendation,
   });
 
   factory HistoryModel.fromJson(Map<String, dynamic> json) {
+    String s(dynamic v) => v?.toString().trim() ?? '';
+
     return HistoryModel(
-      id: json['id'] ?? '',
-      createdAt: json['created_at'] as String?,
-      country: json['country'] as String?,
-      confidenceScore: json['confidence_score'] as int?,
-      overallRisk: json['overall_risk'] as String?,
-      isPaidScan: json['is_paid_scan']?.toString(),
-      isPaidReport: json['is_paid_report']?.toString(),
-      recommendation: json['recommendation'] as String?,
+      id: s(json['id']),
+      country: s(json['country']),
+      overallRisk: s(json['overall_risk']),
+      recommendation: s(json['recommendation']),
     );
   }
 
-  bool get hasData => confidenceScore != null && overallRisk != null;
-  
-  bool get isReportPaid => isPaidReport?.toLowerCase() == 'true';
+  /// "high" | "medium" | "low" | "" (চেনা না গেলে খালি)
+  String get level {
+    final r = overallRisk.toLowerCase();
+    if (r.contains('high')) return 'high';
+    if (r.contains('medium') || r.contains('moderate')) return 'medium';
+    if (r == 'low' || r.startsWith('low ')) return 'low';
+    return '';
+  }
 
-  // Format date to "Jun 04, 2026"
-  String get formattedDate {
-    if (createdAt == null || createdAt!.isEmpty) return '';
-    try {
-      final dateTime = DateTime.parse(createdAt!);
-      final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      return '${months[dateTime.month - 1]} ${dateTime.day.toString().padLeft(2, '0')}, ${dateTime.year}';
-    } catch (e) {
-      return '';
-    }
+  /// "accept" | "review" | "reject" | "" (চেনা না গেলে খালি)
+  String get recKind {
+    final r = recommendation.toLowerCase();
+    if (r.contains('reject') || r.contains('refuse')) return 'reject';
+    if (r.contains('review') || r.contains('legal')) return 'review';
+    if (r.contains('accept')) return 'accept';
+    return '';
   }
 }
