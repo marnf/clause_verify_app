@@ -37,8 +37,8 @@ class PdfPurchaseSheet {
           'Purchase successful',
           'Your PDF report is being unlocked.',
           snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
+          backgroundColor: AppColors.success,
+          colorText: AppColors.white,
         );
       }
       return purchased;
@@ -91,7 +91,7 @@ class _PdfPurchaseSheetContent extends StatelessWidget {
                 width: 56,
                 height: 56,
                 decoration: BoxDecoration(
-                  color: Color(0xFF13233D),
+                  color: AppColors.surfaceLight,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(Icons.picture_as_pdf_rounded,

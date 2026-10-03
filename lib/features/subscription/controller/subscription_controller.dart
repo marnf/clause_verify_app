@@ -1,8 +1,11 @@
+
 import 'dart:async';
+import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:clause_verify/core/services/purchase_service.dart';
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:clause_verify/features/home/controllers/home_controller.dart';
 import 'package:clause_verify/features/nav_bar/controllers/nav_bar_controller.dart';
 import 'package:clause_verify/routes/app_routes.dart';
@@ -29,6 +32,9 @@ class SubscriptionIds {
       'https://play.google.com/store/account/subscriptions';
 }
 
+/// Subscription plan change-এর ধরন
+enum PlanChangeType { upgrade, downgrade }
+
 class SubscriptionController extends GetxController
     with WidgetsBindingObserver {
   final isLoading = true.obs;
@@ -44,6 +50,13 @@ class SubscriptionController extends GetxController
   final activePlan = 'free'.obs;
   final Rxn<DateTime> planExpiresAt = Rxn<DateTime>();
   final willRenew = true.obs;
+
+  /// বর্তমান active subscription-এর store product id (Google-এর জন্য
+  /// base plan বাদ দিয়ে শুধু subscription id)। Plan change-এ লাগে।
+  String? _activeProductId;
+
+  /// শেষ purchase-টা deferred downgrade ছিল কিনা
+  bool _lastPurchaseWasDeferred = false;
 
   // কেনার পরপরই lifecycle-resume এসে ভুলভাবে "খালি" দেখানো ঠেকাতে এই cooldown।
   DateTime? _lastPurchaseAt;
@@ -185,6 +198,13 @@ class SubscriptionController extends GetxController
     planExpiresAt.value =
         expiry != null ? DateTime.tryParse(expiry)?.toLocal() : null;
 
+    // Google Play-তে productIdentifier "subId:basePlanId" আকারে আসতে পারে।
+    // Plan change-এর জন্য শুধু subscription id (colon-এর আগের অংশ) লাগে।
+    final rawProductId = entitlement?.productIdentifier;
+    _activeProductId = (rawProductId == null || rawProductId.isEmpty)
+        ? null
+        : rawProductId.split(':').first;
+
     if (kDebugMode) {
       debugPrint('🔍 [Subscription] active entitlements = '
           '${active.keys.toList()}');
@@ -193,7 +213,7 @@ class SubscriptionController extends GetxController
       debugPrint('🔍 [Subscription] expected identifiers = '
           '["${SubscriptionIds.monthlyEntitlement}", '
           '"${SubscriptionIds.unlimitedEntitlement}"] → resolved plan = '
-          '${activePlan.value}');
+          '${activePlan.value}, activeProductId = $_activeProductId');
     }
   }
 
@@ -212,15 +232,54 @@ class SubscriptionController extends GetxController
         (id == SubscriptionIds.unlimitedPackage && plan == 'unlimited');
   }
 
-  /// কোনো subscription চালু থাকলে অন্য subscription lock থাকবে।
-  /// (Single scan ও PDF এর উপর এর কোনো প্রভাব নেই)
-  bool isSubscriptionLocked(String id) =>
-      isSubscriptionPackage(id) && hasActivePlan && !isCurrentPlan(id);
+  int _packageRank(String id) {
+    if (id == SubscriptionIds.unlimitedPackage) return 2;
+    if (id == SubscriptionIds.monthlyPackage) return 1;
+    return 0;
+  }
+
+  int _currentRank() {
+    switch (activePlan.value) {
+      case 'unlimited':
+        return 2;
+      case 'monthly':
+        return 1;
+      default:
+        return 0;
+    }
+  }
+
+  /// Active subscription থাকা অবস্থায় অন্য subscription package-এ গেলে
+  /// সেটা upgrade নাকি downgrade। অন্য ক্ষেত্রে null।
+  PlanChangeType? planChangeType(String id) {
+    if (!isSubscriptionPackage(id) || !hasActivePlan || isCurrentPlan(id)) {
+      return null;
+    }
+    return _packageRank(id) > _currentRank()
+        ? PlanChangeType.upgrade
+        : PlanChangeType.downgrade;
+  }
+
+  /// Android-এ plan change করতে Google-কে পুরোনো product জানাতে হয়।
+  /// - Upgrade: সাথে সাথে, বাকি সময়ের proration সহ
+  /// - Downgrade: বর্তমান period শেষ হলে (deferred)
+  GoogleProductChangeInfo? _buildChangeInfo(String newPackageId) {
+    if (!Platform.isAndroid) return null; // iOS-এ subscription group handle করে
+    final type = planChangeType(newPackageId);
+    final oldProductId = _activeProductId;
+    if (type == null || oldProductId == null) return null;
+
+    return GoogleProductChangeInfo(
+      oldProductId,
+      prorationMode: type == PlanChangeType.upgrade
+          ? GoogleProrationMode.immediateWithTimeProration
+          : GoogleProrationMode.deferred,
+    );
+  }
 
   /// কেনা সফল হলে true ফেরত দেয়। Screen ফেরার কাজ caller-এর।
   ///
-  /// - Subscription চালু থাকলে অন্য কোনো subscription কেনা যাবে না
-  ///   (plan switch/product change বন্ধ)।
+  /// - Monthly ⇄ Unlimited যেকোনো সময় change করা যাবে।
   /// - Single scan ও PDF যেকোনো সময় কেনা যাবে।
   Future<bool> buy(String packageId) async {
     if (isPurchasing.value) return false;
@@ -241,22 +300,23 @@ class SubscriptionController extends GetxController
       return false;
     }
 
-    // Plan চালু থাকা অবস্থায় অন্য subscription কেনা আটকানো
-    if (isSubscriptionLocked(packageId)) {
-      _snack('errorTitle'.tr, 'planSwitchBlockedBody'.tr, isError: true);
-      return false;
-    }
+    final changeType = planChangeType(packageId);
+    final changeInfo = _buildChangeInfo(packageId);
 
     isPurchasing.value = true;
     purchasingId.value = packageId;
+    _lastPurchaseWasDeferred = false;
     bool success = false;
 
     try {
-      final params = PurchaseParams.package(package);
+      final params = changeInfo != null
+          ? PurchaseParams.package(package, googleProductChangeInfo: changeInfo)
+          : PurchaseParams.package(package);
 
       final result = await Purchases.purchase(params);
       _applyCustomerInfo(result.customerInfo);
       _lastPurchaseAt = DateTime.now();
+      _lastPurchaseWasDeferred = changeType == PlanChangeType.downgrade;
       success = true;
     } on PlatformException catch (e) {
       final code = PurchasesErrorHelper.getErrorCode(e);
@@ -290,6 +350,19 @@ class SubscriptionController extends GetxController
   Future<void> buyAndGoHome(String packageId) async {
     final ok = await buy(packageId);
     if (!ok) return;
+
+    // Downgrade: plan এখনই বদলায় না, বর্তমান period শেষে বদলাবে।
+    // তাই Home-এ না গিয়ে এখানেই বুঝিয়ে দেওয়া হয়।
+    if (_lastPurchaseWasDeferred) {
+      final expiry = planExpiresAt.value;
+      final body = expiry != null
+          ? 'planChangeScheduledBody'
+              .trParams({'date': formatDate(expiry)})
+          : 'planChangeScheduledBodyNoDate'.tr;
+      _snack('planChangeScheduledTitle'.tr, body);
+      return;
+    }
+
     goHome();
     _snack('purchaseSuccessTitle'.tr, 'purchaseSuccessBody'.tr);
   }
@@ -340,13 +413,13 @@ class SubscriptionController extends GetxController
           'nothingToRestoreTitle'.tr,
           'nothingToRestoreBody'.tr,
           snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.orange,
-          colorText: Colors.white,
+          backgroundColor: AppColors.warning,
+          colorText: AppColors.white,
         );
       }
     } on PlatformException catch (e) {
-     _snack('restoreFailedTitle'.tr, e.message ?? 'genericErrorBody'.tr,
-    isError: true);
+      _snack('restoreFailedTitle'.tr, e.message ?? 'genericErrorBody'.tr,
+          isError: true);
     } catch (e) {
       _snack(
         'restoreFailedTitle'.tr,
@@ -400,8 +473,8 @@ class SubscriptionController extends GetxController
       title,
       message,
       snackPosition: SnackPosition.TOP,
-      backgroundColor: isError ? Colors.red : Colors.green,
-      colorText: Colors.white,
+      backgroundColor: isError ? AppColors.error : AppColors.success,
+      colorText: AppColors.white,
     );
   }
 }

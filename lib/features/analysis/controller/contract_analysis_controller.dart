@@ -1,3 +1,4 @@
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:clause_verify/core/services/endpoints.dart';
 import 'package:clause_verify/core/services/network_caller.dart';
 import 'package:clause_verify/features/analysis/model/analysis_result_model.dart';
@@ -152,8 +153,8 @@ class ContractAnalysisController extends GetxController with GetSingleTickerProv
       'error'.tr,
       message,
       snackPosition: SnackPosition.TOP,
-      backgroundColor: Colors.redAccent,
-      colorText: Colors.white,
+      backgroundColor: AppColors.error,
+      colorText: AppColors.white,
     );
 
     Future.delayed(const Duration(seconds: 2), () {

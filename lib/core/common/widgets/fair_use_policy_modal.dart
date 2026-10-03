@@ -1,3 +1,4 @@
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -27,12 +28,12 @@ class FairUsePolicyModal extends StatelessWidget {
                   width: 32,
                   height: 32,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFD4AF37),
+                    color: AppColors.primaryColor,
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
                     Icons.close,
-                    color: Colors.black,
+                    color: AppColors.black,
                     size: 20,
                   ),
                 ),
@@ -48,11 +49,11 @@ class FairUsePolicyModal extends StatelessWidget {
               child: const Text(
                 'fair use policy',
                 style: TextStyle(
-                  color: Color(0xFFD4AF37),
+                  color: AppColors.primaryColor,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   decoration: TextDecoration.underline,
-                  decorationColor: Color(0xFFD4AF37),
+                  decorationColor: AppColors.primaryColor,
                 ),
               ),
             ),
@@ -81,7 +82,7 @@ class FairUsePolicyModal extends StatelessWidget {
           child: Icon(
             Icons.circle,
             size: 6,
-            color: Colors.white,
+            color: AppColors.white,
           ),
         ),
         const SizedBox(width: 12),
@@ -89,7 +90,7 @@ class FairUsePolicyModal extends StatelessWidget {
           child: Text(
             text,
             style: const TextStyle(
-              color: Colors.white,
+              color: AppColors.white,
               fontSize: 14,
               height: 1.5,
             ),

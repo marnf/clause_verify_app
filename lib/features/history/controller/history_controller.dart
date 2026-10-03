@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:clause_verify/core/services/endpoints.dart';
 import 'package:clause_verify/core/services/network_caller.dart';
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:clause_verify/features/analysis/model/analysis_result_model.dart';
 import 'package:clause_verify/features/analysis/controller/analysis_result_controller.dart';
 import 'package:clause_verify/features/history/model/history_model.dart';
@@ -123,8 +124,8 @@ class HistoryController extends GetxController {
       Get.dialog(
         WillPopScope(
           onWillPop: () async => false,
-          child: const Center(
-            child: CircularProgressIndicator(color: Color(0xFFD4A574)),
+          child: Center(
+            child: CircularProgressIndicator(color: AppColors.primaryColor),
           ),
         ),
         barrierDismissible: false,
@@ -155,8 +156,8 @@ class HistoryController extends GetxController {
           'error'.tr,
           response.errorMessage ?? 'failedToLoadAnalysisDetails'.tr,
           snackPosition: SnackPosition.TOP,
-          backgroundColor: const Color(0xFF1A1A1A),
-          colorText: Colors.white,
+          backgroundColor: AppColors.surface,
+          colorText: AppColors.white,
         );
       }
     } catch (e) {
@@ -166,8 +167,8 @@ class HistoryController extends GetxController {
         'error'.tr,
         'failedToLoadAnalysisDetails'.tr,
         snackPosition: SnackPosition.TOP,
-        backgroundColor: const Color(0xFF1A1A1A),
-        colorText: Colors.white,
+        backgroundColor: AppColors.surface,
+        colorText: AppColors.white,
       );
     }
   }

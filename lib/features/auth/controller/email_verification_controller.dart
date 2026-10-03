@@ -1,3 +1,4 @@
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:clause_verify/core/models/response_data.dart';
 import 'package:clause_verify/core/services/endpoints.dart';
 import 'package:clause_verify/core/services/network_caller.dart';
@@ -84,8 +85,8 @@ class EmailVerificationController extends GetxController {
         Get.snackbar(
           'error'.tr,
           errorMsg,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
           duration: const Duration(seconds: 3),
         );
       }
@@ -93,8 +94,8 @@ class EmailVerificationController extends GetxController {
       Get.snackbar(
         'error'.tr,
         'network_error'.tr,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
     } finally {
       isLoading.value = false;

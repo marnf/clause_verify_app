@@ -18,7 +18,7 @@ class HistoryPreview extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 0.h),
       child: Scaffold(
-        backgroundColor: const Color(0xFF000000),
+        backgroundColor: AppColors.black,
         appBar: CustomAppBar(title: 'watchDetails'.tr),
         body: SafeArea(
           child: Obx(() {
@@ -32,7 +32,7 @@ class HistoryPreview extends StatelessWidget {
               return Center(
                 child: Text(
                   'noDataAvailable'.tr,
-                  style: const TextStyle(color: Color(0xFFFFFFFF), fontSize: 16.0),
+                  style: const TextStyle(color: AppColors.white, fontSize: 16.0),
                 ),
               );
             }
@@ -65,13 +65,13 @@ class HistoryPreview extends StatelessWidget {
                           fontSize: 14.sp,
                           fontWeight: FontWeight.bold,
                           color: controller.isPdfAvailable
-                              ? Colors.black
+                              ? AppColors.black
                               : Colors.grey.shade600,
                         ),
                         prefixIcon: Image.asset(
                           IconPath.document,
                           color: controller.isPdfAvailable
-                              ? Colors.black
+                              ? AppColors.black
                               : Colors.grey.shade600,
                         ),
                         onTap: () {
@@ -97,17 +97,17 @@ class HistoryPreview extends StatelessWidget {
 
                   CustomButton(
                     text: 'viewPriceEstimation'.tr,
-                    backgroundColor: Colors.black,
+                    backgroundColor: AppColors.black,
                     borderColor: const Color(0xFF364153),
                     isOutline: true,
                     customTextStyle: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: AppColors.white,
                     ),
                     prefixIcon: Image.asset(
                       IconPath.document,
-                      color: Colors.white,
+                      color: AppColors.white,
                     ),
                     onTap: () {
                       Get.toNamed(
@@ -127,10 +127,10 @@ class HistoryPreview extends StatelessWidget {
                       vertical: 10.h,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1A1A1A),
+                      color: AppColors.surfaceLight,
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(
-                        color: AppColors.secondary.withOpacity(0.4),
+                        color: AppColors.background.withOpacity(0.4),
                       ),
                     ),
                     child: Row(
@@ -139,7 +139,7 @@ class HistoryPreview extends StatelessWidget {
                         Text(
                           'aiConfidenceLevel'.tr,
                           style: TextStyle(
-                            color: Colors.white,
+                            color: AppColors.white,
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w500,
                           ),
@@ -170,7 +170,7 @@ class HistoryPreview extends StatelessWidget {
     return Obx(
       () => Container(
         decoration: BoxDecoration(
-          color: Colors.black,
+          color: AppColors.black,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
@@ -198,7 +198,7 @@ class HistoryPreview extends StatelessWidget {
                   Text(
                     '${controller.authenticityScore}',
                     style: TextStyle(
-                      color: const Color(0xFFFFFFFF),
+                      color: AppColors.white,
                       fontSize: 48.sp,
                       fontWeight: FontWeight.bold,
                     ),
@@ -210,7 +210,7 @@ class HistoryPreview extends StatelessWidget {
                 ],
               ),
               progressColor: const Color(0xFFD4A574),
-              backgroundColor: Colors.black,
+              backgroundColor: AppColors.black,
               circularStrokeCap: CircularStrokeCap.round,
               animation: true,
               animationDuration: 1500,
@@ -261,7 +261,7 @@ class HistoryPreview extends StatelessWidget {
       () => Container(
         decoration: BoxDecoration(
           color: const Color(0xFF0D0D0D),
-          border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
+          border: Border.all(color: AppColors.white.withOpacity(0.3), width: 1),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Padding(
@@ -275,7 +275,7 @@ class HistoryPreview extends StatelessWidget {
                     width: 36.w,
                     height: 36.h,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1A1A1A),
+                      color: AppColors.surfaceLight,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Image.asset(
@@ -335,7 +335,7 @@ class HistoryPreview extends StatelessWidget {
                           Text(
                             item.name,
                             style: TextStyle(
-                              color: const Color(0xFFFFFFFF),
+                              color: AppColors.white,
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w500,
                             ),
@@ -355,7 +355,7 @@ class HistoryPreview extends StatelessWidget {
                         borderRadius: BorderRadius.circular(4),
                         child: LinearProgressIndicator(
                           value: item.percentage / 100,
-                          backgroundColor: const Color(0xFF1A1A1A),
+                          backgroundColor: AppColors.surfaceLight,
                           valueColor: AlwaysStoppedAnimation<Color>(
                             Color(
                               int.parse(item.color.replaceFirst('#', '0xFF')),
@@ -380,7 +380,7 @@ class HistoryPreview extends StatelessWidget {
       () => Container(
         decoration: BoxDecoration(
           color: const Color(0xFF0D0D0D),
-          border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
+          border: Border.all(color: AppColors.white.withOpacity(0.3), width: 1),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Padding(
@@ -449,7 +449,7 @@ class HistoryPreview extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: const Color(0xFF090909),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.3),
+                        color: AppColors.white.withOpacity(0.3),
                         width: 1,
                       ),
                       borderRadius: BorderRadius.circular(8),
@@ -474,7 +474,7 @@ class HistoryPreview extends StatelessWidget {
                               Text(
                                 comment.title,
                                 style: TextStyle(
-                                  color: const Color(0xFFFFFFFF),
+                                  color: AppColors.white,
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w600,
                                 ),

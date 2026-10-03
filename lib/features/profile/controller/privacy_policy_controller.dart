@@ -21,18 +21,8 @@ class PrivacyPolicyController extends GetxController {
         'privacyContent1_5'.tr,
       ],
     ),
-    PrivacySection(
-      title: 'privacyTitle2'.tr,
-      content: [
-        'privacyContent2_1'.tr,
-      ],
-    ),
-    PrivacySection(
-      title: 'privacyTitle3'.tr,
-      content: [
-        'privacyContent3_1'.tr,
-      ],
-    ),
+    PrivacySection(title: 'privacyTitle2'.tr, content: ['privacyContent2_1'.tr]),
+    PrivacySection(title: 'privacyTitle3'.tr, content: ['privacyContent3_1'.tr]),
     PrivacySection(
       title: 'privacyTitle4'.tr,
       content: [
@@ -40,17 +30,11 @@ class PrivacyPolicyController extends GetxController {
         'privacyContent4_2'.tr,
       ],
     ),
-    PrivacySection(
-      title: 'privacyTitle5'.tr,
-      content: [
-        'privacyContent5_1'.tr,
-      ],
-    ),
-    PrivacySection(
-      title: 'privacyTitle6'.tr,
-      content: [
-        'privacyContent6_1'.tr,
-      ],
-    ),
+    PrivacySection(title: 'privacyTitle5'.tr, content: ['privacyContent5_1'.tr]),
+    PrivacySection(title: 'privacyTitle6'.tr, content: ['privacyContent6_1'.tr]),
+    PrivacySection(title: 'privacyTitle7'.tr, content: ['privacyContent7_1'.tr]),
+    PrivacySection(title: 'privacyTitle8'.tr, content: ['privacyContent8_1'.tr]),
+    PrivacySection(title: 'privacyTitle9'.tr, content: ['privacyContent9_1'.tr]),
+    PrivacySection(title: 'privacyTitle10'.tr, content: ['privacyContent10_1'.tr]),
   ];
 }

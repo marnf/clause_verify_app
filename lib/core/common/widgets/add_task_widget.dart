@@ -85,7 +85,7 @@ class DynamicTodoWidget extends StatelessWidget {
                       onTap: () => controller.removeTodoField(index),
                       child: const Icon(
                         Icons.remove_circle,
-                        color: Colors.red,
+                        color: AppColors.error,
                         size: 28,
                       ),
                     ),
@@ -120,12 +120,12 @@ class DynamicTodoWidget extends StatelessWidget {
                 onPressed: controller.addTodoField,
                 icon: const Icon(
                   Icons.add,
-                  color: AppColors.tealColor,
+                  color: AppColors.primaryColor,
                   size: 20,
                 ),
                 label: CustomText(
                   text: "Add More",
-                  color: AppColors.tealColor,
+                  color: AppColors.primaryColor,
                   fontWeight: FontWeight.w500,
                   fontSize: 16,
                 ),

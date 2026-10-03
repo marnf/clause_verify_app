@@ -37,7 +37,7 @@ class _ConsentDialog extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.4),
+              color: AppColors.black.withOpacity(0.4),
               blurRadius: 24,
               offset: const Offset(0, 8),
             ),
@@ -169,7 +169,7 @@ class _ConsentDialog extends StatelessWidget {
                         child: Text(
                           'aiConsentAgree'.tr,
                           style: TextStyle(
-                            color: Colors.black,
+                            color: AppColors.black,
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w700,
                           ),

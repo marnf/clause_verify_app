@@ -7,12 +7,11 @@ import 'package:get/get.dart';
 class NoScanModal extends StatelessWidget {
   const NoScanModal({super.key});
 
-  /// Baire tap korle automatic bondho hobe
   static void show() {
     Get.dialog(
       const NoScanModal(),
       barrierDismissible: true,
-      barrierColor: Colors.black.withValues(alpha: 0.6),
+      barrierColor: AppColors.black.withValues(alpha: 0.6),
     );
   }
 
@@ -33,45 +32,46 @@ class NoScanModal extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // ── Lock icon ──
             Container(
               padding: EdgeInsets.all(16.w),
               decoration: BoxDecoration(
-                color: Colors.redAccent.withValues(alpha: 0.12),
+                color: AppColors.error.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
               ),
               child: Icon(Icons.lock_rounded,
-                  color: Colors.redAccent, size: 34.sp),
+                  color: AppColors.error, size: 34.sp),
             ),
             SizedBox(height: 18.h),
 
-            Text('No Scans Available',
+            // Client's exact Title
+            Text('noScansLeftTitle'.tr, 
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: AppColors.textWhite,
                     fontSize: 19.sp,
                     fontWeight: FontWeight.w800)),
             SizedBox(height: 8.h),
+            
+            // Client's exact Message
             Text(
-              'You haven\'t purchased any package or single scan yet. '
-              'Please upgrade to start analyzing your contracts.',
+              'noScansRemainingMessage'.tr,
               textAlign: TextAlign.center,
               style: TextStyle(
                   color: AppColors.textMuted, fontSize: 13.sp, height: 1.5),
             ),
             SizedBox(height: 22.h),
 
-            // ── Upgrade button ──
+            // Main button -> Client's exact text: "See Plans"
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  Get.back(); // age modal bondho
-                  controller.navigateToPremium(); // tarpor subscription page
+                  Get.back(); 
+                  controller.navigateToPremium(); 
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryColor,
-                  foregroundColor: Colors.black,
+                  foregroundColor: AppColors.black,
                   padding: EdgeInsets.symmetric(vertical: 15.h),
                   elevation: 0,
                   shape: RoundedRectangleBorder(
@@ -80,9 +80,7 @@ class NoScanModal extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.bolt_rounded, size: 20.sp),
-                    SizedBox(width: 6.w),
-                    Text('Upgrade Now',
+                    Text('seePlansButton'.tr, // 👈 Updated
                         style: TextStyle(
                             fontSize: 15.sp, fontWeight: FontWeight.w700)),
                   ],
@@ -90,9 +88,11 @@ class NoScanModal extends StatelessWidget {
               ),
             ),
             SizedBox(height: 4.h),
+            
+            // Secondary button -> Client's exact text: "Maybe later"
             TextButton(
               onPressed: () => Get.back(),
-              child: Text('Maybe later',
+              child: Text('maybeLaterButton'.tr, // 👈 Updated
                   style:
                       TextStyle(color: AppColors.textMuted, fontSize: 13.sp)),
             ),

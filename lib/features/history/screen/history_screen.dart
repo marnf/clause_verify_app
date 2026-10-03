@@ -1,3 +1,6 @@
+// lib/features/history/view/history_screen.dart
+
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:clause_verify/core/utils/constants/app_sizer.dart';
 import 'package:clause_verify/features/history/controller/history_controller.dart';
 import 'package:clause_verify/features/history/model/history_model.dart';
@@ -12,18 +15,18 @@ class HistoryScreen extends StatelessWidget {
 
   HistoryScreen({Key? key}) : super(key: key);
 
-  static const Color _gold = Color(0xFFD4A574);
-  static const Color _card = Color(0xFF141414);
-  static const Color _border = Color(0xFF2A2A2A);
-  static const Color _red = Color(0xFFE53935);
-  static const Color _orange = Color(0xFFFF8F00);
-  static const Color _green = Color(0xFF4CAF50);
-  static const Color _grey = Color(0xFF888888);
+  static const Color _gold = AppColors.primaryColor;
+  static const Color _card = AppColors.surface;
+  static const Color _border = AppColors.cardBorder;
+  static const Color _red = AppColors.error;
+  static const Color _orange = AppColors.warning;
+  static const Color _green = AppColors.success;
+  static const Color _grey = AppColors.textSubtle;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,14 +47,14 @@ class HistoryScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.error_outline,
-                            color: Colors.grey[600], size: 64.sp),
+                            color: AppColors.textMuted, size: 64.sp),
                         SizedBox(height: 16.h),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 24.w),
                           child: Text(
                             controller.errorMessage.value,
                             style: TextStyle(
-                                color: Colors.grey[600], fontSize: 16.sp),
+                                color: AppColors.textMuted, fontSize: 16.sp),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -64,9 +67,9 @@ class HistoryScreen extends StatelessWidget {
                                 horizontal: 32.w, vertical: 12.h),
                           ),
                           child: Text('retry'.tr,
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14.0,
+                              style: TextStyle(
+                                  color: AppColors.black,
+                                  fontSize: 14.sp,
                                   fontWeight: FontWeight.w600)),
                         ),
                       ],
@@ -80,11 +83,11 @@ class HistoryScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.history,
-                            color: Colors.grey[600], size: 64.sp),
+                            color: AppColors.textMuted, size: 64.sp),
                         SizedBox(height: 16.h),
                         Text('noHistoryYet'.tr,
                             style: TextStyle(
-                                color: Colors.grey[600], fontSize: 16.sp)),
+                                color: AppColors.textMuted, fontSize: 16.sp)),
                       ],
                     ),
                   );
@@ -93,7 +96,7 @@ class HistoryScreen extends StatelessWidget {
                 return RefreshIndicator(
                   onRefresh: () => controller.refreshData(),
                   color: _gold,
-                  backgroundColor: const Color(0xFF1A1A1A),
+                  backgroundColor: AppColors.surfaceLight,
                   child: ListView.builder(
                     controller: controller.scrollController,
                     physics: const AlwaysScrollableScrollPhysics(),
@@ -129,9 +132,6 @@ class HistoryScreen extends StatelessWidget {
     );
   }
 
-  // ─────────────────────────────────────────────
-  // HEADER
-  // ─────────────────────────────────────────────
   Widget _buildHeader() {
     return Obx(() => Padding(
           padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 8.h),
@@ -140,9 +140,9 @@ class HistoryScreen extends StatelessWidget {
             children: [
               Text(
                 'scanHistory'.tr,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 24.0,
+                style: TextStyle(
+                  color: AppColors.white,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -150,18 +150,19 @@ class HistoryScreen extends StatelessWidget {
               Text(
                 'documentsAnalyzed'.trParams(
                     {'count': controller.totalCount.value.toString()}),
-                style: TextStyle(color: Colors.grey[600], fontSize: 13.sp),
+                style: TextStyle(color: AppColors.textMuted, fontSize: 13.sp),
               ),
             ],
           ),
         ));
   }
 
-  // ─────────────────────────────────────────────
-  // HISTORY CARD
-  // ─────────────────────────────────────────────
+  // Card: Title / Subtitle (date · country) / Risk label / Counts line
   Widget _buildHistoryCard(HistoryModel item) {
     final Color riskColor = _levelColor(item.level);
+    final String subtitle = item.subtitle;
+    final String riskLabel = _riskLabel(item);
+    final String countsLine = item.countsLine;
 
     return GestureDetector(
       onTap: () => controller.navigateToDetails(item),
@@ -177,63 +178,76 @@ class HistoryScreen extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // ── বাঁ পাশের risk strip ──
+              // Left colored bar
               Container(width: 5.w, color: riskColor),
-
-              // ── কনটেন্ট ──
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.all(16.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // উপরে: icon + দেশ + risk badge + তীর
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 44.w,
-                            height: 44.w,
-                            decoration: BoxDecoration(
-                              color: riskColor.withOpacity(0.12),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Icon(Icons.description_outlined,
-                                color: riskColor, size: 22.sp),
-                          ),
-                          SizedBox(width: 12.w),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (item.country.isNotEmpty)
-                                  Text(
-                                    item.country,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15.5.sp,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                if (item.overallRisk.isNotEmpty) ...[
-                                  SizedBox(height: 5.h),
-                                  _riskBadge(item, riskColor),
-                                ],
-                              ],
-                            ),
-                          ),
-                          Icon(Icons.chevron_right_rounded,
-                              color: Colors.grey[700], size: 24.sp),
-                        ],
+                      Container(
+                        width: 44.w,
+                        height: 44.w,
+                        decoration: BoxDecoration(
+                          color: riskColor.withOpacity(0.12),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(Icons.description_outlined,
+                            color: riskColor, size: 22.sp),
                       ),
-
-                      // নিচে: recommendation
-                      if (item.recommendation.isNotEmpty) ...[
-                        SizedBox(height: 14.h),
-                        _recommendationRow(item),
-                      ],
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Title
+                            Text(
+                              item.displayTitle,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: AppColors.white,
+                                fontSize: 15.5.sp,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            // Subtitle
+                            if (subtitle.isNotEmpty) ...[
+                              SizedBox(height: 3.h),
+                              Text(
+                                subtitle,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: AppColors.textMuted,
+                                  fontSize: 12.5.sp,
+                                ),
+                              ),
+                            ],
+                            // Risk level label
+                            if (riskLabel.isNotEmpty) ...[
+                              SizedBox(height: 8.h),
+                              _riskBadge(riskLabel, riskColor),
+                            ],
+                            // Counts line
+                            if (countsLine.isNotEmpty) ...[
+                              SizedBox(height: 4.h),
+                              Text(
+                                countsLine,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: AppColors.textSubtle,
+                                  fontSize: 11.5.sp,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                      Icon(Icons.chevron_right_rounded,
+                          color: AppColors.textSubtle, size: 24.sp),
                     ],
                   ),
                 ),
@@ -245,15 +259,12 @@ class HistoryScreen extends StatelessWidget {
     );
   }
 
-  /// "● High Risk" — চেনা না গেলে backend-এর লেখাই ধূসর রঙে
-  Widget _riskBadge(HistoryModel item, Color color) {
-    final label = _riskLabel(item);
-
+  Widget _riskBadge(String label, Color color) {
     return Row(
       children: [
         Container(
-          width: 8,
-          height: 8,
+          width: 8.w,
+          height: 8.h,
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         SizedBox(width: 6.w),
@@ -273,66 +284,19 @@ class HistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget _recommendationRow(HistoryModel item) {
-    final color = _recColor(item.recKind);
-
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 9.h),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.10),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: color.withOpacity(0.3), width: 1),
-      ),
-      child: Row(
-        children: [
-          Icon(_recIcon(item.recKind), color: color, size: 16.sp),
-          SizedBox(width: 8.w),
-          Expanded(
-            child: Text(
-              _recLabel(item),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: color,
-                fontSize: 12.5.sp,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ─────────────────────────────────────────────
-  // HELPERS
-  // ─────────────────────────────────────────────
+  // Client's exact label texts
   String _riskLabel(HistoryModel item) {
     switch (item.level) {
       case 'high':
-        return 'highRisk'.tr;
+        return 'highRiskClausesFound'.tr;
       case 'medium':
-        return 'mediumRisk'.tr;
+        return 'mediumRiskClausesFound'.tr;
       case 'low':
-        return 'lowRisk'.tr;
+        return 'noRiskyClausesFound'.tr;
       default:
         return item.overallRisk;
     }
   }
-
-String _recLabel(HistoryModel item) {
-  switch (item.recKind) {
-    case 'accept':
-      return 'accept'.tr;
-    case 'review':
-      return 'legalReviewRequired'.tr; // ✅ আগে ছিল 'legalReview'
-    case 'reject':
-      return 'reject'.tr;
-    default:
-      return item.recommendation;
-  }
-}
 
   Color _levelColor(String level) {
     switch (level) {
@@ -344,32 +308,6 @@ String _recLabel(HistoryModel item) {
         return _green;
       default:
         return _grey;
-    }
-  }
-
-  Color _recColor(String kind) {
-    switch (kind) {
-      case 'accept':
-        return _green;
-      case 'review':
-        return _orange;
-      case 'reject':
-        return _red;
-      default:
-        return _grey;
-    }
-  }
-
-  IconData _recIcon(String kind) {
-    switch (kind) {
-      case 'accept':
-        return Icons.check_circle_rounded;
-      case 'review':
-        return Icons.gavel_rounded;
-      case 'reject':
-        return Icons.cancel_rounded;
-      default:
-        return Icons.help_outline_rounded;
     }
   }
 }

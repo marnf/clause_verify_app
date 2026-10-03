@@ -1,3 +1,4 @@
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:clause_verify/core/utils/constants/app_sizer.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui'; // IMPORTANT: Blur er jonno import korte hobe
@@ -38,7 +39,7 @@ class CustomDialog extends StatelessWidget {
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
                 child: Container(
-                  color: Colors.white.withOpacity(0.1), // White tint layer
+                  color: AppColors.white.withOpacity(0.1), // White tint layer
                 ),
               ),
             ),
@@ -48,7 +49,7 @@ class CustomDialog extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: backgroundColor ?? Colors.black,
+              color: backgroundColor ?? AppColors.black,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Column(
@@ -68,7 +69,7 @@ class CustomDialog extends StatelessWidget {
                                 )
                               : Icon(
                                   Icons.safety_check,
-                                  color: Colors.white,
+                                  color: AppColors.white,
                                   size: 160.sp,
                                 )),
                     ),
@@ -80,7 +81,7 @@ class CustomDialog extends StatelessWidget {
                   title,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppColors.white,
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
                   ),
@@ -106,7 +107,7 @@ class CustomDialog extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: onButtonPressed,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFD4AF37),
+                      backgroundColor: AppColors.primaryColor,
                       elevation: 0,
                       side: BorderSide.none,
                       shape: RoundedRectangleBorder(
@@ -124,7 +125,7 @@ class CustomDialog extends StatelessWidget {
                           Text(
                             buttonText,
                             style: TextStyle(
-                              color: Colors.black,
+                              color: AppColors.black,
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
                             ),
@@ -132,7 +133,7 @@ class CustomDialog extends StatelessWidget {
                           SizedBox(width: 8.w),
                           Icon(
                             Icons.arrow_forward,
-                            color: Colors.black,
+                            color: AppColors.black,
                             size: 20.sp,
                           ),
                         ],
@@ -180,6 +181,6 @@ void showCustomDialogGetX({
       ),
     ),
     barrierDismissible: barrierDismissible,
-    barrierColor: Colors.black.withOpacity(0.5),
+    barrierColor: AppColors.black.withOpacity(0.5),
   );
 }

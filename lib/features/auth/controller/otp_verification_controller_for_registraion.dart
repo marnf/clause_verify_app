@@ -1,3 +1,4 @@
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'dart:async';
 import 'package:clause_verify/core/common/widgets/custom_modal.dart';
 import 'package:clause_verify/core/models/response_data.dart';
@@ -43,8 +44,8 @@ class OtpVerificationControllerForRegistraion extends GetxController {
       Get.snackbar(
         'error'.tr,
         'Please enter a valid 6-digit OTP',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
       return;
     }
@@ -53,8 +54,8 @@ class OtpVerificationControllerForRegistraion extends GetxController {
       Get.snackbar(
         'error'.tr,
         'Email not found. Please try registering again.',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
       return;
     }
@@ -96,8 +97,8 @@ class OtpVerificationControllerForRegistraion extends GetxController {
         Get.snackbar(
           'error'.tr,
           errorMsg,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
           duration: const Duration(seconds: 3),
         );
       }
@@ -105,8 +106,8 @@ class OtpVerificationControllerForRegistraion extends GetxController {
       Get.snackbar(
         'error'.tr,
         'network_error'.tr,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
         duration: const Duration(seconds: 3),
       );
     } finally {
@@ -120,8 +121,8 @@ class OtpVerificationControllerForRegistraion extends GetxController {
       Get.snackbar(
         'error'.tr,
         'Email not found',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
       return;
     }
@@ -153,8 +154,8 @@ class OtpVerificationControllerForRegistraion extends GetxController {
         Get.snackbar(
           'success'.tr,
           successMsg,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
+          backgroundColor: AppColors.success,
+          colorText: AppColors.white,
         );
       } else {
         final errorMsg = response.responseData?['error']?.toString() ??
@@ -163,16 +164,16 @@ class OtpVerificationControllerForRegistraion extends GetxController {
         Get.snackbar(
           'error'.tr,
           errorMsg,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
         );
       }
     } catch (e) {
       Get.snackbar(
         'error'.tr,
         'network_error'.tr,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
     } finally {
       isLoading.value = false;

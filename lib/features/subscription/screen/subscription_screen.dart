@@ -46,14 +46,12 @@ class SubscriptionScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Free user-এর জন্য কোনো "Free Plan" card নেই,
-                          // শুধু কোনো plan চালু থাকলে দেখাবে
                           if (controller.hasActivePlan) ...[
                             _buildCurrentPlanCard(),
                             SizedBox(height: 28.h),
                           ],
 
-                          // ── One-time purchases (আগে) ──
+                          // ── One-time purchases ──
                           if (controller.packages.containsKey(
                                   SubscriptionIds.scanSinglePackage) ||
                               controller.packages.containsKey(
@@ -73,6 +71,8 @@ class SubscriptionScreen extends StatelessWidget {
                                 features: [
                                   'singleScanFeature1'.tr,
                                   'singleScanFeature2'.tr,
+                                  'singleScanFeature3'.tr,
+                                  'singleScanFeature4'.tr,
                                 ],
                                 buttonLabel: 'buyButtonLabel'.tr,
                               ),
@@ -91,7 +91,7 @@ class SubscriptionScreen extends StatelessWidget {
                             SizedBox(height: 24.h),
                           ],
 
-                          // ── Subscription plans (পরে) ──
+                          // ── Subscription plans ──
                           if (controller.packages.containsKey(
                                   SubscriptionIds.monthlyPackage) ||
                               controller.packages.containsKey(
@@ -112,7 +112,8 @@ class SubscriptionScreen extends StatelessWidget {
                                 features: [
                                   'monthlyFeature1'.tr,
                                   'monthlyFeature2'.tr,
-                                  'cancelAnytime'.tr,
+                                  'monthlyFeature3'.tr,
+                                  'monthlyFeature4'.tr,
                                 ],
                                 buttonLabel: 'subscribeButtonLabel'.tr,
                               ),
@@ -121,14 +122,15 @@ class SubscriptionScreen extends StatelessWidget {
                               _buildPlanCard(
                                 packageId: SubscriptionIds.unlimitedPackage,
                                 title: 'unlimitedPlanTitle'.tr,
-                                icon: Icons.all_inclusive_rounded,
+                                icon: Icons.workspace_premium_rounded,
                                 period: 'perMonth'.tr,
                                 highlighted: true,
                                 badge: 'bestValueBadge'.tr,
                                 features: [
                                   'unlimitedFeature1'.tr,
                                   'unlimitedFeature2'.tr,
-                                  'cancelAnytime'.tr,
+                                  'unlimitedFeature3'.tr,
+                                  'unlimitedFeature4'.tr,
                                 ],
                                 buttonLabel: 'subscribeButtonLabel'.tr,
                               ),
@@ -150,9 +152,6 @@ class SubscriptionScreen extends StatelessWidget {
     );
   }
 
-  // ══════════════════════════════════════
-  //  Header
-  // ══════════════════════════════════════
   Widget _buildHeader() {
     return Row(
       children: [
@@ -168,7 +167,7 @@ class SubscriptionScreen extends StatelessWidget {
               border: Border.all(color: AppColors.cardBorder, width: 1),
             ),
             child: Icon(Icons.arrow_back_ios_new_rounded,
-                color: AppColors.textWhite, size: 18),
+                color: AppColors.textWhite, size: 18.sp),
           ),
         ),
         SizedBox(width: 16.w),
@@ -184,7 +183,6 @@ class SubscriptionScreen extends StatelessWidget {
     );
   }
 
-  /// সাধারণ সেকশন টাইটেল — icon ও subtitle সহ
   Widget _buildSectionTitle(String title, {String? subtitle, IconData? icon}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,7 +190,7 @@ class SubscriptionScreen extends StatelessWidget {
         Row(
           children: [
             if (icon != null) ...[
-              Icon(icon, color: AppColors.primaryColor, size: 18),
+              Icon(icon, color: AppColors.primaryColor, size: 18.sp),
               SizedBox(width: 8.w),
             ],
             Text(
@@ -220,15 +218,12 @@ class SubscriptionScreen extends StatelessWidget {
     );
   }
 
-  // ══════════════════════════════════════
-  //  Error State
-  // ══════════════════════════════════════
   Widget _buildErrorState() {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.cloud_off_rounded, color: AppColors.textMuted, size: 48),
+          Icon(Icons.cloud_off_rounded, color: AppColors.textMuted, size: 48.sp),
           SizedBox(height: 16.h),
           Text(
             controller.errorMessage.value ?? 'genericErrorBody'.tr,
@@ -239,7 +234,7 @@ class SubscriptionScreen extends StatelessWidget {
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryColor,
-              padding: EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -258,9 +253,6 @@ class SubscriptionScreen extends StatelessWidget {
     );
   }
 
-  // ══════════════════════════════════════
-  //  Current Plan Card
-  // ══════════════════════════════════════
   Widget _buildCurrentPlanCard() {
     final hasPlan = controller.hasActivePlan;
     final expiry = controller.planExpiresAt.value;
@@ -268,7 +260,6 @@ class SubscriptionScreen extends StatelessWidget {
     String? statusLine;
     if (hasPlan && expiry != null) {
       final date = controller.formatDate(expiry);
-      // GetX trParams: json এ "renewsOn": "Renews on @date" আকারে থাকতে হবে
       statusLine = controller.willRenew.value
           ? 'renewsOn'.trParams({'date': date})
           : 'cancelledAccessUntil'.trParams({'date': date});
@@ -276,13 +267,13 @@ class SubscriptionScreen extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: hasPlan
-            ? LinearGradient(
+            ? const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [Color(0xFF2B2007), Color(0xFF1F1809)],
+                colors: [AppColors.surfaceLight, AppColors.surface],
               )
             : null,
         color: hasPlan ? null : AppColors.surface,
@@ -309,7 +300,7 @@ class SubscriptionScreen extends StatelessWidget {
                   ? Icons.workspace_premium_rounded
                   : Icons.person_outline_rounded,
               color: hasPlan ? AppColors.primaryColor : AppColors.textMuted,
-              size: 24,
+              size: 24.sp,
             ),
           ),
           SizedBox(width: 14.w),
@@ -337,31 +328,39 @@ class SubscriptionScreen extends StatelessWidget {
                   ),
                 ),
                 if (statusLine != null) ...[
-                  SizedBox(height: 4.h),
-                  Row(
-                    children: [
-                      Icon(
-                        controller.willRenew.value
-                            ? Icons.autorenew_rounded
-                            : Icons.schedule_rounded,
-                        size: 13,
-                        color: controller.willRenew.value
-                            ? AppColors.textSubtle
-                            : AppColors.error,
-                      ),
-                      SizedBox(width: 4.w),
-                      Text(
-                        statusLine,
-                        style: TextStyle(
-                          color: controller.willRenew.value
-                              ? AppColors.textSubtle
-                              : AppColors.error,
-                          fontSize: 12.5.sp,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+  SizedBox(height: 4.h),
+  Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: EdgeInsets.only(top: 2.h),
+        child: Icon(
+          controller.willRenew.value
+              ? Icons.autorenew_rounded
+              : Icons.schedule_rounded,
+          size: 13.sp,
+          color: controller.willRenew.value
+              ? AppColors.textSubtle
+              : AppColors.error,
+        ),
+      ),
+      SizedBox(width: 4.w),
+      Expanded(
+        child: Text(
+          statusLine,
+          softWrap: true,
+          style: TextStyle(
+            color: controller.willRenew.value
+                ? AppColors.textSubtle
+                : AppColors.error,
+            fontSize: 12.5.sp,
+            height: 1.3,
+          ),
+        ),
+      ),
+    ],
+  ),
+],
               ],
             ),
           ),
@@ -370,9 +369,6 @@ class SubscriptionScreen extends StatelessWidget {
     );
   }
 
-  // ══════════════════════════════════════
-  //  Plan / Add-on Card
-  // ══════════════════════════════════════
   Widget _buildPlanCard({
     required String packageId,
     required String title,
@@ -384,12 +380,12 @@ class SubscriptionScreen extends StatelessWidget {
     required String buttonLabel,
   }) {
     final package = controller.packages[packageId]!;
-    final price = package.storeProduct.priceString; // Play Console-এর price
+    final price = package.storeProduct.priceString;
 
     return Container(
       width: double.infinity,
       margin: EdgeInsets.only(bottom: 14.h),
-      padding: EdgeInsets.all(18),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: highlighted
             ? AppColors.primaryColor.withOpacity(0.06)
@@ -409,10 +405,10 @@ class SubscriptionScreen extends StatelessWidget {
                 width: 42.w,
                 height: 42.h,
                 decoration: BoxDecoration(
-                  color: Color(0xFF13233D),
+                  color: AppColors.surfaceLight,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(icon, color: AppColors.goldLight, size: 22),
+                child: Icon(icon, color: AppColors.goldLight, size: 22.sp),
               ),
               SizedBox(width: 12.w),
               Expanded(
@@ -434,7 +430,7 @@ class SubscriptionScreen extends StatelessWidget {
                         if (badge != null) ...[
                           SizedBox(width: 8.w),
                           Container(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 3),
                             decoration: BoxDecoration(
                               color: AppColors.primaryColor,
@@ -480,7 +476,7 @@ class SubscriptionScreen extends StatelessWidget {
             ],
           ),
           SizedBox(height: 14.h),
-          Container(height: 1, color: AppColors.cardBorder.withOpacity(0.5)),
+          Container(height: 1.h, color: AppColors.cardBorder.withOpacity(0.5)),
           SizedBox(height: 14.h),
           ...features.map(
             (f) => Padding(
@@ -489,7 +485,7 @@ class SubscriptionScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(Icons.check_circle_rounded,
-                      color: AppColors.primaryColor, size: 16),
+                      color: AppColors.primaryColor, size: 16.sp),
                   SizedBox(width: 8.w),
                   Expanded(
                     child: Text(
@@ -512,30 +508,21 @@ class SubscriptionScreen extends StatelessWidget {
     );
   }
 
-  // ══════════════════════════════════════
-  //  Buy Button
-  //  - Current plan: outlined + "Current Plan"
-  //  - অন্য subscription চালু থাকলে: disabled + lock (নতুন)
-  //  - এই package কেনা হচ্ছে: spinner
-  //  - বাকি: normal button
-  // ══════════════════════════════════════
   Widget _buildBuyButton(String packageId, String label) {
     return Obx(() {
       final isCurrent = controller.isCurrentPlan(packageId);
-      final isLockedByPlan = controller.isSubscriptionLocked(packageId);
+      final changeType = controller.planChangeType(packageId);
       final isThisLoading = controller.isPurchasing.value &&
           controller.purchasingId.value == packageId;
-      // অন্য কোনো package কেনা চলছে, এইটা না
       final isBlockedByOther = controller.isPurchasing.value && !isThisLoading;
 
-      // ── Current plan ──
       if (isCurrent) {
         return SizedBox(
           width: double.infinity,
           child: OutlinedButton(
             style: OutlinedButton.styleFrom(
               side: BorderSide(color: AppColors.primaryColor.withOpacity(0.5)),
-              padding: EdgeInsets.symmetric(vertical: 14),
+              padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -545,7 +532,7 @@ class SubscriptionScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.check_circle_rounded,
-                    color: AppColors.primaryColor, size: 18),
+                    color: AppColors.primaryColor, size: 18.sp),
                 SizedBox(width: 6.w),
                 Text(
                   'currentPlanButton'.tr,
@@ -561,58 +548,22 @@ class SubscriptionScreen extends StatelessWidget {
         );
       }
 
-      // ── ✅ নতুন: অন্য subscription চালু আছে, তাই এটা lock ──
-      if (isLockedByPlan) {
-        return SizedBox(
-          width: double.infinity,
-          child: OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(color: AppColors.cardBorder),
-              padding: EdgeInsets.symmetric(vertical: 14),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            onPressed: null,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.lock_rounded, color: AppColors.textMuted, size: 17),
-                SizedBox(width: 6.w),
-                Flexible(
-                  child: Text(
-                    'availableAfterPlanEnds'.tr,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AppColors.textMuted,
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      }
-
-      // ── এই package টাই কেনা হচ্ছে: normal solid color + spinner ──
       if (isThisLoading) {
         return SizedBox(
           width: double.infinity,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryColor,
-              padding: EdgeInsets.symmetric(vertical: 14),
+              padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
             onPressed: null,
             child: SizedBox(
-              height: 20,
-              width: 20,
-              child: CircularProgressIndicator(
+              height: 20.h,
+              width: 20.w,
+              child: const CircularProgressIndicator(
                 color: AppColors.background,
                 strokeWidth: 2,
               ),
@@ -621,42 +572,62 @@ class SubscriptionScreen extends StatelessWidget {
         );
       }
 
-      // ── বাকি সব button: purchase চলাকালীন শুধু হালকা opacity দিয়ে
-      // tap ব্লক করা হবে, bg color একই থাকবে ──
+      // Active plan থাকলে অন্য subscription-এর label বদলে যাবে
+      final effectiveLabel = changeType == PlanChangeType.upgrade
+          ? 'upgradeButtonLabel'.tr
+          : changeType == PlanChangeType.downgrade
+              ? 'downgradeButtonLabel'.tr
+              : label;
+
       return AnimatedOpacity(
         duration: const Duration(milliseconds: 200),
         opacity: isBlockedByOther ? 0.45 : 1,
         child: IgnorePointer(
           ignoring: isBlockedByOther,
-          child: SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryColor,
-                padding: EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryColor,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onPressed: () => controller.buyAndGoHome(packageId),
+                  child: Text(
+                    effectiveLabel,
+                    style: TextStyle(
+                      color: AppColors.background,
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ),
-              onPressed: () => controller.buyAndGoHome(packageId),
-              child: Text(
-                label,
-                style: TextStyle(
-                  color: AppColors.background,
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w600,
+              if (changeType != null) ...[
+                SizedBox(height: 8.h),
+                Text(
+                  changeType == PlanChangeType.upgrade
+                      ? 'upgradeNote'.tr
+                      : 'downgradeNote'.tr,
+                  style: TextStyle(
+                    color: AppColors.textMuted,
+                    fontSize: 12.sp,
+                    height: 1.3,
+                  ),
                 ),
-              ),
-            ),
+              ],
+            ],
           ),
         ),
       );
     });
   }
 
-  // ══════════════════════════════════════
-  //  Manage / Cancel / Restore
-  // ══════════════════════════════════════
   Widget _buildManageSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -665,7 +636,6 @@ class SubscriptionScreen extends StatelessWidget {
             icon: Icons.settings_rounded),
         SizedBox(height: 14.h),
 
-        // Cancel — শুধু active subscription থাকলে
         if (controller.hasActivePlan && controller.willRenew.value) ...[
           GestureDetector(
             onTap: _showCancelDialog,
@@ -673,7 +643,7 @@ class SubscriptionScreen extends StatelessWidget {
               width: double.infinity,
               padding: EdgeInsets.symmetric(vertical: 14.h),
               decoration: BoxDecoration(
-                color: Color(0xFF1C0A0A),
+                color: AppColors.surfaceLight,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                     color: AppColors.error.withOpacity(0.3), width: 1),
@@ -681,7 +651,7 @@ class SubscriptionScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.cancel_outlined, color: AppColors.error, size: 20),
+                  Icon(Icons.cancel_outlined, color: AppColors.error, size: 20.sp),
                   SizedBox(width: 8.w),
                   Text(
                     'cancelSubscriptionButton'.tr,
@@ -698,7 +668,6 @@ class SubscriptionScreen extends StatelessWidget {
           SizedBox(height: 12.h),
         ],
 
-        // Restore
         Obx(
           () => GestureDetector(
             onTap: controller.isRestoring.value
@@ -717,16 +686,16 @@ class SubscriptionScreen extends StatelessWidget {
                 children: [
                   if (controller.isRestoring.value)
                     SizedBox(
-                      height: 18,
-                      width: 18,
-                      child: CircularProgressIndicator(
+                      height: 18.h,
+                      width: 18.w,
+                      child: const CircularProgressIndicator(
                         color: AppColors.textWhite,
                         strokeWidth: 2,
                       ),
                     )
                   else ...[
                     Icon(Icons.restore_rounded,
-                        color: AppColors.textWhite, size: 20),
+                        color: AppColors.textWhite, size: 20.sp),
                     SizedBox(width: 8.w),
                     Text(
                       'restorePurchasesButton'.tr,
@@ -758,30 +727,27 @@ class SubscriptionScreen extends StatelessWidget {
     );
   }
 
-  // ══════════════════════════════════════
-  //  Cancel Dialog
-  // ══════════════════════════════════════
   void _showCancelDialog() {
     Get.dialog(
       Dialog(
         backgroundColor: AppColors.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Padding(
-          padding: EdgeInsets.all(24),
+          padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 56,
-                height: 56,
+                width: 56.w,
+                height: 56.h,
                 decoration: BoxDecoration(
                   color: AppColors.error.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(Icons.cancel_outlined,
-                    color: AppColors.error, size: 28),
+                    color: AppColors.error, size: 28.sp),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 20.h),
               Text(
                 'cancelSubDialogTitle'.tr,
                 style: TextStyle(
@@ -790,35 +756,35 @@ class SubscriptionScreen extends StatelessWidget {
                   color: AppColors.textWhite,
                 ),
               ),
-              SizedBox(height: 8),
+              SizedBox(height: 8.h),
               Text(
                 'cancelSubDialogBody'.tr,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: AppColors.textMuted, fontSize: 14.sp),
               ),
-              SizedBox(height: 24),
+              SizedBox(height: 24.h),
               Row(
                 children: [
                   Expanded(
                     child: OutlinedButton(
                       style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: AppColors.cardBorder),
-                        padding: EdgeInsets.symmetric(vertical: 14),
+                        side: const BorderSide(color: AppColors.cardBorder),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                       onPressed: () => Get.back(),
                       child: Text('keepPlanButton'.tr,
-                          style: TextStyle(color: AppColors.textWhite)),
+                          style: const TextStyle(color: AppColors.textWhite)),
                     ),
                   ),
-                  SizedBox(width: 12),
+                  SizedBox(width: 12.w),
                   Expanded(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.error,
-                        padding: EdgeInsets.symmetric(vertical: 14),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -828,7 +794,7 @@ class SubscriptionScreen extends StatelessWidget {
                         controller.openCancelSubscription();
                       },
                       child: Text('continue'.tr,
-                          style: TextStyle(color: AppColors.textWhite)),
+                          style: const TextStyle(color: AppColors.textWhite)),
                     ),
                   ),
                 ],

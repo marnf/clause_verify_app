@@ -1,3 +1,4 @@
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:clause_verify/core/localization/localization_controller.dart';
 import 'package:clause_verify/core/services/auth_service.dart';
 import 'package:clause_verify/core/services/endpoints.dart';
@@ -94,8 +95,8 @@ class LoginController extends GetxController {
           'error'.tr,
           errorMsg,
           snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
         );
       }
     } catch (e) {
@@ -103,8 +104,8 @@ class LoginController extends GetxController {
         'error'.tr,
         'An error occurred: ${e.toString()}',
         snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
     } finally {
       isLoading.value = false;
@@ -141,8 +142,8 @@ class LoginController extends GetxController {
           'error'.tr,
           'Google login failed: ${AuthService.lastGoogleError ?? "unknown reason"}',
           snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
           duration: const Duration(seconds: 6),
         );
       }
@@ -151,8 +152,8 @@ class LoginController extends GetxController {
         'error'.tr,
         'An error occurred during Google login: ${e.toString()}',
         snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
         duration: const Duration(seconds: 6),
       );
     } finally {
@@ -190,8 +191,8 @@ class LoginController extends GetxController {
           'error'.tr,
           'Apple login was cancelled or failed. Please try again.',
           snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
         );
       }
     } catch (e) {
@@ -199,8 +200,8 @@ class LoginController extends GetxController {
         'error'.tr,
         'An error occurred during Apple login: ${e.toString()}',
         snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
     } finally {
       isAppleLoading.value = false;

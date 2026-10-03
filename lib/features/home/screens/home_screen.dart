@@ -1,4 +1,3 @@
-
 import 'package:clause_verify/core/common/widgets/language_modal.dart';
 import 'package:clause_verify/core/localization/localization_controller.dart';
 import 'package:clause_verify/core/utils/constants/app_colors.dart';
@@ -91,7 +90,7 @@ class HomeScreen extends StatelessWidget {
             Obx(() {
               final total = controller.totalScans;
               final empty = total <= 0;
-              final color = empty ? Colors.redAccent : AppColors.primaryColor;
+              final color = empty ? AppColors.error : AppColors.primaryColor;
               return GestureDetector(
                 onTap: controller.showScanDetails,
                 child: Container(
@@ -156,7 +155,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // ══════════════ Upload + Scan cards (ekta common lock box) ══════════════
+    // ══════════════ Upload + Scan cards (ekta common lock box) ══════════════
   Widget _buildActionSection() {
     return Obx(() {
       final locked = controller.isLocked;
@@ -194,13 +193,13 @@ class HomeScreen extends StatelessWidget {
               opacity: 0.35,
               child: IgnorePointer(child: cards),
             ),
-            // overlay: duto card er upor ekta box
+            // overlay: duto card er 4 pashe red border
             Positioned.fill(
               child: Container(
                 decoration: BoxDecoration(
                   color: AppColors.background.withValues(alpha: 0.45),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.cardBorder, width: 1),
+                  border: Border.all(color: AppColors.error, width: 1.5),
                 ),
               ),
             ),
@@ -211,10 +210,10 @@ class HomeScreen extends StatelessWidget {
                 color: AppColors.surface,
                 shape: BoxShape.circle,
                 border: Border.all(
-                    color: Colors.redAccent.withValues(alpha: 0.5), width: 1.5),
+                    color: AppColors.error.withValues(alpha: 0.5), width: 1.5),
               ),
               child: Icon(Icons.lock_rounded,
-                  color: Colors.redAccent, size: 30.sp),
+                  color: AppColors.error, size: 30.sp),
             ),
           ],
         ),
@@ -321,7 +320,7 @@ class HomeScreen extends StatelessWidget {
             child: Center(
                 child: Text(number,
                     style: TextStyle(
-                        color: Colors.black,
+                        color: AppColors.black,
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w700)))),
         SizedBox(width: 12.w),
@@ -338,7 +337,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   // ══════════════ Upgrade card ══════════════
-  Widget _buildUpgradeCard() {
+   Widget _buildUpgradeCard() {
     return GestureDetector(
       onTap: controller.navigateToPremium,
       child: Container(
@@ -360,30 +359,30 @@ class HomeScreen extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(8.w),
               decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.15),
+                  color: AppColors.black.withValues(alpha: 0.15),
                   shape: BoxShape.circle),
               child: Icon(Icons.workspace_premium_rounded,
-                  color: Colors.black, size: 24.sp),
+                  color: AppColors.black, size: 24.sp),
             ),
             SizedBox(width: 14.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Upgrade to Premium',
+                  Text('homeUpgradeTitle'.tr, // 👈 Updated
                       style: TextStyle(
-                          color: Colors.black,
+                          color: AppColors.black,
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w800)),
                   SizedBox(height: 4.h),
-                  Text('Unlock unlimited scans and advanced features.',
+                  Text('homeUpgradeSubtitle'.tr, // 👈 Updated
                       style: TextStyle(
-                          color: Colors.black.withValues(alpha: 0.8),
+                          color: AppColors.black.withValues(alpha: 0.8),
                           fontSize: 12.sp)),
                 ],
               ),
             ),
-            Icon(Icons.arrow_forward_rounded, color: Colors.black, size: 22.sp),
+            Icon(Icons.arrow_forward_rounded, color: AppColors.black, size: 22.sp),
           ],
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomRequestCard extends StatelessWidget {
@@ -15,7 +16,7 @@ class CustomRequestCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.white,
+      color: AppColors.white,
       margin: EdgeInsets.symmetric(vertical: 6, horizontal: 0),
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

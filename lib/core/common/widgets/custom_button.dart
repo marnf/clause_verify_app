@@ -52,7 +52,7 @@ class CustomButton extends StatelessWidget {
     final bool hasGradient = backgroundColor is Gradient;
     final Color effectiveTextColor = isOutline
         ? (textColor ?? Theme.of(context).primaryColor)
-        : (textColor ?? Colors.black);
+        : (textColor ?? AppColors.black);
 
     return Material(
       color: Colors.transparent,
@@ -61,7 +61,7 @@ class CustomButton extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: effectiveBorderRadius,
-        splashColor: Colors.white,
+        splashColor: AppColors.white,
         child: Container(
           width: width ?? double.infinity,
           height: height,
@@ -78,7 +78,7 @@ class CustomButton extends StatelessWidget {
             boxShadow: enableShadow
                 ? [
               BoxShadow(
-                color: shadowColor ?? Colors.black,
+                color: shadowColor ?? AppColors.black,
                 offset: const Offset(0, 4),
                 blurRadius: 8,
               ),

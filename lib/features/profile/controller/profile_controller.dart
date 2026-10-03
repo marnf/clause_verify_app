@@ -1,9 +1,7 @@
-
-
-
 import 'package:clause_verify/core/services/auth_service.dart';
 import 'package:clause_verify/core/services/endpoints.dart';
 import 'package:clause_verify/core/services/network_caller.dart';
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:clause_verify/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -84,11 +82,11 @@ class ProfileController extends GetxController {
   Future<void> deleteAccount() async {
     if (deleteConfirmController.text.trim().toLowerCase() != 'i want to delete my account') {
       Get.snackbar(
-        'Error',
-        'Please type exactly "i want to delete my account" to confirm.',
+        'errorTitle'.tr,
+        'deleteAccountConfirmError'.tr, // 👈 Updated
         snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
       return;
     }
@@ -105,31 +103,31 @@ class ProfileController extends GetxController {
       if (response.isSuccess) {
         Get.back();
         Get.snackbar(
-          'Success',
-          'Your account has been deleted successfully.',
+          'deleteAccountSuccessTitle'.tr, // 👈 Updated
+          'deleteAccountSuccessBody'.tr, // 👈 Updated
           snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
+          backgroundColor: AppColors.success,
+          colorText: AppColors.white,
         );
 
         await AuthService.logoutUser();
         Get.offAllNamed(AppRoute.loginScreen);
       } else {
         Get.snackbar(
-          'Error',
-          response.errorMessage ?? 'Failed to delete account. Please try again.',
+          'errorTitle'.tr,
+          response.errorMessage ?? 'deleteAccountFailedBody'.tr, // 👈 Updated
           snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
         );
       }
     } catch (e) {
       Get.snackbar(
-        'Error',
-        'An error occurred: ${e.toString()}',
+        'errorTitle'.tr,
+        'anErrorOccurred'.trParams({'error': e.toString()}), // 👈 Updated
         snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
       );
     } finally {
       isDeleting.value = false;

@@ -48,13 +48,13 @@ class CustomTextField extends StatelessWidget {
     this.border = InputBorder.none,
     this.enabledBorder = InputBorder.none,
     this.focusedBorder = InputBorder.none,
-    this.containerColor = Colors.white,
+    this.containerColor = AppColors.white,
     this.hintTextColor = const Color(0xff9597A6), // Default color
     this.hintTextSize = 16, // Default font size
     this.suffixText, // Nullable suffix text
     this.suffixTextStyle, // Nullable suffix text style
     this.validator,
-    this.fillColor = Colors.white, // Nullable validator function
+    this.fillColor = AppColors.white, // Nullable validator function
   });
 
   @override
@@ -78,7 +78,7 @@ class CustomTextField extends StatelessWidget {
         style: GoogleFonts.inter(
           fontSize: getWidth(14),
           fontWeight: FontWeight.w400,
-          color: Colors.black,
+          color: AppColors.black,
         ),
         validator: validator, // Use the passed validator function here
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -101,7 +101,7 @@ class CustomTextField extends StatelessWidget {
               hintTextSize ?? 14,
             ), // Use dynamic size, default to 15
             fontWeight: FontWeight.w400,
-            color: hintTextColor ?? AppColors.backgroundDark, // Use dynamic color, default to textSecondary
+            color: hintTextColor ?? AppColors.background, // Use dynamic color, default to textSecondary
           ),
           fillColor: fillColor,
           border: border,

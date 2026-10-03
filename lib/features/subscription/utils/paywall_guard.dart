@@ -40,7 +40,7 @@ class PaywallGuard {
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryColor,
-              foregroundColor: Colors.black,
+              foregroundColor: AppColors.black,
             ),
             onPressed: () => Get.back(result: true),
             child: const Text('View plans'),

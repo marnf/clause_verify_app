@@ -1,4 +1,5 @@
 
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:clause_verify/core/common/widgets/custom_text.dart';
 import 'package:clause_verify/core/utils/constants/app_sizer.dart';
@@ -27,7 +28,7 @@ class CustomNotificationCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: notification.isSelected
               ? Colors.blue.withOpacity(0.2)
-              : Colors.white,
+              : AppColors.white,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.grey.shade400, width: 1.w),
         ),

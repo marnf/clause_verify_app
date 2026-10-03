@@ -156,7 +156,7 @@ class RegistrationController extends GetxController {
             'success'.tr,
             successMsg.toString(),
             backgroundColor: AppColors.primaryColor,
-            colorText: Colors.white,
+            colorText: AppColors.white,
             duration: const Duration(seconds: 2),
           );
         }
@@ -166,8 +166,8 @@ class RegistrationController extends GetxController {
         Get.snackbar(
           'error'.tr,
           errorMsg.toString(),
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
+          backgroundColor: AppColors.error,
+          colorText: AppColors.white,
           duration: const Duration(seconds: 4),
         );
       }
@@ -175,8 +175,8 @@ class RegistrationController extends GetxController {
       Get.snackbar(
         'error'.tr,
         'network_error'.tr,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
         duration: const Duration(seconds: 3),
       );
     } finally {

@@ -1,6 +1,7 @@
 // ==================== 1. LANGUAGE MODAL ====================
 // File: lib/core/common/widgets/modals/language_modal.dart
 
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -37,12 +38,12 @@ class AnalysisLimitModal extends StatelessWidget {
                   width: 32,
                   height: 32,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFD4AF37),
+                    color: AppColors.primaryColor,
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
                     Icons.close,
-                    color: Colors.black,
+                    color: AppColors.black,
                     size: 20,
                   ),
                 ),
@@ -55,12 +56,12 @@ class AnalysisLimitModal extends StatelessWidget {
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: const Color(0xFFD4AF37),
+                color: AppColors.primaryColor,
                 shape: BoxShape.circle,
               ),
               child: const Icon(
                 Icons.warning_amber_rounded,
-                color: Colors.black,
+                color: AppColors.black,
                 size: 32,
               ),
             ),
@@ -70,7 +71,7 @@ class AnalysisLimitModal extends StatelessWidget {
             const Text(
               'OPPS!',
               style: TextStyle(
-                color: Colors.white,
+                color: AppColors.white,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
@@ -82,7 +83,7 @@ class AnalysisLimitModal extends StatelessWidget {
               'You\'ve reached your analysis limit!\n\nUpgrade to Premium for 100 analyses per month, no ads, and full detailed reports.',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.white,
+                color: AppColors.white,
                 fontSize: 14,
                 height: 1.5,
               ),
@@ -99,7 +100,7 @@ class AnalysisLimitModal extends StatelessWidget {
                   onUpgrade();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFD4AF37),
+                  backgroundColor: AppColors.primaryColor,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -108,7 +109,7 @@ class AnalysisLimitModal extends StatelessWidget {
                 child: const Text(
                   'Upgrade to Premium',
                   style: TextStyle(
-                    color: Colors.black,
+                    color: AppColors.black,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -169,12 +170,12 @@ class PremiumSubscriptionModal extends StatelessWidget {
                   width: 32,
                   height: 32,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFD4AF37),
+                    color: AppColors.primaryColor,
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
                     Icons.close,
-                    color: Colors.black,
+                    color: AppColors.black,
                     size: 20,
                   ),
                 ),
@@ -187,12 +188,12 @@ class PremiumSubscriptionModal extends StatelessWidget {
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: const Color(0xFFD4AF37),
+                color: AppColors.primaryColor,
                 shape: BoxShape.circle,
               ),
               child: const Icon(
                 Icons.description_outlined,
-                color: Colors.black,
+                color: AppColors.black,
                 size: 28,
               ),
             ),
@@ -202,7 +203,7 @@ class PremiumSubscriptionModal extends StatelessWidget {
             const Text(
               'PDF Report Available',
               style: TextStyle(
-                color: Colors.white,
+                color: AppColors.white,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
@@ -223,7 +224,7 @@ class PremiumSubscriptionModal extends StatelessWidget {
                   TextSpan(
                     text: 'Premium Analysis(\$5.49)',
                     style: TextStyle(
-                      color: Color(0xFFD4AF37),
+                      color: AppColors.primaryColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -231,7 +232,7 @@ class PremiumSubscriptionModal extends StatelessWidget {
                   TextSpan(
                     text: 'Premium Subscription',
                     style: TextStyle(
-                      color: Color(0xFFD4AF37),
+                      color: AppColors.primaryColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -247,7 +248,7 @@ class PremiumSubscriptionModal extends StatelessWidget {
               child: Text(
                 'Pay-Per-Scan',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -259,7 +260,7 @@ class PremiumSubscriptionModal extends StatelessWidget {
               child: Text(
                 '\$5.49',
                 style: TextStyle(
-                  color: Color(0xFFD4AF37),
+                  color: AppColors.primaryColor,
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
@@ -277,7 +278,7 @@ class PremiumSubscriptionModal extends StatelessWidget {
                   onPayPerScan();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFD4AF37),
+                  backgroundColor: AppColors.primaryColor,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -286,7 +287,7 @@ class PremiumSubscriptionModal extends StatelessWidget {
                 child: const Text(
                   'Get Premium Analysis',
                   style: TextStyle(
-                    color: Colors.black,
+                    color: AppColors.black,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -301,7 +302,7 @@ class PremiumSubscriptionModal extends StatelessWidget {
               child: Text(
                 'Premium Subscription',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -313,7 +314,7 @@ class PremiumSubscriptionModal extends StatelessWidget {
               child: Text(
                 '\$11.99 or \$89.99',
                 style: TextStyle(
-                  color: Color(0xFFD4AF37),
+                  color: AppColors.primaryColor,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -331,7 +332,7 @@ class PremiumSubscriptionModal extends StatelessWidget {
                   onUpgradeToPremium();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFD4AF37),
+                  backgroundColor: AppColors.primaryColor,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -340,7 +341,7 @@ class PremiumSubscriptionModal extends StatelessWidget {
                 child: const Text(
                   'Upgrade to Premium',
                   style: TextStyle(
-                    color: Colors.black,
+                    color: AppColors.black,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -398,12 +399,12 @@ class FairUsePolicyModal extends StatelessWidget {
                   width: 32,
                   height: 32,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFD4AF37),
+                    color: AppColors.primaryColor,
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
                     Icons.close,
-                    color: Colors.black,
+                    color: AppColors.black,
                     size: 20,
                   ),
                 ),
@@ -419,11 +420,11 @@ class FairUsePolicyModal extends StatelessWidget {
               child: const Text(
                 'fair use policy',
                 style: TextStyle(
-                  color: Color(0xFFD4AF37),
+                  color: AppColors.primaryColor,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   decoration: TextDecoration.underline,
-                  decorationColor: Color(0xFFD4AF37),
+                  decorationColor: AppColors.primaryColor,
                 ),
               ),
             ),
@@ -452,7 +453,7 @@ class FairUsePolicyModal extends StatelessWidget {
           child: Icon(
             Icons.circle,
             size: 6,
-            color: Colors.white,
+            color: AppColors.white,
           ),
         ),
         const SizedBox(width: 12),
@@ -460,7 +461,7 @@ class FairUsePolicyModal extends StatelessWidget {
           child: Text(
             text,
             style: const TextStyle(
-              color: Colors.white,
+              color: AppColors.white,
               fontSize: 14,
               height: 1.5,
             ),

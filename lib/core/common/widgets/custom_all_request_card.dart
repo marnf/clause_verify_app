@@ -1,3 +1,4 @@
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomAllRequestCard extends StatelessWidget {
@@ -17,11 +18,11 @@ class CustomAllRequestCard extends StatelessWidget {
   Color getStatusColor() {
     switch (status.toLowerCase()) {
       case 'approved':
-        return Colors.green;
+        return AppColors.success;
       case 'pending':
-        return Colors.orange;
+        return AppColors.warning;
       case 'rejected':
-        return Colors.red;
+        return AppColors.error;
       default:
         return Colors.grey;
     }
@@ -30,7 +31,7 @@ class CustomAllRequestCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-    color: Colors.white,
+    color: AppColors.white,
       margin: EdgeInsets.symmetric(vertical: 6, horizontal: 0),
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

@@ -1,3 +1,4 @@
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:clause_verify/core/models/response_data.dart';
 import 'package:clause_verify/core/services/auth_service.dart';
 import 'package:clause_verify/core/services/endpoints.dart';
@@ -95,8 +96,8 @@ class LocalizationController extends GetxController implements GetxService {
                 'languageUpdateFailed'.tr,
                 snackPosition: SnackPosition.TOP,
                 duration: const Duration(seconds: 2),
-                backgroundColor: Colors.red,
-                colorText: Colors.white,
+                backgroundColor: AppColors.error,
+                colorText: AppColors.white,
                 margin: const EdgeInsets.all(16),
                 borderRadius: 8,
               );
@@ -115,8 +116,8 @@ class LocalizationController extends GetxController implements GetxService {
               'languageUpdatedSuccessfully'.tr,
               snackPosition: SnackPosition.TOP,
               duration: const Duration(seconds: 2),
-              backgroundColor: const Color(0xFFD4AF37),
-              colorText: Colors.black,
+              backgroundColor: AppColors.primaryColor,
+              colorText: AppColors.black,
               margin: const EdgeInsets.all(16),
               borderRadius: 8,
             );
@@ -130,8 +131,8 @@ class LocalizationController extends GetxController implements GetxService {
         'networkError'.tr,
         snackPosition: SnackPosition.TOP,
         duration: const Duration(seconds: 2),
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.white,
         margin: const EdgeInsets.all(16),
         borderRadius: 8,
       );

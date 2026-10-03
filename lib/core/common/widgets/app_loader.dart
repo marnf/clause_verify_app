@@ -8,7 +8,7 @@ class AppLoader extends StatelessWidget {
 
   const AppLoader({
     super.key,
-    this.color = AppColors.textBlue,
+    this.color = AppColors.primaryColor,
     this.size = 50.0,
   });
 

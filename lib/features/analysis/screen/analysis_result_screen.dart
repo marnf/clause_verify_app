@@ -1,23 +1,22 @@
 
 
-// // lib/screens/analysis_result_screen.dart
-
 // import 'package:flutter/material.dart';
 // import 'package:clause_verify/features/analysis/controller/analysis_result_controller.dart';
 // import 'package:clause_verify/features/analysis/model/analysis_result_model.dart';
+// import 'package:clause_verify/core/utils/constants/app_colors.dart';
 // import 'package:clause_verify/core/utils/constants/app_sizer.dart';
 // import 'package:get/get.dart';
 
 // class AnalysisResultScreen extends StatelessWidget {
 //   const AnalysisResultScreen({super.key});
 
-//   static const Color _bg = Color(0xFF0A0A0A);
-//   static const Color _card = Color(0xFF141414);
-//   static const Color _border = Color(0xFF2A2A2A);
-//   static const Color _gold = Color(0xFFB8860B);
-//   static const Color _red = Color(0xFFE53935);
-//   static const Color _orange = Color(0xFFFF8F00);
-//   static const Color _green = Color(0xFF4CAF50);
+//   static const Color _bg = AppColors.background;
+//   static const Color _card = AppColors.surface;
+//   static const Color _border = AppColors.cardBorder;
+//   static const Color _gold = AppColors.primaryColor;
+//   static const Color _red = AppColors.error;
+//   static const Color _orange = AppColors.warning;
+//   static const Color _green = AppColors.success;
 
 //   @override
 //   Widget build(BuildContext context) {
@@ -28,7 +27,7 @@
 //       body: CustomScrollView(
 //         physics: const BouncingScrollPhysics(),
 //         slivers: [
-//           _buildAppBar(c),
+//           _buildAppBar(c, context),
 //           SliverToBoxAdapter(
 //             child: Padding(
 //               padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -50,6 +49,10 @@
 //                     SizedBox(height: 14.h),
 //                     _buildTermsList(c),
 //                   ],
+//                   if (c.missingTerms.isNotEmpty) ...[
+//                     SizedBox(height: 28.h),
+//                     _buildMissingSection(c),
+//                   ],
 //                   SizedBox(height: 40.h),
 //                 ],
 //               ),
@@ -60,60 +63,130 @@
 //     );
 //   }
 
-//   // ─────────────────────────────────────────────
-//   // APP BAR  (title + country · pages)
-//   // ─────────────────────────────────────────────
-//   Widget _buildAppBar(AnalysisResultController c) {
-//     final subtitleParts = <String>[
-//       if (c.country.isNotEmpty) c.country,
-//       if (c.totalPages > 0) '${c.totalPages} ${'pages'.tr}',
-//     ];
+//   Widget _buildAppBar(AnalysisResultController c, BuildContext context) {
+//   // 👈 Point 2: "1 Pages" becomes "1 page" (singular when 1)
+//   final subtitleParts = <String>[
+//     if (c.country.isNotEmpty) c.country,
+//     if (c.totalPages > 0) '${c.totalPages} ${c.totalPages == 1 ? 'page'.tr : 'pages'.tr}',
+//   ];
+//   final bool hasSub = subtitleParts.isNotEmpty;
 
-//     return SliverAppBar(
-//       pinned: true,
-//       toolbarHeight: 70.h,
-//       backgroundColor: _bg,
-//       surfaceTintColor: Colors.transparent,
-//       leadingWidth: 56.w,
-//       leading: GestureDetector(
-//         onTap: () => Get.back(),
-//         child: Center(
-//           child: Icon(Icons.arrow_back_ios_new_rounded,
-//               color: _gold, size: 20.sp),
-//         ),
-//       ),
-//       titleSpacing: 0,
-//       title: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         mainAxisSize: MainAxisSize.min,
-//         children: [
-//           Text('analysisResults'.tr,
-//               style: TextStyle(
-//                   color: Colors.white,
-//                   fontSize: 20.sp,
-//                   fontWeight: FontWeight.w700)),
-//           if (subtitleParts.isNotEmpty)
-//             Padding(
-//               padding: EdgeInsets.only(top: 2.h),
-//               child: Text(subtitleParts.join(' · '),
-//                   maxLines: 1,
-//                   overflow: TextOverflow.ellipsis,
-//                   style: TextStyle(
-//                       color: const Color(0xFF888888), fontSize: 12.sp)),
-//             ),
-//         ],
-//       ),
-//     );
-//   }
+//   final double topPad = MediaQuery.of(context).padding.top;
+//   final double toolbarH = 70.h;
+//   final double circle = 40.w;
+//   final double bigFont = 26.sp;
+//   final double smallFont = 20.sp;
+//   final double subFont = 12.sp;
+//   final double gap = 2.h;
 
-//   // ─────────────────────────────────────────────
-//   // VERDICT CARD  (একনজরে সিদ্ধান্ত)
-//   // ─────────────────────────────────────────────
-//   Widget _buildVerdictCard(AnalysisResultController c) {
+//   final double backTop = topPad + (toolbarH - circle) / 2;
+//   final double expTitleTop = backTop + circle + 10.h;
+//   final double expBlockH =
+//       bigFont * 1.2 + (hasSub ? gap + subFont * 1.3 : 0);
+//   final double expandedH = (expTitleTop - topPad) + expBlockH + 14.h;
+
+//   final double colBlockH =
+//       smallFont * 1.2 + (hasSub ? gap + subFont * 1.3 : 0);
+//   final double colTitleTop = topPad + (toolbarH - colBlockH) / 2;
+
+//   final double leftExpanded = 20.w;
+//   final double leftCollapsed = 20.w + circle + 12.w;
+
+//   final double maxExtent = topPad + expandedH;
+//   final double minExtent = topPad + toolbarH;
+
+//   return SliverAppBar(
+//     pinned: true,
+//     toolbarHeight: toolbarH,
+//     expandedHeight: expandedH,
+//     backgroundColor: _bg,
+//     surfaceTintColor: Colors.transparent,
+//     elevation: 0,
+//     automaticallyImplyLeading: false,
+//     flexibleSpace: LayoutBuilder(
+//       builder: (context, constraints) {
+//         final double t =
+//             (1 - (constraints.maxHeight - minExtent) / (maxExtent - minExtent))
+//                 .clamp(0.0, 1.0);
+//         final double eased = Curves.easeInOut.transform(t);
+
+//         final double titleLeft =
+//             leftExpanded + (leftCollapsed - leftExpanded) * eased;
+//         final double titleTop = expTitleTop + (colTitleTop - expTitleTop) * eased;
+//         final double fontSize = bigFont + (smallFont - bigFont) * eased;
+
+//         return Container(
+//           color: _bg,
+//           child: Stack(
+//             children: [
+//               Positioned(
+//                 left: 20.w,
+//                 top: backTop,
+//                 child: GestureDetector(
+//                   behavior: HitTestBehavior.opaque,
+//                   onTap: () => Get.back(),
+//                   child: Container(
+//                     width: circle,
+//                     height: circle,
+//                     decoration: BoxDecoration(
+//                       color: _card,
+//                       shape: BoxShape.circle,
+//                       border: Border.all(color: _border, width: 1),
+//                     ),
+//                     child: Center(
+//                       child: Icon(Icons.arrow_back_ios_new_rounded,
+//                           color: _gold, size: 18.sp),
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//               Positioned(
+//                 left: titleLeft,
+//                 top: titleTop,
+//                 right: 20.w,
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   mainAxisSize: MainAxisSize.min,
+//                   children: [
+//                     Text(
+//                       'analysisResults'.tr,
+//                       maxLines: 1,
+//                       overflow: TextOverflow.ellipsis,
+//                       style: TextStyle(
+//                         color: AppColors.white,
+//                         fontSize: fontSize,
+//                         fontWeight: FontWeight.w700,
+//                         height: 1.2,
+//                       ),
+//                     ),
+//                     if (hasSub) ...[
+//                       SizedBox(height: gap),
+//                       Text(
+//                         subtitleParts.join(' · '),
+//                         maxLines: 1,
+//                         overflow: TextOverflow.ellipsis,
+//                         style: TextStyle(
+//                           color: AppColors.textMuted,
+//                           fontSize: subFont,
+//                           height: 1.3,
+//                         ),
+//                       ),
+//                     ],
+//                   ],
+//                 ),
+//               ),
+//             ],
+//           ),
+//         );
+//       },
+//     ),
+//   );
+// }
+
+//    Widget _buildVerdictCard(AnalysisResultController c) {
 //     final level = _normalizeLevel(c.overallRisk);
 //     final color = _levelColor(level);
 //     final hasRisk = c.overallRisk.isNotEmpty;
-//     final hasRec = c.recommendation.isNotEmpty;
 //     final hasGuidance = c.recommendationGuidance.isNotEmpty;
 
 //     return Container(
@@ -152,35 +225,11 @@
 //                 ),
 //               ],
 //             ),
-//           if (hasRec) ...[
+//           if (hasGuidance) ...[ 
 //             SizedBox(height: hasRisk ? 16.h : 0),
-//             Container(
-//               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.h),
-//               decoration: BoxDecoration(
-//                 color: color.withOpacity(0.15),
-//                 borderRadius: BorderRadius.circular(20),
-//               ),
-//               child: Row(
-//                 mainAxisSize: MainAxisSize.min,
-//                 children: [
-//                   Icon(Icons.auto_awesome_rounded, color: color, size: 14.sp),
-//                   SizedBox(width: 6.w),
-//                   Flexible(
-//                     child: Text(_recommendationLabel(c.recommendation),
-//                         style: TextStyle(
-//                             color: color,
-//                             fontSize: 13.sp,
-//                             fontWeight: FontWeight.w700)),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ],
-//           if (hasGuidance) ...[
-//             SizedBox(height: 12.h),
 //             Text(c.recommendationGuidance,
 //                 style: TextStyle(
-//                     color: const Color(0xFFCCCCCC),
+//                     color: AppColors.cream,
 //                     fontSize: 12.5.sp,
 //                     height: 1.55)),
 //           ],
@@ -189,11 +238,11 @@
 //             Row(
 //               children: [
 //                 Icon(Icons.calendar_today_outlined,
-//                     color: const Color(0xFF777777), size: 12.sp),
+//                     color: AppColors.textMuted, size: 12.sp),
 //                 SizedBox(width: 6.w),
 //                 Text('${'analyzedOn'.tr} ${c.formattedDate}',
 //                     style: TextStyle(
-//                         color: const Color(0xFF777777), fontSize: 11.sp)),
+//                         color: AppColors.textMuted, fontSize: 11.sp)),
 //               ],
 //             ),
 //           ],
@@ -207,7 +256,7 @@
 //   Widget _buildViewPdfButton(AnalysisResultController c) {
 //     final bool isBusy = c.isGeneratingPdf.value;
 //     final bool isLocked = c.isPdfLocked;
-//     final Color contentColor = isLocked ? _gold : Colors.black;
+//     final Color contentColor = isLocked ? _gold : AppColors.black;
 
 //     return GestureDetector(
 //       onTap: isBusy ? null : c.onPdfButtonTap,
@@ -216,7 +265,7 @@
 //         padding: EdgeInsets.symmetric(vertical: 14.h),
 //         decoration: BoxDecoration(
 //           color: isLocked
-//               ? const Color(0xFF1A1500)
+//               ? AppColors.surfaceLight
 //               : (isBusy ? _gold.withOpacity(0.5) : _gold),
 //           borderRadius: BorderRadius.circular(10),
 //           border: isLocked
@@ -225,11 +274,11 @@
 //         ),
 //         child: Center(
 //           child: isBusy
-//               ? const SizedBox(
-//                   width: 18,
-//                   height: 18,
+//               ? SizedBox(
+//                   width: 18.w,
+//                   height: 18.h,
 //                   child: CircularProgressIndicator(
-//                       strokeWidth: 2, color: Colors.black))
+//                       strokeWidth: 2, color: AppColors.black))
 //               : Row(
 //                   mainAxisAlignment: MainAxisAlignment.center,
 //                   children: [
@@ -252,16 +301,14 @@
 //     );
 //   }
 
-//   // ─────────────────────────────────────────────
-//   // OVERVIEW: risk bar + found/missing (data থাকলেই দেখাবে)
-//   // ─────────────────────────────────────────────
 //   Widget _buildOverviewSection(AnalysisResultController c) {
-//     final rb = c.riskBreakdown;
-//     if (rb == null) return const SizedBox.shrink();
+//     final high = c.countOfLevel('high');
+//     final medium = c.countOfLevel('medium');
+//     final low = c.countOfLevel('low');
+//     final found = c.foundCount;
+//     final missing = c.missingCount;
 
-//     final showRisk = rb.total > 0;
-//     final showCounts = rb.foundClause > 0 || rb.missingClause > 0;
-//     if (!showRisk && !showCounts) return const SizedBox.shrink();
+//     if (found == 0 && missing == 0) return const SizedBox.shrink();
 
 //     return Padding(
 //       padding: EdgeInsets.only(top: 20.h),
@@ -276,20 +323,41 @@
 //         child: Column(
 //           crossAxisAlignment: CrossAxisAlignment.start,
 //           children: [
-//             if (showRisk) ...[
+//             if (found > 0) ...[
+//               Row(
+//                 crossAxisAlignment: CrossAxisAlignment.end,
+//                 children: [
+//                   Text('$found',
+//                       style: TextStyle(
+//                           color: AppColors.white,
+//                           fontSize: 34.sp,
+//                           fontWeight: FontWeight.w800,
+//                           height: 1)),
+//                   SizedBox(width: 8.w),
+//                   Padding(
+//                     padding: EdgeInsets.only(bottom: 4.h),
+//                     child: Text('clausesFound'.tr,
+//                         style: TextStyle(
+//                             color: AppColors.textMuted,
+//                             fontSize: 13.sp,
+//                             fontWeight: FontWeight.w500)),
+//                   ),
+//                 ],
+//               ),
+//               SizedBox(height: 12.h),
 //               ClipRRect(
 //                 borderRadius: BorderRadius.circular(6),
 //                 child: SizedBox(
 //                   height: 10.h,
 //                   child: Row(
 //                     children: [
-//                       if (rb.highRisk > 0)
-//                         Expanded(flex: rb.highRisk, child: Container(color: _red)),
-//                       if (rb.mediumRisk > 0)
+//                       if (high > 0)
+//                         Expanded(flex: high, child: Container(color: _red)),
+//                       if (medium > 0)
 //                         Expanded(
-//                             flex: rb.mediumRisk, child: Container(color: _orange)),
-//                       if (rb.lowRisk > 0)
-//                         Expanded(flex: rb.lowRisk, child: Container(color: _green)),
+//                             flex: medium, child: Container(color: _orange)),
+//                       if (low > 0)
+//                         Expanded(flex: low, child: Container(color: _green)),
 //                     ],
 //                   ),
 //                 ),
@@ -297,37 +365,21 @@
 //               SizedBox(height: 14.h),
 //               Row(
 //                 children: [
-//                   _riskLegend('highRisk'.tr, rb.highRisk, _red),
-//                   _riskLegend('mediumRisk'.tr, rb.mediumRisk, _orange),
-//                   _riskLegend('lowRisk'.tr, rb.lowRisk, _green),
+//                   _riskLegend('highRisk'.tr, high, _red),
+//                   _riskLegend('mediumRisk'.tr, medium, _orange),
+//                   // 👈 Point 1: Replace "Low Risk" with "Standard" in the summary
+//                   _riskLegend('standardLabel'.tr, low, _green),
 //                 ],
 //               ),
 //             ],
-//             if (showRisk && showCounts) ...[
-//               SizedBox(height: 14.h),
-//               const Divider(color: _border, height: 1),
-//               SizedBox(height: 14.h),
+//             if (missing > 0) ...[
+//               if (found > 0) ...[
+//                 SizedBox(height: 14.h),
+//                 const Divider(color: _border, height: 1),
+//                 SizedBox(height: 14.h),
+//               ],
+//               _missingTile(missing),
 //             ],
-//             if (showCounts)
-//               Row(
-//                 children: [
-//                   _countTile(
-//                     icon: Icons.task_alt_rounded,
-//                     label: 'clausesFound'.tr,
-//                     count: rb.foundClause,
-//                     color: _gold,
-//                   ),
-//                   SizedBox(width: 10.w),
-//                   _countTile(
-//                     icon: Icons.report_gmailerrorred_rounded,
-//                     label: 'clausesMissing'.tr,
-//                     count: rb.missingClause,
-//                     color: rb.missingClause > 0
-//                         ? _red
-//                         : const Color(0xFF777777),
-//                   ),
-//                 ],
-//               ),
 //           ],
 //         ),
 //       ),
@@ -340,7 +392,7 @@
 //         children: [
 //           Text('$count',
 //               style: TextStyle(
-//                   color: count > 0 ? color : const Color(0xFF555555),
+//                   color: count > 0 ? color : AppColors.textMuted,
 //                   fontSize: 24.sp,
 //                   fontWeight: FontWeight.w800)),
 //           SizedBox(height: 4.h),
@@ -348,16 +400,17 @@
 //             mainAxisAlignment: MainAxisAlignment.center,
 //             children: [
 //               Container(
-//                   width: 8,
-//                   height: 8,
-//                   decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+//                   width: 8.w,
+//                   height: 8.h,
+//                   decoration:
+//                       BoxDecoration(color: color, shape: BoxShape.circle)),
 //               SizedBox(width: 5.w),
 //               Flexible(
 //                 child: Text(label,
 //                     maxLines: 1,
 //                     overflow: TextOverflow.ellipsis,
 //                     style: TextStyle(
-//                         color: const Color(0xFF999999), fontSize: 10.5.sp)),
+//                         color: AppColors.textMuted, fontSize: 10.5.sp)),
 //               ),
 //             ],
 //           ),
@@ -366,46 +419,37 @@
 //     );
 //   }
 
-//   Widget _countTile({
-//     required IconData icon,
-//     required String label,
-//     required int count,
-//     required Color color,
-//   }) {
-//     return Expanded(
-//       child: Container(
-//         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-//         decoration: BoxDecoration(
-//           color: color.withOpacity(0.08),
-//           borderRadius: BorderRadius.circular(12),
-//           border: Border.all(color: color.withOpacity(0.25), width: 1),
-//         ),
-//         child: Row(
-//           children: [
-//             Icon(icon, color: color, size: 20.sp),
-//             SizedBox(width: 8.w),
-//             Text('$count',
-//                 style: TextStyle(
-//                     color: color, fontSize: 20.sp, fontWeight: FontWeight.w800)),
-//             SizedBox(width: 6.w),
-//             Expanded(
-//               child: Text(label,
-//                   maxLines: 2,
-//                   overflow: TextOverflow.ellipsis,
-//                   style: TextStyle(
-//                       color: color.withOpacity(0.9),
-//                       fontSize: 10.5.sp,
-//                       fontWeight: FontWeight.w500)),
-//             ),
-//           ],
-//         ),
+//   Widget _missingTile(int count) {
+//     return Container(
+//       width: double.infinity,
+//       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+//       decoration: BoxDecoration(
+//         color: _red.withOpacity(0.08),
+//         borderRadius: BorderRadius.circular(12),
+//         border: Border.all(color: _red.withOpacity(0.25), width: 1),
+//       ),
+//       child: Row(
+//         children: [
+//           Icon(Icons.report_gmailerrorred_rounded, color: _red, size: 20.sp),
+//           SizedBox(width: 10.w),
+//           Text('$count',
+//               style: TextStyle(
+//                   color: _red, fontSize: 22.sp, fontWeight: FontWeight.w800)),
+//           SizedBox(width: 8.w),
+//           Expanded(
+//             // 👈 Point 3: "1 Clauses Missing" becomes "1 missing protection" (plural: "2 missing protections")
+//             child: Text(
+//               count == 1 ? 'missingProtection'.tr : 'missingProtections'.tr,
+//               style: TextStyle(
+//                   color: _red.withOpacity(0.9),
+//                   fontSize: 12.sp,
+//                   fontWeight: FontWeight.w500)),
+//           ),
+//         ],
 //       ),
 //     );
 //   }
 
-//   // ─────────────────────────────────────────────
-//   // POSITIVE POINTS  (খালি হলে আসবেই না)
-//   // ─────────────────────────────────────────────
 //   Widget _buildPositivePoints(AnalysisResultController c) {
 //     return Column(
 //       crossAxisAlignment: CrossAxisAlignment.start,
@@ -416,10 +460,10 @@
 //           width: double.infinity,
 //           padding: const EdgeInsets.all(16),
 //           decoration: BoxDecoration(
-//             color: const Color(0xFF0D1A0D),
+//             color: AppColors.surface,
 //             borderRadius: BorderRadius.circular(14),
 //             border: Border.all(
-//                 color: const Color(0xFF2E7D32).withOpacity(0.3), width: 1),
+//                 color: AppColors.success.withOpacity(0.3), width: 1),
 //           ),
 //           child: Column(
 //             children: c.positivePoints.asMap().entries.map((e) {
@@ -438,7 +482,7 @@
 //                     Expanded(
 //                       child: Text(e.value,
 //                           style: TextStyle(
-//                               color: const Color(0xFFCCCCCC),
+//                               color: AppColors.cream,
 //                               fontSize: 12.5.sp,
 //                               height: 1.5)),
 //                     ),
@@ -452,9 +496,6 @@
 //     );
 //   }
 
-//   // ─────────────────────────────────────────────
-//   // CLAUSES: header + filter + list
-//   // ─────────────────────────────────────────────
 //   Widget _buildTermsHeader(AnalysisResultController c) {
 //     return Row(
 //       children: [
@@ -465,7 +506,7 @@
 //           decoration: BoxDecoration(
 //               color: _gold.withOpacity(0.15),
 //               borderRadius: BorderRadius.circular(20)),
-//           child: Text('${c.allTerms.length} ${'clauses'.tr}',
+//           child: Text('${c.foundCount} ${'clauses'.tr}',
 //               style: TextStyle(
 //                   color: _gold, fontSize: 11.sp, fontWeight: FontWeight.w600)),
 //         ),
@@ -473,19 +514,22 @@
 //     );
 //   }
 
-//   /// শুধু সেই level এর tab দেখাবে যেখানে clause আছে
 //   Widget _buildFilterTabs(AnalysisResultController c) {
 //     final filters = <Map<String, dynamic>>[
-//       {'key': 'all', 'label': 'all'.tr, 'count': c.allTerms.length},
+//       {'key': 'all', 'label': 'all'.tr, 'count': c.foundCount},
 //       if (c.countOfLevel('high') > 0)
 //         {'key': 'high', 'label': 'high'.tr, 'count': c.countOfLevel('high')},
 //       if (c.countOfLevel('medium') > 0)
-//         {'key': 'medium', 'label': 'medium'.tr, 'count': c.countOfLevel('medium')},
+//         {
+//           'key': 'medium',
+//           'label': 'medium'.tr,
+//           'count': c.countOfLevel('medium')
+//         },
+//       // 👈 Point 1: filter chip "Low · 1" becomes "Standard · 1"
 //       if (c.countOfLevel('low') > 0)
-//         {'key': 'low', 'label': 'low'.tr, 'count': c.countOfLevel('low')},
+//         {'key': 'low', 'label': 'standardLabel'.tr, 'count': c.countOfLevel('low')},
 //     ];
 
-//     // একটাই level থাকলে "All" ছাড়া আলাদা filter দরকার নেই
 //     if (filters.length <= 2) return const SizedBox.shrink();
 
 //     return Obx(() => SingleChildScrollView(
@@ -505,7 +549,7 @@
 //                   decoration: BoxDecoration(
 //                     color: isActive
 //                         ? color.withOpacity(0.18)
-//                         : const Color(0xFF1A1A1A),
+//                         : AppColors.surfaceLight,
 //                     borderRadius: BorderRadius.circular(20),
 //                     border: Border.all(
 //                         color: isActive ? color.withOpacity(0.5) : _border,
@@ -513,7 +557,7 @@
 //                   ),
 //                   child: Text('${f['label']} · ${f['count']}',
 //                       style: TextStyle(
-//                           color: isActive ? color : const Color(0xFF777777),
+//                           color: isActive ? color : AppColors.textMuted,
 //                           fontSize: 11.5.sp,
 //                           fontWeight:
 //                               isActive ? FontWeight.w700 : FontWeight.w500)),
@@ -534,11 +578,11 @@
 //             child: Column(
 //               children: [
 //                 Icon(Icons.search_off_rounded,
-//                     color: const Color(0xFF444444), size: 40.sp),
+//                     color: AppColors.textMuted, size: 40.sp),
 //                 SizedBox(height: 12.h),
 //                 Text('noClausesFound'.tr,
 //                     style: TextStyle(
-//                         color: const Color(0xFF555555), fontSize: 13.sp)),
+//                         color: AppColors.textMuted, fontSize: 13.sp)),
 //               ],
 //             ),
 //           ),
@@ -551,13 +595,43 @@
 //     });
 //   }
 
+//   Widget _buildMissingSection(AnalysisResultController c) {
+//     final missing = c.missingTerms;
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Row(
+//           children: [
+//             // 👈 Point 3: Section title updated to match the new text
+//             _sectionTitle('missingProtections'.tr, Icons.report_gmailerrorred_rounded),
+//             const Spacer(),
+//             Container(
+//               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+//               decoration: BoxDecoration(
+//                   color: _red.withOpacity(0.15),
+//                   borderRadius: BorderRadius.circular(20)),
+//               child: Text('${missing.length}',
+//                   style: TextStyle(
+//                       color: _red,
+//                       fontSize: 11.sp,
+//                       fontWeight: FontWeight.w700)),
+//             ),
+//           ],
+//         ),
+//         SizedBox(height: 14.h),
+//         ...missing.asMap().entries.map(
+//               (e) => _buildTermCard(c, e.value, 1000 + e.key),
+//             ),
+//       ],
+//     );
+//   }
+
 //   Widget _buildTermCard(
 //       AnalysisResultController c, ImportantTerm term, int index) {
 //     final color = _levelColor(term.level);
 
 //     return Obx(() {
 //       final expanded = c.isExpanded(index);
-//       // collapsed অবস্থায় ছোট সারাংশ: আগে explanation, না থাকলে মূল টেক্সট
 //       final preview = term.aiExplanation.isNotEmpty
 //           ? term.aiExplanation
 //           : term.extractedText;
@@ -577,7 +651,6 @@
 //           child: Column(
 //             crossAxisAlignment: CrossAxisAlignment.start,
 //             children: [
-//               // ── Header ──
 //               Padding(
 //                 padding: const EdgeInsets.all(14),
 //                 child: Row(
@@ -602,7 +675,7 @@
 //                         children: [
 //                           Text(term.termTitle,
 //                               style: TextStyle(
-//                                   color: Colors.white,
+//                                   color: AppColors.white,
 //                                   fontSize: 13.5.sp,
 //                                   fontWeight: FontWeight.w600,
 //                                   height: 1.3)),
@@ -612,7 +685,7 @@
 //                                 maxLines: 2,
 //                                 overflow: TextOverflow.ellipsis,
 //                                 style: TextStyle(
-//                                     color: const Color(0xFF888888),
+//                                     color: AppColors.textMuted,
 //                                     fontSize: 11.5.sp,
 //                                     height: 1.4)),
 //                           ],
@@ -624,13 +697,11 @@
 //                       turns: expanded ? 0.5 : 0,
 //                       duration: const Duration(milliseconds: 250),
 //                       child: Icon(Icons.keyboard_arrow_down_rounded,
-//                           color: const Color(0xFF666666), size: 22.sp),
+//                           color: AppColors.textMuted, size: 22.sp),
 //                     ),
 //                   ],
 //                 ),
 //               ),
-
-//               // ── Expanded body (খালি field দেখাবে না) ──
 //               if (expanded)
 //                 Padding(
 //                   padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
@@ -645,7 +716,7 @@
 //                       ],
 //                       if (term.aiExplanation.isNotEmpty) ...[
 //                         _section('aiExplanation'.tr, term.aiExplanation,
-//                             const Color(0xFFDDDDDD), Icons.psychology_rounded),
+//                             AppColors.cream, Icons.psychology_rounded),
 //                         SizedBox(height: 14.h),
 //                       ],
 //                       if (term.aiRecommendation.isNotEmpty) ...[
@@ -654,7 +725,7 @@
 //                       ],
 //                       if (term.extractedText.isNotEmpty)
 //                         _section('fullText'.tr, term.extractedText,
-//                             const Color(0xFF999999), Icons.format_quote_rounded,
+//                             AppColors.textMuted, Icons.format_quote_rounded,
 //                             isQuote: true),
 //                     ],
 //                   ),
@@ -696,7 +767,6 @@
 //     );
 //   }
 
-//   /// "কী করা উচিত" — সবচেয়ে গুরুত্বপূর্ণ তাই আলাদা রঙিন box
 //   Widget _recommendationBox(String text, Color color) {
 //     return Container(
 //       width: double.infinity,
@@ -724,7 +794,9 @@
 //           SizedBox(height: 6.h),
 //           Text(text,
 //               style: TextStyle(
-//                   color: const Color(0xFFE0E0E0), fontSize: 12.5.sp, height: 1.55)),
+//                   color: AppColors.cream,
+//                   fontSize: 12.5.sp,
+//                   height: 1.55)),
 //         ],
 //       ),
 //     );
@@ -737,11 +809,11 @@
 //       children: [
 //         Row(
 //           children: [
-//             Icon(icon, color: const Color(0xFF888888), size: 14.sp),
+//             Icon(icon, color: AppColors.textMuted, size: 14.sp),
 //             SizedBox(width: 6.w),
 //             Text(title,
 //                 style: TextStyle(
-//                     color: const Color(0xFF888888),
+//                     color: AppColors.textMuted,
 //                     fontSize: 11.5.sp,
 //                     fontWeight: FontWeight.w700,
 //                     letterSpacing: 0.3)),
@@ -753,7 +825,7 @@
 //             width: double.infinity,
 //             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
 //             decoration: BoxDecoration(
-//               color: const Color(0xFF1A1A1A),
+//               color: AppColors.surfaceLight,
 //               borderRadius: BorderRadius.circular(8),
 //               border: Border(
 //                   left: BorderSide(color: _gold.withOpacity(0.5), width: 2)),
@@ -767,7 +839,8 @@
 //           )
 //         else
 //           Text(content,
-//               style: TextStyle(color: textColor, fontSize: 12.5.sp, height: 1.6)),
+//               style:
+//                   TextStyle(color: textColor, fontSize: 12.5.sp, height: 1.6)),
 //       ],
 //     );
 //   }
@@ -779,18 +852,13 @@
 //         SizedBox(width: 7.w),
 //         Text(title,
 //             style: TextStyle(
-//                 color: Colors.white,
+//                 color: AppColors.white,
 //                 fontSize: 15.sp,
 //                 fontWeight: FontWeight.w700)),
 //       ],
 //     );
 //   }
 
-//   // ─────────────────────────────────────────────
-//   // HELPERS
-//   // ─────────────────────────────────────────────
-
-//   /// backend এর overall_risk ("Low", "High risk" ...) থেকে high/medium/low বের করে
 //   String _normalizeLevel(String risk) {
 //     final r = risk.toLowerCase();
 //     if (r.contains('high')) return 'high';
@@ -805,20 +873,12 @@
 //         return 'highRisk'.tr;
 //       case 'medium':
 //         return 'mediumRisk'.tr;
+//       // 👈 Point 1: Replace "Low Risk" with "Standard" in the summary verdict
 //       case 'low':
-//         return 'lowRisk'.tr;
+//         return 'standardRisk'.tr;
 //       default:
 //         return risk;
 //     }
-//   }
-
-//   /// Accept / Legal Review / Reject — ভাষা অনুযায়ী দেখাবে, না মিললে backend এর text
-//   String _recommendationLabel(String rec) {
-//     final r = rec.toLowerCase();
-//     if (r.contains('reject')) return 'reject'.tr;
-//     if (r.contains('review') || r.contains('legal')) return 'legalReview'.tr;
-//     if (r.contains('accept')) return 'accept'.tr;
-//     return rec;
 //   }
 
 //   Color _levelColor(String level) {
@@ -852,24 +912,23 @@
 
 
 
-// lib/screens/analysis_result_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:clause_verify/features/analysis/controller/analysis_result_controller.dart';
 import 'package:clause_verify/features/analysis/model/analysis_result_model.dart';
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:clause_verify/core/utils/constants/app_sizer.dart';
 import 'package:get/get.dart';
 
 class AnalysisResultScreen extends StatelessWidget {
   const AnalysisResultScreen({super.key});
 
-  static const Color _bg = Color(0xFF0A0A0A);
-  static const Color _card = Color(0xFF141414);
-  static const Color _border = Color(0xFF2A2A2A);
-  static const Color _gold = Color(0xFFB8860B);
-  static const Color _red = Color(0xFFE53935);
-  static const Color _orange = Color(0xFFFF8F00);
-  static const Color _green = Color(0xFF4CAF50);
+  static const Color _bg = AppColors.background;
+  static const Color _card = AppColors.surface;
+  static const Color _border = AppColors.cardBorder;
+  static const Color _gold = AppColors.primaryColor;
+  static const Color _red = AppColors.error;
+  static const Color _orange = AppColors.warning;
+  static const Color _green = AppColors.success;
 
   @override
   Widget build(BuildContext context) {
@@ -880,7 +939,7 @@ class AnalysisResultScreen extends StatelessWidget {
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          _buildAppBar(c),
+          _buildAppBar(c, context),
           SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -916,60 +975,130 @@ class AnalysisResultScreen extends StatelessWidget {
     );
   }
 
-  // ─────────────────────────────────────────────
-  // APP BAR
-  // ─────────────────────────────────────────────
-  Widget _buildAppBar(AnalysisResultController c) {
-    final subtitleParts = <String>[
-      if (c.country.isNotEmpty) c.country,
-      if (c.totalPages > 0) '${c.totalPages} ${'pages'.tr}',
-    ];
+  Widget _buildAppBar(AnalysisResultController c, BuildContext context) {
+  // 👈 Point 2: "1 Pages" becomes "1 page" (singular when 1)
+  final subtitleParts = <String>[
+    if (c.country.isNotEmpty) c.country,
+    if (c.totalPages > 0) '${c.totalPages} ${c.totalPages == 1 ? 'page'.tr : 'pages'.tr}',
+  ];
+  final bool hasSub = subtitleParts.isNotEmpty;
 
-    return SliverAppBar(
-      pinned: true,
-      toolbarHeight: 70.h,
-      backgroundColor: _bg,
-      surfaceTintColor: Colors.transparent,
-      leadingWidth: 56.w,
-      leading: GestureDetector(
-        onTap: () => Get.back(),
-        child: Center(
-          child: Icon(Icons.arrow_back_ios_new_rounded,
-              color: _gold, size: 20.sp),
-        ),
-      ),
-      titleSpacing: 0,
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('analysisResults'.tr,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w700)),
-          if (subtitleParts.isNotEmpty)
-            Padding(
-              padding: EdgeInsets.only(top: 2.h),
-              child: Text(subtitleParts.join(' · '),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      color: const Color(0xFF888888), fontSize: 12.sp)),
-            ),
-        ],
-      ),
-    );
-  }
+  final double topPad = MediaQuery.of(context).padding.top;
+  final double toolbarH = 70.h;
+  final double circle = 40.w;
+  final double bigFont = 26.sp;
+  final double smallFont = 20.sp;
+  final double subFont = 12.sp;
+  final double gap = 2.h;
 
-  // ─────────────────────────────────────────────
-  // VERDICT CARD
-  // ─────────────────────────────────────────────
-  Widget _buildVerdictCard(AnalysisResultController c) {
+  final double backTop = topPad + (toolbarH - circle) / 2;
+  final double expTitleTop = backTop + circle + 10.h;
+  final double expBlockH =
+      bigFont * 1.2 + (hasSub ? gap + subFont * 1.3 : 0);
+  final double expandedH = (expTitleTop - topPad) + expBlockH + 14.h;
+
+  final double colBlockH =
+      smallFont * 1.2 + (hasSub ? gap + subFont * 1.3 : 0);
+  final double colTitleTop = topPad + (toolbarH - colBlockH) / 2;
+
+  final double leftExpanded = 20.w;
+  final double leftCollapsed = 20.w + circle + 12.w;
+
+  final double maxExtent = topPad + expandedH;
+  final double minExtent = topPad + toolbarH;
+
+  return SliverAppBar(
+    pinned: true,
+    toolbarHeight: toolbarH,
+    expandedHeight: expandedH,
+    backgroundColor: _bg,
+    surfaceTintColor: Colors.transparent,
+    elevation: 0,
+    automaticallyImplyLeading: false,
+    flexibleSpace: LayoutBuilder(
+      builder: (context, constraints) {
+        final double t =
+            (1 - (constraints.maxHeight - minExtent) / (maxExtent - minExtent))
+                .clamp(0.0, 1.0);
+        final double eased = Curves.easeInOut.transform(t);
+
+        final double titleLeft =
+            leftExpanded + (leftCollapsed - leftExpanded) * eased;
+        final double titleTop = expTitleTop + (colTitleTop - expTitleTop) * eased;
+        final double fontSize = bigFont + (smallFont - bigFont) * eased;
+
+        return Container(
+          color: _bg,
+          child: Stack(
+            children: [
+              Positioned(
+                left: 20.w,
+                top: backTop,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => Get.back(),
+                  child: Container(
+                    width: circle,
+                    height: circle,
+                    decoration: BoxDecoration(
+                      color: _card,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: _border, width: 1),
+                    ),
+                    child: Center(
+                      child: Icon(Icons.arrow_back_ios_new_rounded,
+                          color: _gold, size: 18.sp),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                left: titleLeft,
+                top: titleTop,
+                right: 20.w,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'analysisResults'.tr,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: AppColors.white,
+                        fontSize: fontSize,
+                        fontWeight: FontWeight.w700,
+                        height: 1.2,
+                      ),
+                    ),
+                    if (hasSub) ...[
+                      SizedBox(height: gap),
+                      Text(
+                        subtitleParts.join(' · '),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: AppColors.textMuted,
+                          fontSize: subFont,
+                          height: 1.3,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    ),
+  );
+}
+
+   Widget _buildVerdictCard(AnalysisResultController c) {
     final level = _normalizeLevel(c.overallRisk);
     final color = _levelColor(level);
     final hasRisk = c.overallRisk.isNotEmpty;
-    final hasRec = c.recommendation.isNotEmpty;
     final hasGuidance = c.recommendationGuidance.isNotEmpty;
 
     return Container(
@@ -1008,35 +1137,11 @@ class AnalysisResultScreen extends StatelessWidget {
                 ),
               ],
             ),
-          if (hasRec) ...[
+          if (hasGuidance) ...[ 
             SizedBox(height: hasRisk ? 16.h : 0),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.h),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.15),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.auto_awesome_rounded, color: color, size: 14.sp),
-                  SizedBox(width: 6.w),
-                  Flexible(
-                    child: Text(_recommendationLabel(c.recommendation),
-                        style: TextStyle(
-                            color: color,
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w700)),
-                  ),
-                ],
-              ),
-            ),
-          ],
-          if (hasGuidance) ...[
-            SizedBox(height: 12.h),
             Text(c.recommendationGuidance,
                 style: TextStyle(
-                    color: const Color(0xFFCCCCCC),
+                    color: AppColors.cream,
                     fontSize: 12.5.sp,
                     height: 1.55)),
           ],
@@ -1045,11 +1150,11 @@ class AnalysisResultScreen extends StatelessWidget {
             Row(
               children: [
                 Icon(Icons.calendar_today_outlined,
-                    color: const Color(0xFF777777), size: 12.sp),
+                    color: AppColors.textMuted, size: 12.sp),
                 SizedBox(width: 6.w),
                 Text('${'analyzedOn'.tr} ${c.formattedDate}',
                     style: TextStyle(
-                        color: const Color(0xFF777777), fontSize: 11.sp)),
+                        color: AppColors.textMuted, fontSize: 11.sp)),
               ],
             ),
           ],
@@ -1063,7 +1168,7 @@ class AnalysisResultScreen extends StatelessWidget {
   Widget _buildViewPdfButton(AnalysisResultController c) {
     final bool isBusy = c.isGeneratingPdf.value;
     final bool isLocked = c.isPdfLocked;
-    final Color contentColor = isLocked ? _gold : Colors.black;
+    final Color contentColor = isLocked ? _gold : AppColors.black;
 
     return GestureDetector(
       onTap: isBusy ? null : c.onPdfButtonTap,
@@ -1072,7 +1177,7 @@ class AnalysisResultScreen extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 14.h),
         decoration: BoxDecoration(
           color: isLocked
-              ? const Color(0xFF1A1500)
+              ? AppColors.surfaceLight
               : (isBusy ? _gold.withOpacity(0.5) : _gold),
           borderRadius: BorderRadius.circular(10),
           border: isLocked
@@ -1081,11 +1186,11 @@ class AnalysisResultScreen extends StatelessWidget {
         ),
         child: Center(
           child: isBusy
-              ? const SizedBox(
-                  width: 18,
-                  height: 18,
+              ? SizedBox(
+                  width: 18.w,
+                  height: 18.h,
                   child: CircularProgressIndicator(
-                      strokeWidth: 2, color: Colors.black))
+                      strokeWidth: 2, color: AppColors.black))
               : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -1108,14 +1213,11 @@ class AnalysisResultScreen extends StatelessWidget {
     );
   }
 
-  // ─────────────────────────────────────────────
-  // OVERVIEW: মোট found clause → High / Medium / Low, আর আলাদা Missing
-  // ─────────────────────────────────────────────
   Widget _buildOverviewSection(AnalysisResultController c) {
     final high = c.countOfLevel('high');
     final medium = c.countOfLevel('medium');
     final low = c.countOfLevel('low');
-    final found = c.foundCount; // = high + medium + low
+    final found = c.foundCount;
     final missing = c.missingCount;
 
     if (found == 0 && missing == 0) return const SizedBox.shrink();
@@ -1134,13 +1236,12 @@ class AnalysisResultScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (found > 0) ...[
-              // ── মোট clause ──
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text('$found',
                       style: TextStyle(
-                          color: Colors.white,
+                          color: AppColors.white,
                           fontSize: 34.sp,
                           fontWeight: FontWeight.w800,
                           height: 1)),
@@ -1149,15 +1250,13 @@ class AnalysisResultScreen extends StatelessWidget {
                     padding: EdgeInsets.only(bottom: 4.h),
                     child: Text('clausesFound'.tr,
                         style: TextStyle(
-                            color: const Color(0xFF999999),
+                            color: AppColors.textMuted,
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w500)),
                   ),
                 ],
               ),
               SizedBox(height: 12.h),
-
-              // ── risk bar ──
               ClipRRect(
                 borderRadius: BorderRadius.circular(6),
                 child: SizedBox(
@@ -1176,18 +1275,15 @@ class AnalysisResultScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 14.h),
-
-              // ── High / Medium / Low ──
               Row(
                 children: [
                   _riskLegend('highRisk'.tr, high, _red),
                   _riskLegend('mediumRisk'.tr, medium, _orange),
-                  _riskLegend('lowRisk'.tr, low, _green),
+                  // 👈 Point 1: Replace "Low Risk" with "Standard" in the summary
+                  _riskLegend('standardLabel'.tr, low, _green),
                 ],
               ),
             ],
-
-            // ── Missing (risk count-এর বাইরে, আলাদা) ──
             if (missing > 0) ...[
               if (found > 0) ...[
                 SizedBox(height: 14.h),
@@ -1208,7 +1304,7 @@ class AnalysisResultScreen extends StatelessWidget {
         children: [
           Text('$count',
               style: TextStyle(
-                  color: count > 0 ? color : const Color(0xFF555555),
+                  color: count > 0 ? color : AppColors.textMuted,
                   fontSize: 24.sp,
                   fontWeight: FontWeight.w800)),
           SizedBox(height: 4.h),
@@ -1216,8 +1312,8 @@ class AnalysisResultScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                  width: 8,
-                  height: 8,
+                  width: 8.w,
+                  height: 8.h,
                   decoration:
                       BoxDecoration(color: color, shape: BoxShape.circle)),
               SizedBox(width: 5.w),
@@ -1226,7 +1322,7 @@ class AnalysisResultScreen extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                        color: const Color(0xFF999999), fontSize: 10.5.sp)),
+                        color: AppColors.textMuted, fontSize: 10.5.sp)),
               ),
             ],
           ),
@@ -1253,20 +1349,19 @@ class AnalysisResultScreen extends StatelessWidget {
                   color: _red, fontSize: 22.sp, fontWeight: FontWeight.w800)),
           SizedBox(width: 8.w),
           Expanded(
-            child: Text('clausesMissing'.tr,
-                style: TextStyle(
-                    color: _red.withOpacity(0.9),
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w500)),
+            // 👈 Point 3: "1 Clauses Missing" becomes "1 missing protection" (plural: "2 missing protections")
+            child: Text(
+              count == 1 ? 'missingProtection'.tr : 'missingProtections'.tr,
+              style: TextStyle(
+                  color: _red.withOpacity(0.9),
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w500)),
           ),
         ],
       ),
     );
   }
 
-  // ─────────────────────────────────────────────
-  // POSITIVE POINTS
-  // ─────────────────────────────────────────────
   Widget _buildPositivePoints(AnalysisResultController c) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1277,10 +1372,10 @@ class AnalysisResultScreen extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFF0D1A0D),
+            color: AppColors.surface,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-                color: const Color(0xFF2E7D32).withOpacity(0.3), width: 1),
+                color: AppColors.success.withOpacity(0.3), width: 1),
           ),
           child: Column(
             children: c.positivePoints.asMap().entries.map((e) {
@@ -1299,7 +1394,7 @@ class AnalysisResultScreen extends StatelessWidget {
                     Expanded(
                       child: Text(e.value,
                           style: TextStyle(
-                              color: const Color(0xFFCCCCCC),
+                              color: AppColors.cream,
                               fontSize: 12.5.sp,
                               height: 1.5)),
                     ),
@@ -1313,9 +1408,6 @@ class AnalysisResultScreen extends StatelessWidget {
     );
   }
 
-  // ─────────────────────────────────────────────
-  // CLAUSES: header + filter + list (শুধু found)
-  // ─────────────────────────────────────────────
   Widget _buildTermsHeader(AnalysisResultController c) {
     return Row(
       children: [
@@ -1334,7 +1426,6 @@ class AnalysisResultScreen extends StatelessWidget {
     );
   }
 
-  /// শুধু সেই level এর tab দেখাবে যেখানে clause আছে
   Widget _buildFilterTabs(AnalysisResultController c) {
     final filters = <Map<String, dynamic>>[
       {'key': 'all', 'label': 'all'.tr, 'count': c.foundCount},
@@ -1346,11 +1437,11 @@ class AnalysisResultScreen extends StatelessWidget {
           'label': 'medium'.tr,
           'count': c.countOfLevel('medium')
         },
+      // 👈 Point 1: filter chip "Low · 1" becomes "Standard · 1"
       if (c.countOfLevel('low') > 0)
-        {'key': 'low', 'label': 'low'.tr, 'count': c.countOfLevel('low')},
+        {'key': 'low', 'label': 'standardLabel'.tr, 'count': c.countOfLevel('low')},
     ];
 
-    // একটাই level থাকলে "All" ছাড়া আলাদা filter দরকার নেই
     if (filters.length <= 2) return const SizedBox.shrink();
 
     return Obx(() => SingleChildScrollView(
@@ -1370,7 +1461,7 @@ class AnalysisResultScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: isActive
                         ? color.withOpacity(0.18)
-                        : const Color(0xFF1A1A1A),
+                        : AppColors.surfaceLight,
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
                         color: isActive ? color.withOpacity(0.5) : _border,
@@ -1378,7 +1469,7 @@ class AnalysisResultScreen extends StatelessWidget {
                   ),
                   child: Text('${f['label']} · ${f['count']}',
                       style: TextStyle(
-                          color: isActive ? color : const Color(0xFF777777),
+                          color: isActive ? color : AppColors.textMuted,
                           fontSize: 11.5.sp,
                           fontWeight:
                               isActive ? FontWeight.w700 : FontWeight.w500)),
@@ -1399,11 +1490,11 @@ class AnalysisResultScreen extends StatelessWidget {
             child: Column(
               children: [
                 Icon(Icons.search_off_rounded,
-                    color: const Color(0xFF444444), size: 40.sp),
+                    color: AppColors.textMuted, size: 40.sp),
                 SizedBox(height: 12.h),
                 Text('noClausesFound'.tr,
                     style: TextStyle(
-                        color: const Color(0xFF555555), fontSize: 13.sp)),
+                        color: AppColors.textMuted, fontSize: 13.sp)),
               ],
             ),
           ),
@@ -1416,9 +1507,6 @@ class AnalysisResultScreen extends StatelessWidget {
     });
   }
 
-  // ─────────────────────────────────────────────
-  // MISSING CLAUSES SECTION (আলাদা, count-এর বাইরে)
-  // ─────────────────────────────────────────────
   Widget _buildMissingSection(AnalysisResultController c) {
     final missing = c.missingTerms;
     return Column(
@@ -1426,7 +1514,8 @@ class AnalysisResultScreen extends StatelessWidget {
       children: [
         Row(
           children: [
-            _sectionTitle('clausesMissing'.tr, Icons.report_gmailerrorred_rounded),
+            // 👈 Point 3: Section title updated to match the new text
+            _sectionTitle('missingProtections'.tr, Icons.report_gmailerrorred_rounded),
             const Spacer(),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
@@ -1443,7 +1532,6 @@ class AnalysisResultScreen extends StatelessWidget {
         ),
         SizedBox(height: 14.h),
         ...missing.asMap().entries.map(
-              // missing card গুলোর expand state আলাদা রাখতে বড় offset
               (e) => _buildTermCard(c, e.value, 1000 + e.key),
             ),
       ],
@@ -1475,7 +1563,6 @@ class AnalysisResultScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ── Header ──
               Padding(
                 padding: const EdgeInsets.all(14),
                 child: Row(
@@ -1500,7 +1587,7 @@ class AnalysisResultScreen extends StatelessWidget {
                         children: [
                           Text(term.termTitle,
                               style: TextStyle(
-                                  color: Colors.white,
+                                  color: AppColors.white,
                                   fontSize: 13.5.sp,
                                   fontWeight: FontWeight.w600,
                                   height: 1.3)),
@@ -1510,7 +1597,7 @@ class AnalysisResultScreen extends StatelessWidget {
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                    color: const Color(0xFF888888),
+                                    color: AppColors.textMuted,
                                     fontSize: 11.5.sp,
                                     height: 1.4)),
                           ],
@@ -1522,13 +1609,11 @@ class AnalysisResultScreen extends StatelessWidget {
                       turns: expanded ? 0.5 : 0,
                       duration: const Duration(milliseconds: 250),
                       child: Icon(Icons.keyboard_arrow_down_rounded,
-                          color: const Color(0xFF666666), size: 22.sp),
+                          color: AppColors.textMuted, size: 22.sp),
                     ),
                   ],
                 ),
               ),
-
-              // ── Expanded body (খালি field দেখাবে না) ──
               if (expanded)
                 Padding(
                   padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
@@ -1543,7 +1628,7 @@ class AnalysisResultScreen extends StatelessWidget {
                       ],
                       if (term.aiExplanation.isNotEmpty) ...[
                         _section('aiExplanation'.tr, term.aiExplanation,
-                            const Color(0xFFDDDDDD), Icons.psychology_rounded),
+                            AppColors.cream, Icons.psychology_rounded),
                         SizedBox(height: 14.h),
                       ],
                       if (term.aiRecommendation.isNotEmpty) ...[
@@ -1552,7 +1637,7 @@ class AnalysisResultScreen extends StatelessWidget {
                       ],
                       if (term.extractedText.isNotEmpty)
                         _section('fullText'.tr, term.extractedText,
-                            const Color(0xFF999999), Icons.format_quote_rounded,
+                            AppColors.textMuted, Icons.format_quote_rounded,
                             isQuote: true),
                     ],
                   ),
@@ -1621,7 +1706,7 @@ class AnalysisResultScreen extends StatelessWidget {
           SizedBox(height: 6.h),
           Text(text,
               style: TextStyle(
-                  color: const Color(0xFFE0E0E0),
+                  color: AppColors.cream,
                   fontSize: 12.5.sp,
                   height: 1.55)),
         ],
@@ -1636,11 +1721,11 @@ class AnalysisResultScreen extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(icon, color: const Color(0xFF888888), size: 14.sp),
+            Icon(icon, color: AppColors.textMuted, size: 14.sp),
             SizedBox(width: 6.w),
             Text(title,
                 style: TextStyle(
-                    color: const Color(0xFF888888),
+                    color: AppColors.textMuted,
                     fontSize: 11.5.sp,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 0.3)),
@@ -1652,7 +1737,7 @@ class AnalysisResultScreen extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
             decoration: BoxDecoration(
-              color: const Color(0xFF1A1A1A),
+              color: AppColors.surfaceLight,
               borderRadius: BorderRadius.circular(8),
               border: Border(
                   left: BorderSide(color: _gold.withOpacity(0.5), width: 2)),
@@ -1679,16 +1764,13 @@ class AnalysisResultScreen extends StatelessWidget {
         SizedBox(width: 7.w),
         Text(title,
             style: TextStyle(
-                color: Colors.white,
+                color: AppColors.white,
                 fontSize: 15.sp,
                 fontWeight: FontWeight.w700)),
       ],
     );
   }
 
-  // ─────────────────────────────────────────────
-  // HELPERS
-  // ─────────────────────────────────────────────
   String _normalizeLevel(String risk) {
     final r = risk.toLowerCase();
     if (r.contains('high')) return 'high';
@@ -1703,20 +1785,13 @@ class AnalysisResultScreen extends StatelessWidget {
         return 'highRisk'.tr;
       case 'medium':
         return 'mediumRisk'.tr;
+      // 👈 Point 1: Replace "Low Risk" with "Standard" in the summary verdict
       case 'low':
-        return 'lowRisk'.tr;
+        return 'standardRisk'.tr;
       default:
         return risk;
     }
   }
-
-  String _recommendationLabel(String rec) {
-  final r = rec.toLowerCase();
-  if (r.contains('reject')) return 'reject'.tr;
-  if (r.contains('review') || r.contains('legal')) return 'legalReviewRequired'.tr; // ✅
-  if (r.contains('accept')) return 'accept'.tr;
-  return rec;
-}
 
   Color _levelColor(String level) {
     switch (level) {

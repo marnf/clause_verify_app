@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 class ScanDetailsBottomSheet extends StatelessWidget {
   const ScanDetailsBottomSheet({super.key});
 
-  /// Bottomsheet er baire click korle / niche drag korle automatic bondho hobe
   static void show() {
     Get.bottomSheet(
       const ScanDetailsBottomSheet(),
@@ -15,7 +14,7 @@ class ScanDetailsBottomSheet extends StatelessWidget {
       isDismissible: true,
       enableDrag: true,
       backgroundColor: Colors.transparent,
-      barrierColor: Colors.black.withValues(alpha: 0.6),
+      barrierColor: AppColors.black.withValues(alpha: 0.6),
     );
   }
 
@@ -33,7 +32,6 @@ class ScanDetailsBottomSheet extends StatelessWidget {
         top: false,
         child: Obx(() {
           final total = controller.totalScans;
-          final isPremium = controller.isPremiumUser;
           final hasScans = total > 0;
 
           return Padding(
@@ -41,7 +39,6 @@ class ScanDetailsBottomSheet extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // ── Drag handle ──
                 Container(
                   width: 44.w,
                   height: 4.h,
@@ -51,8 +48,6 @@ class ScanDetailsBottomSheet extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 20.h),
-
-                // ── Title + plan chip ──
                 Row(
                   children: [
                     Container(
@@ -69,24 +64,22 @@ class ScanDetailsBottomSheet extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Scan Balance',
+                          Text('scanBalanceTitle'.tr,
                               style: TextStyle(
                                   color: AppColors.textWhite,
                                   fontSize: 18.sp,
                                   fontWeight: FontWeight.w700)),
                           SizedBox(height: 2.h),
-                          Text('Your available contract scans',
+                          Text('availableContractScans'.tr,
                               style: TextStyle(
                                   color: AppColors.textMuted, fontSize: 12.sp)),
                         ],
                       ),
                     ),
-                    _PlanChip(isPremium: isPremium),
+                
                   ],
                 ),
                 SizedBox(height: 20.h),
-
-                // ── Total card ──
                 Container(
                   width: double.infinity,
                   padding:
@@ -99,8 +92,8 @@ class ScanDetailsBottomSheet extends StatelessWidget {
                               AppColors.primaryColor.withValues(alpha: 0.06),
                             ]
                           : [
-                              Colors.redAccent.withValues(alpha: 0.18),
-                              Colors.redAccent.withValues(alpha: 0.05),
+                              AppColors.error.withValues(alpha: 0.18),
+                              AppColors.error.withValues(alpha: 0.05),
                             ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -108,7 +101,7 @@ class ScanDetailsBottomSheet extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color:
-                          (hasScans ? AppColors.primaryColor : Colors.redAccent)
+                          (hasScans ? AppColors.primaryColor : AppColors.error)
                               .withValues(alpha: 0.4),
                     ),
                   ),
@@ -118,7 +111,7 @@ class ScanDetailsBottomSheet extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Total Available Scans',
+                            Text('totalAvailableScans'.tr,
                                 style: TextStyle(
                                     color: AppColors.textSubtle,
                                     fontSize: 13.sp,
@@ -126,8 +119,10 @@ class ScanDetailsBottomSheet extends StatelessWidget {
                             SizedBox(height: 4.h),
                             Text(
                               hasScans
-                                  ? 'You can analyze $total more contract${total == 1 ? '' : 's'}.'
-                                  : 'No scans left. Upgrade to continue.',
+                                  ? (total == 1
+                                      ? 'scanBalanceRemainingSingular'.trParams({'total': total.toString()})
+                                      : 'scanBalanceRemainingPlural'.trParams({'total': total.toString()}))
+                                  : 'noScansLeftUpgrade'.tr,
                               style: TextStyle(
                                   color: AppColors.textMuted,
                                   fontSize: 12.sp,
@@ -141,7 +136,7 @@ class ScanDetailsBottomSheet extends StatelessWidget {
                           style: TextStyle(
                               color: hasScans
                                   ? AppColors.primaryColor
-                                  : Colors.redAccent,
+                                  : AppColors.error,
                               fontSize: 40.sp,
                               fontWeight: FontWeight.w800,
                               height: 1)),
@@ -149,33 +144,27 @@ class ScanDetailsBottomSheet extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 16.h),
-
-                // ── 3 ta box pashapashi ──
-                // ✅ FIX: IntrinsicHeight chara stretch unbounded height e crash kore
                 IntrinsicHeight(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Expanded(
                         child: _StatBox(
-                          icon: Icons.card_giftcard_rounded,
-                          label: 'Scan Limit',
+                          label: 'singleScanTitle'.tr, // Pay-Per-Scan
                           value: controller.scanLimit,
                         ),
                       ),
                       SizedBox(width: 10.w),
                       Expanded(
                         child: _StatBox(
-                          icon: Icons.calendar_month_rounded,
-                          label: 'Monthly',
+                          label: 'monthlyPlanTitle'.tr, // Monthly
                           value: controller.monthlyPackage,
                         ),
                       ),
                       SizedBox(width: 10.w),
                       Expanded(
                         child: _StatBox(
-                          icon: Icons.all_inclusive_rounded,
-                          label: 'Unlimited',
+                          label: 'unlimitedPlanTitle'.tr, // Pro
                           value: controller.unlimitedPackage,
                         ),
                       ),
@@ -183,18 +172,16 @@ class ScanDetailsBottomSheet extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 20.h),
-
-                // ── Upgrade button ──
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      Get.back(); // age bottomsheet bondho
-                      controller.navigateToPremium(); // tarpor subscription page
+                      Get.back();
+                      controller.navigateToPremium();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryColor,
-                      foregroundColor: Colors.black,
+                      foregroundColor: AppColors.black,
                       padding: EdgeInsets.symmetric(vertical: 15.h),
                       elevation: 0,
                       shape: RoundedRectangleBorder(
@@ -205,7 +192,7 @@ class ScanDetailsBottomSheet extends StatelessWidget {
                       children: [
                         Icon(Icons.bolt_rounded, size: 20.sp),
                         SizedBox(width: 6.w),
-                        Text(hasScans ? 'Get More Scans' : 'Upgrade Now',
+                        Text(hasScans ? 'getMoreScans'.tr : 'goPremium'.tr,
                             style: TextStyle(
                                 fontSize: 15.sp, fontWeight: FontWeight.w700)),
                       ],
@@ -221,14 +208,12 @@ class ScanDetailsBottomSheet extends StatelessWidget {
   }
 }
 
-// ═════════════ Single stat box ═════════════
 class _StatBox extends StatelessWidget {
-  final IconData icon;
   final String label;
   final int value;
 
+ 
   const _StatBox({
-    required this.icon,
     required this.label,
     required this.value,
   });
@@ -253,16 +238,9 @@ class _StatBox extends StatelessWidget {
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            padding: EdgeInsets.all(9.w),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.12),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: color, size: 20.sp),
-          ),
-          SizedBox(height: 12.h),
+         
           Text('$value',
               style: TextStyle(
                   color: active ? AppColors.textWhite : AppColors.textMuted,
@@ -284,36 +262,4 @@ class _StatBox extends StatelessWidget {
   }
 }
 
-// ═════════════ Plan status chip ═════════════
-class _PlanChip extends StatelessWidget {
-  final bool isPremium;
-  const _PlanChip({required this.isPremium});
-
-  @override
-  Widget build(BuildContext context) {
-    final color = isPremium ? AppColors.primaryColor : AppColors.textMuted;
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withValues(alpha: 0.5)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-              isPremium
-                  ? Icons.workspace_premium_rounded
-                  : Icons.person_outline_rounded,
-              color: color,
-              size: 14.sp),
-          SizedBox(width: 4.w),
-          Text(isPremium ? 'Premium' : 'Free',
-              style: TextStyle(
-                  color: color, fontSize: 11.sp, fontWeight: FontWeight.w700)),
-        ],
-      ),
-    );
-  }
-}
+// 👈 _PlanChip ক্লাসটিও সম্পূর্ণ বাদ দেওয়া হয়েছে

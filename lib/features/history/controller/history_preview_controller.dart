@@ -1,3 +1,4 @@
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:clause_verify/core/services/endpoints.dart';
 import 'package:clause_verify/core/services/network_caller.dart';
 
@@ -98,7 +99,7 @@ class HistoryPreviewController extends GetxController {
         'error'.tr,
         'failedToLoadAnalysisData'.trParams({'error': e.toString()}),
         snackPosition: SnackPosition.TOP,
-        backgroundColor: const Color(0xFF1A1A1A),
+        backgroundColor: AppColors.surfaceLight,
         colorText: const Color(0xFFEF4444),
         duration: const Duration(seconds: 3),
       );
@@ -433,8 +434,8 @@ class HistoryPreviewController extends GetxController {
         'error'.tr,
         'noDataAvailableToDownload'.tr,
         snackPosition: SnackPosition.TOP,
-        backgroundColor: const Color(0xFF1A1A1A),
-        colorText: const Color(0xFFFFFFFF),
+        backgroundColor: AppColors.surfaceLight,
+        colorText: AppColors.white,
       );
       return;
     }
@@ -444,8 +445,8 @@ class HistoryPreviewController extends GetxController {
       'downloadStarted'.tr,
       'aiPreExpertiseReportDownloading'.tr,
       snackPosition: SnackPosition.TOP,
-      backgroundColor: const Color(0xFF1A1A1A),
-      colorText: const Color(0xFFFFFFFF),
+      backgroundColor: AppColors.surfaceLight,
+      colorText: AppColors.white,
       duration: const Duration(seconds: 2),
     );
 
@@ -469,8 +470,8 @@ class HistoryPreviewController extends GetxController {
         'error'.tr,
         'noDataAvailable'.tr,
         snackPosition: SnackPosition.TOP,
-        backgroundColor: const Color(0xFF1A1A1A),
-        colorText: const Color(0xFFFFFFFF),
+        backgroundColor: AppColors.surfaceLight,
+        colorText: AppColors.white,
       );
       return;
     }
@@ -489,16 +490,16 @@ class HistoryPreviewController extends GetxController {
             'condition': priceEstimation.conditionAssumed
           }),
           snackPosition: SnackPosition.TOP,
-          backgroundColor: const Color(0xFF1A1A1A),
-          colorText: const Color(0xFFFFFFFF),
+          backgroundColor: AppColors.surfaceLight,
+          colorText: AppColors.white,
         );
       } else {
         Get.snackbar(
           'info'.tr,
           'priceEstimationNotAvailable'.tr,
           snackPosition: SnackPosition.TOP,
-          backgroundColor: const Color(0xFF1A1A1A),
-          colorText: const Color(0xFFFFFFFF),
+          backgroundColor: AppColors.surfaceLight,
+          colorText: AppColors.white,
         );
       }
     } catch (e) {
@@ -507,7 +508,7 @@ class HistoryPreviewController extends GetxController {
         'error'.tr,
         'unableToLoadPriceEstimation'.tr,
         snackPosition: SnackPosition.TOP,
-        backgroundColor: const Color(0xFF1A1A1A),
+        backgroundColor: AppColors.surfaceLight,
         colorText: const Color(0xFFEF4444),
       );
     }
@@ -530,8 +531,8 @@ class HistoryPreviewController extends GetxController {
         'error'.tr,
         'noDataAvailableToShare'.tr,
         snackPosition: SnackPosition.TOP,
-        backgroundColor: const Color(0xFF1A1A1A),
-        colorText: const Color(0xFFFFFFFF),
+        backgroundColor: AppColors.surfaceLight,
+        colorText: AppColors.white,
       );
       return;
     }
@@ -540,8 +541,8 @@ class HistoryPreviewController extends GetxController {
       'share'.tr,
       'openingShareOptions'.tr,
       snackPosition: SnackPosition.TOP,
-      backgroundColor: const Color(0xFF1A1A1A),
-      colorText: const Color(0xFFFFFFFF),
+      backgroundColor: AppColors.surfaceLight,
+      colorText: AppColors.white,
     );
 
     // TODO: Implement share logic

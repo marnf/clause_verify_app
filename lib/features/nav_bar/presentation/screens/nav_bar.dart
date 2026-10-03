@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:clause_verify/core/utils/constants/app_sizer.dart';
-import '../../../../../core/utils/constants/app_colors.dart';
-import '../../../../../core/utils/constants/icon_path.dart';
-import '../../controllers/nav_bar_controller.dart';
+import 'package:clause_verify/core/utils/constants/app_colors.dart';
+import 'package:clause_verify/core/utils/constants/icon_path.dart';
+import 'package:clause_verify/features/nav_bar/controllers/nav_bar_controller.dart';
 
 class NavBar extends GetView<NavBarController> {
   NavBar({super.key});
@@ -14,20 +14,19 @@ class NavBar extends GetView<NavBarController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.textSecondary,
+      backgroundColor: AppColors.background,
       body: Obx(() => controller.screens[controller.currentIndex]),
       bottomNavigationBar: Container(
         height: 110.h,
-        color:  AppColors.secondary,
+        color: AppColors.surface,
         child: Obx(
           () => BottomNavigationBar(
-
             currentIndex: controller.currentIndex,
             onTap: controller.changeIndex,
 
             backgroundColor: Colors.transparent,
             selectedItemColor: AppColors.primaryColor,
-            unselectedItemColor: AppColors.navUnselectedColor,
+            unselectedItemColor: AppColors.textMuted,
 
             selectedLabelStyle: GoogleFonts.openSans(
               fontSize: 14.sp,
@@ -43,11 +42,9 @@ class NavBar extends GetView<NavBarController> {
             showUnselectedLabels: true,
             elevation: 0,
             items: [
-              _buildNavItem(iconPath: IconPath.home, label: 'Home'.tr),
-              _buildNavItem(iconPath: IconPath.history, label: 'History'.tr),
-              // _buildNavItem(iconPath: IconPath.premium, label: 'Premium'.tr),
-              _buildNavItem(iconPath: IconPath.user, label: 'Profile'.tr),
-              
+              _buildNavItem(iconPath: IconPath.home, label: 'home'.tr),
+              _buildNavItem(iconPath: IconPath.history, label: 'history'.tr),
+              _buildNavItem(iconPath: IconPath.user, label: 'profile'.tr),
             ],
           ),
         ),
@@ -60,26 +57,6 @@ class NavBar extends GetView<NavBarController> {
     required String label,
   }) {
     return BottomNavigationBarItem(
-      // For Svg
-      // ------------------
-      // activeIcon: SvgPicture.asset(
-      //   iconPath,
-      //   width: 25,
-      //   height: 25,
-      //   colorFilter: ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
-      // ),
-      // icon: SvgPicture.asset(
-      // iconPath,
-      // width: 20,
-      // height: 20,
-      // colorFilter: ColorFilter.mode(
-      //   AppColors.navUnselectedColor,
-      //   BlendMode.srcIn,
-      // ),
-      // ),
-
-      // For Images
-      // ------------------
       activeIcon: Image.asset(
         iconPath,
         width: 25.w,
@@ -90,9 +67,8 @@ class NavBar extends GetView<NavBarController> {
         iconPath,
         width: 20.w,
         height: 20.h,
-        color: AppColors.greyColor,
+        color: AppColors.textMuted,
       ),
-
       label: label,
     );
   }

@@ -13,21 +13,21 @@ class AppSnackBar {
   static TextStyle get _defaultTitleStyle => GoogleFonts.inter(
     fontSize: 16,
     fontWeight: FontWeight.bold,
-    color: Colors.white,
+    color: AppColors.white,
   );
 
   static TextStyle get _defaultMessageStyle => GoogleFonts.inter(
     fontSize: 14,
     fontWeight: FontWeight.w500,
-    color: Colors.white,
+    color: AppColors.white,
   );
 
   /// General Show SnackBar Method
   static void show({
     required String title,
     required String message,
-    Color backgroundColor = AppColors.textBlack,
-    Color textColor = Colors.white,
+    Color backgroundColor = AppColors.black,
+    Color textColor = AppColors.white,
     IconData? icon,
     Widget? iconWidget,
     SnackPosition position = SnackPosition.TOP,
@@ -65,7 +65,7 @@ class AppSnackBar {
     show(
       title: title,
       message: message,
-      backgroundColor: Colors.red,
+      backgroundColor: AppColors.error,
       icon: Icons.error_outline,
     );
   }
@@ -75,7 +75,7 @@ class AppSnackBar {
     show(
       title: title,
       message: message,
-      backgroundColor: Colors.green,
+      backgroundColor: AppColors.success,
       icon: Icons.check_circle_outline,
     );
   }
@@ -94,8 +94,8 @@ class AppSnackBar {
   static void toast({
     required String message,
     String? title,
-    Color backgroundColor = AppColors.textBlack,
-    Color textColor = Colors.white,
+    Color backgroundColor = AppColors.black,
+    Color textColor = AppColors.white,
     IconData? icon,
     Widget? iconWidget,
     Duration duration = _defaultDuration,
@@ -122,7 +122,7 @@ class AppSnackBar {
     toast(
       title: title,
       message: message,
-      backgroundColor: Colors.red,
+      backgroundColor: AppColors.error,
       icon: Icons.error,
     );
   }
@@ -132,7 +132,7 @@ class AppSnackBar {
     toast(
       title: title,
       message: message,
-      backgroundColor: Colors.green,
+      backgroundColor: AppColors.success,
       icon: Icons.check_circle,
     );
   }
