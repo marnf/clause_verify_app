@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../constants/app_colors.dart';
+
 class AppTextFormFieldTheme {
   AppTextFormFieldTheme._();
 
@@ -49,31 +51,31 @@ class AppTextFormFieldTheme {
 
   static final InputDecorationTheme lightInputDecorationTheme =
       _baseInputDecorationTheme(
-    labelColor: Colors.black,
-    hintColor: Colors.black,
-    errorColor: Colors.red,
-    focusedErrorColor: Colors.orange,
-    prefixIconColor: Colors.grey,
-    suffixIconColor: Colors.grey,
-    borderColor: Colors.grey,
-    enabledBorderColor: Colors.grey,
-    focusedBorderColor: Colors.black,
-    errorBorderColor: Colors.red,
-    focusedErrorBorderColor: Colors.orange,
+    labelColor: AppColors.white,
+    hintColor: AppColors.textMuted,
+    errorColor: AppColors.error,
+    focusedErrorColor: AppColors.error,
+    prefixIconColor: AppColors.textMuted,
+    suffixIconColor: AppColors.textMuted,
+    borderColor: AppColors.cardBorder,
+    enabledBorderColor: AppColors.cardBorder,
+    focusedBorderColor: AppColors.primaryColor,
+    errorBorderColor: AppColors.error,
+    focusedErrorBorderColor: AppColors.error,
   );
 
   static final InputDecorationTheme darkInputDecorationTheme =
       _baseInputDecorationTheme(
-    labelColor: Colors.white,
-    hintColor: Colors.white70,
-    errorColor: Colors.redAccent,
-    focusedErrorColor: Colors.orangeAccent,
-    prefixIconColor: Colors.grey,
-    suffixIconColor: Colors.grey,
-    borderColor: Colors.grey,
-    enabledBorderColor: Colors.grey,
-    focusedBorderColor: Colors.white,
-    errorBorderColor: Colors.redAccent,
-    focusedErrorBorderColor: Colors.orangeAccent,
+    labelColor: AppColors.white,
+    hintColor: AppColors.textMuted,
+    errorColor: AppColors.error,
+    focusedErrorColor: AppColors.error,
+    prefixIconColor: AppColors.textMuted,
+    suffixIconColor: AppColors.textMuted,
+    borderColor: AppColors.cardBorder,
+    enabledBorderColor: AppColors.cardBorder,
+    focusedBorderColor: AppColors.primaryColor,
+    errorBorderColor: AppColors.error,
+    focusedErrorBorderColor: AppColors.error,
   );
 }

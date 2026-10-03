@@ -628,6 +628,6 @@
   "standardLabel": "Standard",
   "standardRisk": "Standard",
   "page": "Seite",
-  "missingProtection": "fehlender Schutz",
-  "missingProtections": "fehlende Schutzmaßnahmen"
+    "missingProtection": "Fehlender Schutz",
+  "missingProtections": "Fehlende Schutzmaßnahmen"
 }

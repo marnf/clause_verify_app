@@ -22,9 +22,10 @@ class AnalysisLimitModal extends StatelessWidget {
       backgroundColor: Colors.transparent,
       child: Container(
         padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: const Color(0xFFE8DCC4),
+                decoration: BoxDecoration(
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.cardBorder, width: 1),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -154,9 +155,10 @@ class PremiumSubscriptionModal extends StatelessWidget {
       backgroundColor: Colors.transparent,
       child: Container(
         padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: const Color(0xFF5C5141),
+                decoration: BoxDecoration(
+          color: AppColors.premiumCard,
           borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.primaryColor, width: 1),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -383,7 +385,7 @@ class FairUsePolicyModal extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: const Color(0xFF5C5141),
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(

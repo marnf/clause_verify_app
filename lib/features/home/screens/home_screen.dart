@@ -248,8 +248,8 @@ class HomeScreen extends StatelessWidget {
             Container(
               width: 52.w,
               height: 52.h,
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor.withValues(alpha: 0.12),
+                            decoration: BoxDecoration(
+                color: AppColors.navy,
                 borderRadius: BorderRadius.circular(14),
               ),
               child:
@@ -337,52 +337,47 @@ class HomeScreen extends StatelessWidget {
   }
 
   // ══════════════ Upgrade card ══════════════
-   Widget _buildUpgradeCard() {
+    Widget _buildUpgradeCard() {
     return GestureDetector(
       onTap: controller.navigateToPremium,
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 18.h),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              AppColors.primaryColor,
-              AppColors.primaryColor.withValues(alpha: 0.85),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          color: AppColors.premiumCard,
           borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.primaryColor, width: 1.2),
         ),
         child: Row(
           children: [
             Container(
               padding: EdgeInsets.all(8.w),
               decoration: BoxDecoration(
-                  color: AppColors.black.withValues(alpha: 0.15),
+                  color: AppColors.primaryColor.withValues(alpha: 0.15),
                   shape: BoxShape.circle),
               child: Icon(Icons.workspace_premium_rounded,
-                  color: AppColors.black, size: 24.sp),
+                  color: AppColors.primaryColor, size: 24.sp),
             ),
             SizedBox(width: 14.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('homeUpgradeTitle'.tr, // 👈 Updated
+                  Text('homeUpgradeTitle'.tr,
                       style: TextStyle(
-                          color: AppColors.black,
+                          color: AppColors.primaryColor,
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w800)),
                   SizedBox(height: 4.h),
-                  Text('homeUpgradeSubtitle'.tr, // 👈 Updated
+                  Text('homeUpgradeSubtitle'.tr,
                       style: TextStyle(
-                          color: AppColors.black.withValues(alpha: 0.8),
+                          color: AppColors.textWhite.withValues(alpha: 0.8),
                           fontSize: 12.sp)),
                 ],
               ),
             ),
-            Icon(Icons.arrow_forward_rounded, color: AppColors.black, size: 22.sp),
+            Icon(Icons.arrow_forward_rounded,
+                color: AppColors.primaryColor, size: 22.sp),
           ],
         ),
       ),

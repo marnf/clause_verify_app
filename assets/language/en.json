@@ -632,6 +632,6 @@
   "standardLabel": "Standard",
   "standardRisk": "Standard",
   "page": "page",
-  "missingProtection": "missing protection",
-  "missingProtections": "missing protections"
+    "missingProtection": "Missing Protection",
+  "missingProtections": "Missing Protections"
 }

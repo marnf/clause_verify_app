@@ -628,6 +628,6 @@
   "standardLabel": "Estándar",
   "standardRisk": "Estándar",
   "page": "página",
-  "missingProtection": "protección faltante",
-  "missingProtections": "protecciones faltantes"
+    "missingProtection": "Protección Faltante",
+  "missingProtections": "Protecciones Faltantes"
 }

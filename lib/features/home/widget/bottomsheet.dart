@@ -23,8 +23,8 @@ class ScanDetailsBottomSheet extends StatelessWidget {
     final controller = Get.find<HomeController>();
 
     return Container(
-      decoration: BoxDecoration(
-        color: AppColors.background,
+            decoration: BoxDecoration(
+        color: AppColors.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
         border: Border.all(color: AppColors.cardBorder, width: 1),
       ),
@@ -52,8 +52,8 @@ class ScanDetailsBottomSheet extends StatelessWidget {
                   children: [
                     Container(
                       padding: EdgeInsets.all(10.w),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryColor.withValues(alpha: 0.12),
+                                           decoration: BoxDecoration(
+                        color: AppColors.navy,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(Icons.document_scanner_rounded,
@@ -111,9 +111,9 @@ class ScanDetailsBottomSheet extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('totalAvailableScans'.tr,
+                                                        Text('totalAvailableScans'.tr,
                                 style: TextStyle(
-                                    color: AppColors.textSubtle,
+                                    color: AppColors.textMuted,
                                     fontSize: 13.sp,
                                     fontWeight: FontWeight.w500)),
                             SizedBox(height: 4.h),
@@ -226,9 +226,9 @@ class _StatBox extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 8.w),
       decoration: BoxDecoration(
-        color: active
+                color: active
             ? AppColors.primaryColor.withValues(alpha: 0.08)
-            : AppColors.surface,
+            : AppColors.navy,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: active

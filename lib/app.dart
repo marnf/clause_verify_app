@@ -1,4 +1,3 @@
-
 import 'package:clause_verify/core/localization/localization_controller.dart';
 import 'package:clause_verify/core/localization/messages.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +29,7 @@ class MyApp extends StatelessWidget {
           builder: (localizationController) {
             return GetMaterialApp(
               debugShowCheckedModeBanner: false,
-              themeMode: ThemeMode.system,
+              themeMode: ThemeMode.dark, // ✅ অ্যাপ dark-only
               theme: _getLightTheme(),
               darkTheme: _getDarkTheme(),
 

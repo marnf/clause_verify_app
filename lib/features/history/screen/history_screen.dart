@@ -21,7 +21,7 @@ class HistoryScreen extends StatelessWidget {
   static const Color _red = AppColors.error;
   static const Color _orange = AppColors.warning;
   static const Color _green = AppColors.success;
-  static const Color _grey = AppColors.textSubtle;
+  static const Color _grey = AppColors.textMuted;
 
   @override
   Widget build(BuildContext context) {
@@ -237,8 +237,8 @@ class HistoryScreen extends StatelessWidget {
                                 countsLine,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: AppColors.textSubtle,
+                                                                style: TextStyle(
+                                  color: AppColors.textMuted,
                                   fontSize: 11.5.sp,
                                 ),
                               ),
@@ -246,8 +246,8 @@ class HistoryScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Icon(Icons.chevron_right_rounded,
-                          color: AppColors.textSubtle, size: 24.sp),
+                                Icon(Icons.chevron_right_rounded,
+                          color: AppColors.textMuted, size: 24.sp),
                     ],
                   ),
                 ),

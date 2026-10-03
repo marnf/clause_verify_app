@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../constants/app_colors.dart';
+
 class AppElevatedButtonTheme {
   AppElevatedButtonTheme._();
 
@@ -14,10 +16,14 @@ class AppElevatedButtonTheme {
       style: ButtonStyle(
         elevation: const WidgetStatePropertyAll(0),
         foregroundColor: WidgetStateProperty.resolveWith<Color>(
-          (states) => states.contains(WidgetState.disabled) ? disabledTextColor : defaultTextColor,
+          (states) => states.contains(WidgetState.disabled)
+              ? disabledTextColor
+              : defaultTextColor,
         ),
         backgroundColor: WidgetStateProperty.resolveWith<Color>(
-          (states) => states.contains(WidgetState.disabled) ? disabledBackgroundColor : defaultBackgroundColor,
+          (states) => states.contains(WidgetState.disabled)
+              ? disabledBackgroundColor
+              : defaultBackgroundColor,
         ),
         side: WidgetStateProperty.all(BorderSide(color: borderColor)),
         padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: 18)),
@@ -32,18 +38,18 @@ class AppElevatedButtonTheme {
   }
 
   static final ElevatedButtonThemeData lightElevatedButtonTheme = _baseTheme(
-    defaultTextColor: Colors.white,
-    disabledTextColor: Colors.grey,
-    defaultBackgroundColor: Colors.blue,
-    disabledBackgroundColor: Colors.grey.shade300,
-    borderColor: Colors.blue,
+    defaultTextColor: AppColors.black,
+    disabledTextColor: AppColors.black54,
+    defaultBackgroundColor: AppColors.primaryColor,
+    disabledBackgroundColor: AppColors.primaryColor.withOpacity(0.45),
+    borderColor: AppColors.primaryColor,
   );
 
   static final ElevatedButtonThemeData darkElevatedButtonTheme = _baseTheme(
-    defaultTextColor: Colors.white,
-    disabledTextColor: Colors.grey.shade600,
-    defaultBackgroundColor: Colors.blueGrey,
-    disabledBackgroundColor: Colors.grey.shade800,
-    borderColor: Colors.blueGrey,
+    defaultTextColor: AppColors.black,
+    disabledTextColor: AppColors.black54,
+    defaultBackgroundColor: AppColors.primaryColor,
+    disabledBackgroundColor: AppColors.primaryColor.withOpacity(0.45),
+    borderColor: AppColors.primaryColor,
   );
 }

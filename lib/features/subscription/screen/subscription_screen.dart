@@ -162,7 +162,7 @@ class SubscriptionScreen extends StatelessWidget {
             width: 42.w,
             height: 42.h,
             decoration: BoxDecoration(
-              color: AppColors.surface,
+                            color: AppColors.navy,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: AppColors.cardBorder, width: 1),
             ),
@@ -273,7 +273,7 @@ class SubscriptionScreen extends StatelessWidget {
             ? const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [AppColors.surfaceLight, AppColors.surface],
+                colors: [AppColors.premiumCard, AppColors.surface],
               )
             : null,
         color: hasPlan ? null : AppColors.surface,
@@ -339,8 +339,8 @@ class SubscriptionScreen extends StatelessWidget {
               ? Icons.autorenew_rounded
               : Icons.schedule_rounded,
           size: 13.sp,
-          color: controller.willRenew.value
-              ? AppColors.textSubtle
+                   color: controller.willRenew.value
+              ? AppColors.textMuted
               : AppColors.error,
         ),
       ),
@@ -349,9 +349,9 @@ class SubscriptionScreen extends StatelessWidget {
         child: Text(
           statusLine,
           softWrap: true,
-          style: TextStyle(
+                    style: TextStyle(
             color: controller.willRenew.value
-                ? AppColors.textSubtle
+                ? AppColors.textMuted
                 : AppColors.error,
             fontSize: 12.5.sp,
             height: 1.3,
@@ -387,9 +387,7 @@ class SubscriptionScreen extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 14.h),
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: highlighted
-            ? AppColors.primaryColor.withOpacity(0.06)
-            : AppColors.surface,
+                color: highlighted ? AppColors.premiumCard : AppColors.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: highlighted ? AppColors.primaryColor : AppColors.cardBorder,
@@ -404,11 +402,11 @@ class SubscriptionScreen extends StatelessWidget {
               Container(
                 width: 42.w,
                 height: 42.h,
-                decoration: BoxDecoration(
-                  color: AppColors.surfaceLight,
+                               decoration: BoxDecoration(
+                  color: AppColors.navy,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(icon, color: AppColors.goldLight, size: 22.sp),
+                child: Icon(icon, color: AppColors.primaryColor, size: 22.sp),
               ),
               SizedBox(width: 12.w),
               Expanded(
@@ -461,8 +459,10 @@ class SubscriptionScreen extends StatelessWidget {
                           if (period != null)
                             TextSpan(
                               text: ' $period',
-                              style: TextStyle(
-                                color: AppColors.textMuted,
+                                                           style: TextStyle(
+                                color: highlighted
+                                    ? AppColors.cream
+                                    : AppColors.textMuted,
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w400,
                               ),
@@ -488,10 +488,12 @@ class SubscriptionScreen extends StatelessWidget {
                       color: AppColors.primaryColor, size: 16.sp),
                   SizedBox(width: 8.w),
                   Expanded(
-                    child: Text(
+                                        child: Text(
                       f,
                       style: TextStyle(
-                        color: AppColors.textSubtle,
+                        color: highlighted
+                            ? AppColors.cream
+                            : AppColors.textMuted,
                         fontSize: 14.sp,
                         height: 1.3,
                       ),

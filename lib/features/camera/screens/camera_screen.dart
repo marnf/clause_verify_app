@@ -472,14 +472,14 @@ class CameraScreen extends StatelessWidget {
                           height: 16,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: Color(0xFFF5F5F0), // off-white
+                                                        color: AppColors.cream,
                           ),
                         ),
                         SizedBox(width: 10.w),
                         Text(
                           'analysing'.tr,
                           style: TextStyle(
-                            color: const Color(0xFFF5F5F0), // off-white
+                                                        color: AppColors.cream,
                             fontSize: 15.sp,
                             fontWeight: FontWeight.w600,
                           ),
