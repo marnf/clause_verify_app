@@ -389,7 +389,7 @@
   "faqA3_4": "Allez dans Profil, puis Supprimer mon compte. Votre compte, vos documents et votre historique d'analyse seront définitivement supprimés de nos serveurs dans les 30 jours. Cette action est irréversible.",
   "faqSection4Title": "Support technique",
   "faqQ4_1": "L'application se bloque ou se fige. Que puis-je faire ?",
-  "faqA4_1": "• Assurez-vous d'avoir installé la dernière version de l'application.\n• Redémarrez l'application et votre téléphone.\n• Vérifiez votre connexion Internet.\n• Toujours bloqué ? Contactez-nous à Qloxinc@gmail.com.",
+  "faqA4_1": "• Assurez-vous d'avoir installé la dernière version de l'application.\n• Redémarrez l'application et votre téléphone.\n• Vérifiez votre connexion Internet.\n• Toujours bloqué ? Contactez-nous à contact@Qlox.ca.",
   "faqQ4_2": "J'ai des problèmes pour téléverser ou numériser mon document.",
   "faqA4_2": "• Accordez les autorisations nécessaires (caméra et fichiers) dans les paramètres de votre téléphone.\n• Nettoyez l'objectif de l'appareil photo si vous photographiez des pages.\n• Évitez de scanner dans des environnements sombres ou réfléchissants.\n• Assurez-vous que les PDF ne sont pas protégés par mot de passe et ont 10 pages maximum.",
   "faqSection5Title": "Confidentialité et sécurité",
@@ -447,7 +447,7 @@
   "termsTitle15": "15 · Modifications de ces Conditions",
   "termsContent15": "Nous pouvons mettre à jour ces Conditions de temps à autre. L'utilisation continue du Service après les modifications signifie que vous acceptez les Conditions mises à jour.",
   "termsContactTitle": "Questions ?",
-  "termsContactEmail": "Qloxinc@gmail.com",
+  "termsContactEmail": "contact@Qlox.ca",
 
   "privacyPolicyTitle": "Politique de confidentialité",
   "privacyLastUpdated": "Dernière mise à jour : 30 septembre 2026",
@@ -478,7 +478,7 @@
   "privacyTitle10": "10 · Modifications de cette politique",
   "privacyContent10_1": "Nous pouvons mettre à jour cette Politique de confidentialité de temps à autre. La date « Dernière mise à jour » en haut reflète la dernière version.",
   "privacyContactTitle": "Contact",
-  "privacyContactBody": "Responsable de la confidentialité, Qlox Inc.\nQloxinc@gmail.com",
+  "privacyContactBody": "Responsable de la confidentialité, Qlox Inc.\ncontact@Qlox.ca",
 
   "uploadFormatsInfo": "PDF, DOC/DOCX (1 fichier) ou Images (max 10) • Max 5 Mo au total",
   "documentText": "document",

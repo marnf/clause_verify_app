@@ -388,7 +388,7 @@
   "faqA3_4": "Ve a Perfil, luego Eliminar mi cuenta. Tu cuenta, documentos e historial de análisis se eliminarán permanentemente de nuestros servidores en 30 días. Esta acción no se puede deshacer.",
   "faqSection4Title": "Soporte técnico",
   "faqQ4_1": "La aplicación se bloquea o se congela. ¿Qué puedo hacer?",
-  "faqA4_1": "• Asegúrese de tener instalada la última versión de la aplicación.\n• Reinicie la aplicación y su teléfono.\n• Compruebe su conexión a internet.\n• ¿Sigues con problemas? Contáctanos en Qloxinc@gmail.com.",
+  "faqA4_1": "• Asegúrese de tener instalada la última versión de la aplicación.\n• Reinicie la aplicación y su teléfono.\n• Compruebe su conexión a internet.\n• ¿Sigues con problemas? Contáctanos en contact@Qlox.ca.",
   "faqQ4_2": "Tengo problemas para subir o escanear mi documento.",
   "faqA4_2": "• Conceda los permisos de cámara y de archivos necesarios en la configuración de su teléfono.\n• Limpie la lente de la cámara de su teléfono si fotografía páginas.\n• Evite escanear en entornos oscuros o reflectantes.\n• Asegúrese de que los PDF no estén protegidos con contraseña y tengan 10 páginas máximo.",
   "faqSection5Title": "Privacidad y seguridad",
@@ -446,7 +446,7 @@
   "termsTitle15": "15 · Cambios a estos Términos",
   "termsContent15": "Podemos actualizar estos Términos de vez en cuando. El uso continuado del Servicio después de los cambios significa que aceptas los Términos actualizados.",
   "termsContactTitle": "¿Preguntas?",
-  "termsContactEmail": "Qloxinc@gmail.com",
+  "termsContactEmail": "contact@Qlox.ca",
 
   "privacyPolicyTitle": "Política de privacidad",
   "privacyLastUpdated": "Última actualización: 30 de septiembre de 2026",
@@ -477,7 +477,7 @@
   "privacyTitle10": "10 · Cambios a esta política",
   "privacyContent10_1": "Podemos actualizar esta Política de privacidad de vez en cuando. La fecha \"Última actualización\" en la parte superior refleja la última versión.",
   "privacyContactTitle": "Contacto",
-  "privacyContactBody": "Oficial de Privacidad, Qlox Inc.\nQloxinc@gmail.com",
+  "privacyContactBody": "Oficial de Privacidad, Qlox Inc.\ncontact@Qlox.ca",
 
   "uploadFormatsInfo": "PDF, DOC/DOCX (1 archivo) o Imágenes (máx 10) • Máx. 5 MB en total",
   "documentText": "documento",

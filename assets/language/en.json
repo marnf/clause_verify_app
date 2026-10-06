@@ -388,7 +388,7 @@
   "faqA3_4": "Go to Profile, then Delete My Account. Your account, documents and analysis history will be permanently deleted from our servers within 30 days. This action cannot be undone.",
   "faqSection4Title": "Technical Support",
   "faqQ4_1": "The app crashes or freezes. What can I do?",
-  "faqA4_1": "• Make sure you have the latest version of the app installed.\n• Restart the app and your phone.\n• Check your internet connection.\n• Still stuck? Contact us at Qloxinc@gmail.com.",
+  "faqA4_1": "• Make sure you have the latest version of the app installed.\n• Restart the app and your phone.\n• Check your internet connection.\n• Still stuck? Contact us at contact@Qlox.ca.",
   "faqQ4_2": "I'm having trouble uploading or scanning my document.",
   "faqA4_2": "• Grant the necessary camera and file-access permissions in your phone settings.\n• Clean your phone's camera lens if photographing pages.\n• Avoid scanning in dark or reflective environments.\n• Make sure PDFs are not password-protected and have 10 pages maximum.",
   "faqSection5Title": "Privacy & Security",
@@ -446,7 +446,7 @@
   "termsTitle15": "15 · Changes to These Terms",
   "termsContent15": "We may update these Terms from time to time. Continued use of the Service after changes means you accept the updated Terms.",
   "termsContactTitle": "Questions?",
-  "termsContactEmail": "Qloxinc@gmail.com",
+  "termsContactEmail": "contact@Qlox.ca",
 
   "privacyPolicyTitle": "Privacy Policy",
   "privacyLastUpdated": "Last updated: September 30, 2026",
@@ -477,7 +477,7 @@
   "privacyTitle10": "10 · Changes to This Policy",
   "privacyContent10_1": "We may update this Privacy Policy from time to time. The \"Last updated\" date at the top reflects the latest version.",
   "privacyContactTitle": "Contact",
-  "privacyContactBody": "Privacy Officer, Qlox Inc.\nQloxinc@gmail.com",
+  "privacyContactBody": "Privacy Officer, Qlox Inc.\ncontact@Qlox.ca",
 
   "uploadFormatsInfo": "PDF, DOC/DOCX (1 file) or Images (max 10) • Max 5 MB total",
   "documentText": "document",
