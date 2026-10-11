@@ -93,16 +93,38 @@ class AnalysisResultController extends GetxController {
   String get createdAt => result.value?.createdAt ?? '';
 
   String get formattedDate {
-    final dateStr = createdAt;
-    if (dateStr.isEmpty) return '';
-    try {
-      final d = DateTime.parse(dateStr).toLocal();
-      String two(int n) => n.toString().padLeft(2, '0');
-      return '${two(d.day)}-${two(d.month)}-${d.year} ${two(d.hour)}:${two(d.minute)}';
-    } catch (e) {
-      return dateStr;
+  final dateStr = createdAt;
+  if (dateStr.isEmpty) return '';
+  try {
+   
+    DateTime parsed = DateTime.parse(dateStr);
+
+    
+    final hasTimezone = RegExp(r'(Z|[+-]\d{2}:?\d{2})$').hasMatch(dateStr);
+    if (!hasTimezone) {
+      parsed = DateTime.utc(
+        parsed.year,
+        parsed.month,
+        parsed.day,
+        parsed.hour,
+        parsed.minute,
+        parsed.second,
+      );
+
+     
     }
+
+    
+    final d = parsed.toLocal();
+
+    String two(int n) => n.toString().padLeft(2, '0');
+    return '${two(d.day)}-${two(d.month)}-${d.year} ${two(d.hour)}:${two(d.minute)}';
+  } catch (e) {
+    return dateStr;
   }
+
+  
+}
 
   // ══════════ PDF LOCK STATE ══════════
   bool get isPdfLocked {

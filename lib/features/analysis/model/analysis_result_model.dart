@@ -22,15 +22,16 @@ class AnalysisResultModel {
   });
 
   factory AnalysisResultModel.fromJson(Map<String, dynamic> json) {
-    return AnalysisResultModel(
-      id: _toStr(json['id']),
-      totalPages: _toInt(json['total_pages']),
-      createdAt: _toStr(json['created_at']),
-      aiResponse: AiResponse.fromJson(
-        (json['ai_response'] as Map<String, dynamic>?) ?? {},
-      ),
-    );
-  }
+  print('RAW created_at: ${json['created_at']}');
+  return AnalysisResultModel(
+    id: _toStr(json['id']),
+    totalPages: _toInt(json['total_pages']),
+    createdAt: _toStr(json['created_at']),
+    aiResponse: AiResponse.fromJson(
+      (json['ai_response'] as Map<String, dynamic>?) ?? {},
+    ),
+  );
+}
 
   Map<String, dynamic> toJson() => {
         'id': id,

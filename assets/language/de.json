@@ -546,7 +546,7 @@
   "planSwitchBlockedBody": "Ihr aktueller Plan ist noch aktiv. Sie können einen einzelnen Scan kaufen oder sich nach dessen Ende erneut abonnieren.",
 
   "confirmJurisdiction": "Rechtsordnung bestätigen",
-  "jurisdictionDescription": "Wir analysieren Ihren Vertrag nach dem Recht des unten gewählten Landes. Dazu wird Ihr Dokument sicher mit unserem KI-Dienstleister (Anthropic) geteilt, nur zur Erstellung Ihres Berichts und nie zum Training von KI-Modellen. Mit „Bestätigen\" stimmen Sie dieser Weitergabe zu.",
+  "jurisdictionDescription": "Wir analysieren Ihren Vertrag auf Grundlage der Gesetze Ihres Landes. Dazu wird Ihr Dokument sicher an unseren KI-Dienstleister (Anthropic) übermittelt, ausschließlich zur Erstellung Ihres Berichts und niemals zum Trainieren von KI-Modellen. Durch Tippen auf Bestätigen stimmen Sie dieser Übermittlung zu.",
   "jurisdictionAiNotice": "Zur Analyse wird Ihr hochgeladener Vertrag sicher an unseren KI-Dienstleister (Anthropic) gesendet, ausschließlich um Ihren klauselweisen Bericht zu erstellen. Ihr Dokument wird nicht zum Training von KI-Modellen verwendet. Mit dem Tippen auf „Bestätigen\" stimmen Sie dieser Datenweitergabe zu.",
   "tapToChangeCountry": "Tippen, um das Land zu ändern",
   "selectScanType": "Scan-Typ auswählen",
@@ -629,5 +629,7 @@
   "standardRisk": "Standard",
   "page": "Seite",
     "missingProtection": "Fehlender Schutz",
-  "missingProtections": "Fehlende Schutzmaßnahmen"
+  "missingProtections": "Fehlende Schutzmaßnahmen",
+
+  "scanAgain": "Erneut scannen"
 }

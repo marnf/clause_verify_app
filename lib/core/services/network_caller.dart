@@ -648,8 +648,17 @@ class NetworkCaller {
 
   // Handle the response from the server
   Future<ResponseData> _handleResponse(http.Response response) async {
-    AppLoggerHelper.info('Response Status: ${response.statusCode}');
-    AppLoggerHelper.info('Response Body: ${response.body}');
+    // AppLoggerHelper.info('Response Status: ${response.statusCode}');
+    // AppLoggerHelper.info('Response Body: ${response.body}');
+
+
+AppLoggerHelper.info('Response Status: ${response.statusCode}');
+AppLoggerHelper.info('Content-Type: ${response.headers['content-type']}');
+final body = response.body;
+AppLoggerHelper.info(
+  'Response Body (first 600 chars): ${body.length > 600 ? body.substring(0, 600) : body}',
+);
+
 
     try {
       final decodedResponse = jsonDecode(response.body);

@@ -547,7 +547,7 @@
   "planSwitchBlockedBody": "Votre plan actuel est toujours actif. Vous pouvez acheter un scan unique ou vous réabonner après sa fin.",
 
   "confirmJurisdiction": "Confirmer la juridiction",
-  "jurisdictionDescription": "Nous analyserons votre contrat selon les lois du pays sélectionné ci-dessous. Pour cela, votre document est partagé de manière sécurisée avec notre prestataire IA (Anthropic), uniquement pour générer votre rapport et jamais pour entraîner des modèles d'IA. En appuyant sur Confirmer, vous acceptez ce partage.",
+  "jurisdictionDescription": "Nous analyserons votre contrat selon les lois de votre pays. Pour ce faire, votre document est partagé de manière sécurisée avec notre fournisseur de services d'IA (Anthropic), uniquement pour générer votre rapport et jamais pour entraîner des modèles d'IA. En appuyant sur Confirmer, vous acceptez ce partage.",
   "jurisdictionAiNotice": "Pour l'analyser, votre contrat téléversé sera envoyé de manière sécurisée à notre prestataire IA (Anthropic), uniquement afin de générer votre rapport clause par clause. Votre document n'est pas utilisé pour entraîner des modèles d'IA. En appuyant sur Confirmer, vous acceptez ce partage de données.",
   "tapToChangeCountry": "Appuyez pour changer de pays",
   "selectScanType": "Sélectionnez le type d'analyse",
@@ -632,5 +632,6 @@
   "standardRisk": "Standard",
   "page": "page",
   "missingProtection": "Protection Manquante",
-  "missingProtections": "Protections Manquantes"
+  "missingProtections": "Protections Manquantes",
+  "scanAgain": "Scanner à nouveau"
 }

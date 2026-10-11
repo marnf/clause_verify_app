@@ -546,7 +546,9 @@
   "planSwitchBlockedBody": "Your current plan is still active. You can buy a single scan, or subscribe again after it ends.",
 
   "confirmJurisdiction": "Confirm Jurisdiction",
-  "jurisdictionDescription": "We'll analyze your contract under the laws of the country you select below. To do this, your document is securely shared with our AI service provider (Anthropic), only to generate your report and never to train AI models. By tapping Confirm, you agree to this sharing.",
+  
+"jurisdictionDescription": "We'll analyze your contract based on the laws of your country. To do this, your document is securely shared with our AI service provider (Anthropic), only to generate your report and never to train AI models. By tapping Confirm, you agree to this sharing.",
+
   "jurisdictionAiNotice": "To analyze it, your uploaded contract will be securely sent to our AI service provider (Anthropic), solely to generate your clause-by-clause report. Your document is not used to train any AI models. By tapping Confirm, you agree to this data sharing.",
   "tapToChangeCountry": "Tap to change country",
   "selectScanType": "Select scan type",
@@ -633,5 +635,8 @@
   "standardRisk": "Standard",
   "page": "page",
     "missingProtection": "Missing Protection",
-  "missingProtections": "Missing Protections"
+  "missingProtections": "Missing Protections",
+
+
+  "scanAgain": "Scan Again"
 }

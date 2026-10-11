@@ -1,9 +1,7 @@
 
-
 import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:clause_verify/core/utils/constants/app_sizer.dart';
 import 'package:clause_verify/features/home/controllers/home_controller.dart';
-import 'package:country_picker/country_picker.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,21 +17,15 @@ enum ScanType {
   const ScanType(this.apiValue);
 }
 
-/// Modal থেকে ফেরত আসা ফলাফল: country + কোন scan ব্যবহার হবে
+/// Modal থেকে ফেরত আসা ফলাফল: শুধু কোন scan ব্যবহার হবে
 class ScanSelection {
-  final Country country;
   final ScanType scanType;
 
-  const ScanSelection({required this.country, required this.scanType});
+  const ScanSelection({required this.scanType});
 }
 
 class CountryConfirmationModal extends StatefulWidget {
-  final Country initialCountry;
-
-  const CountryConfirmationModal({
-    Key? key,
-    required this.initialCountry,
-  }) : super(key: key);
+  const CountryConfirmationModal({Key? key}) : super(key: key);
 
   @override
   State<CountryConfirmationModal> createState() =>
@@ -41,8 +33,6 @@ class CountryConfirmationModal extends StatefulWidget {
 }
 
 class _CountryConfirmationModalState extends State<CountryConfirmationModal> {
-  late Country selectedCountry;
-
   /// null মানে user এখনো select করেনি
   ScanType? selectedType;
 
@@ -57,8 +47,6 @@ class _CountryConfirmationModalState extends State<CountryConfirmationModal> {
   void initState() {
     super.initState();
     _privacyTap = TapGestureRecognizer()..onTap = _openPrivacyPolicy;
-
-    selectedCountry = widget.initialCountry;
 
     if (Get.isRegistered<HomeController>()) {
       final home = Get.find<HomeController>();
@@ -94,34 +82,6 @@ class _CountryConfirmationModalState extends State<CountryConfirmationModal> {
 
   bool get _hasAnyScan =>
       _singleCount > 0 || _monthlyCount > 0 || _unlimitedCount > 0;
-
-  void _openCountryPicker() {
-    FocusScope.of(context).unfocus();
-
-    Future.delayed(const Duration(milliseconds: 100), () {
-      if (!mounted) return;
-
-      final screenHeight = MediaQuery.of(context).size.height;
-
-      showCountryPicker(
-        context: context,
-        showPhoneCode: false,
-        useSafeArea: true,
-        countryListTheme: CountryListThemeData(
-          borderRadius: BorderRadius.circular(16),
-          backgroundColor: AppColors.surface,
-          textStyle: TextStyle(color: AppColors.textWhite, fontSize: 14.sp),
-          searchTextStyle: TextStyle(color: AppColors.textWhite),
-          bottomSheetHeight: screenHeight * 0.55,
-        ),
-        onSelect: (Country country) {
-          setState(() {
-            selectedCountry = country;
-          });
-        },
-      );
-    });
-  }
 
   Future<void> _openPrivacyPolicy() async {
     final uri = Uri.parse('https://www.clauseverify.app/privacy-policy');
@@ -195,49 +155,6 @@ class _CountryConfirmationModalState extends State<CountryConfirmationModal> {
               ),
               SizedBox(height: 14.h),
 
-              // ── Country selector ──
-              GestureDetector(
-                onTap: _openCountryPicker,
-                child: Container(
-                  width: double.infinity,
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.background,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                        color: AppColors.primaryColor.withOpacity(0.5),
-                        width: 1.5),
-                  ),
-                  child: Row(
-                    children: [
-                      Text(selectedCountry.flagEmoji,
-                          style: TextStyle(fontSize: 24.sp)),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: Text(selectedCountry.name,
-                            style: TextStyle(
-                                color: AppColors.textWhite,
-                                fontSize: 15.sp,
-                                fontWeight: FontWeight.w600)),
-                      ),
-                      Icon(Icons.chevron_right,
-                          color: AppColors.textMuted, size: 20),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 6.h),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Text('tapToChangeCountry'.tr,
-                    style: TextStyle(
-                        color: AppColors.primaryColor,
-                        fontSize: 11.sp,
-                        fontStyle: FontStyle.italic)),
-              ),
-              SizedBox(height: 18.h),
-
               // ── Scan type selector ──
               Row(
                 children: [
@@ -259,19 +176,16 @@ class _CountryConfirmationModalState extends State<CountryConfirmationModal> {
                 children: [
                   _buildScanOption(
                     type: ScanType.single,
-                    
                     label: 'scanTypeSingle'.tr,
                   ),
                   SizedBox(width: 8.w),
                   _buildScanOption(
                     type: ScanType.monthly,
-                    
                     label: 'scanTypeMonthly'.tr,
                   ),
                   SizedBox(width: 8.w),
                   _buildScanOption(
                     type: ScanType.unlimited,
-                   
                     label: 'scanTypeUnlimited'.tr,
                   ),
                 ],
@@ -322,7 +236,6 @@ class _CountryConfirmationModalState extends State<CountryConfirmationModal> {
                       onPressed: canConfirm
                           ? () => Get.back(
                                 result: ScanSelection(
-                                  country: selectedCountry,
                                   scanType: selectedType!,
                                 ),
                               )
@@ -343,14 +256,11 @@ class _CountryConfirmationModalState extends State<CountryConfirmationModal> {
   // ══════════════ Single scan-type box ══════════════
   Widget _buildScanOption({
     required ScanType type,
-    
     required String label,
   }) {
     final count = _countOf(type);
     final enabled = count > 0;
     final selected = selectedType == type;
-
-    final Color accent = enabled ? AppColors.primaryColor : AppColors.textMuted;
 
     return Expanded(
       child: GestureDetector(
@@ -381,16 +291,22 @@ class _CountryConfirmationModalState extends State<CountryConfirmationModal> {
                         fontWeight: FontWeight.w800,
                         height: 1)),
                 SizedBox(height: 6.h),
-                Text(label,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: selected
-                            ? AppColors.primaryColor
-                            : AppColors.textMuted,
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w600)),
+                
+Text(
+  label,
+  maxLines: 2,
+  softWrap: true,
+  overflow: TextOverflow.visible,
+  textAlign: TextAlign.center,
+  style: TextStyle(
+    color: selected
+        ? AppColors.primaryColor
+        : AppColors.textMuted,
+    fontSize: 11.sp,
+    fontWeight: FontWeight.w600,
+  ),
+),
+
               ],
             ),
           ),

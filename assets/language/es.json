@@ -546,7 +546,7 @@
   "planSwitchBlockedBody": "Tu plan actual todavía está activo. Puedes comprar un escaneo individual o suscribirte de nuevo después de que termine.",
 
   "confirmJurisdiction": "Confirmar jurisdicción",
-  "jurisdictionDescription": "Analizaremos tu contrato según las leyes del país que selecciones abajo. Para ello, tu documento se comparte de forma segura con nuestro proveedor de IA (Anthropic), solo para generar tu informe y nunca para entrenar modelos de IA. Al pulsar Confirmar, aceptas este intercambio.",
+  "jurisdictionDescription": "Analizaremos su contrato según las leyes de su país. Para ello, su documento se comparte de forma segura con nuestro proveedor de servicios de IA (Anthropic), únicamente para generar su informe y nunca para entrenar modelos de IA. Al tocar Confirmar, acepta este intercambio.",
   "jurisdictionAiNotice": "Para analizarlo, tu contrato cargado se enviará de forma segura a nuestro proveedor de IA (Anthropic), únicamente para generar tu informe cláusula por cláusula. Tu documento no se utiliza para entrenar ningún modelo de IA. Al pulsar Confirmar, aceptas este intercambio de datos.",
   "tapToChangeCountry": "Toca para cambiar de país",
   "selectScanType": "Selecciona el tipo de escaneo",
@@ -629,5 +629,7 @@
   "standardRisk": "Estándar",
   "page": "página",
     "missingProtection": "Protección Faltante",
-  "missingProtections": "Protecciones Faltantes"
+  "missingProtections": "Protecciones Faltantes",
+
+  "scanAgain": "Escanear de nuevo"
 }
