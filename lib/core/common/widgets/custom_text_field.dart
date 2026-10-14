@@ -92,8 +92,7 @@ class CustomTextField extends StatelessWidget {
                 fontSize: getWidth(14), // Default size for the suffix text
                 fontWeight: FontWeight.w400,
                 color:
-                AppColors
-                    .textSecondary, // Default color for the suffix text
+                AppColors.textMuted, // Default color for the suffix text
               ),
           hintText: hintText,
           hintStyle: GoogleFonts.poppins(
