@@ -1,8 +1,7 @@
 class Endpoints {
-   static const String baseUrl = "https://app.clauseverify.app";
-    // static const String baseUrl = "https://unheated-overuse-abrasive.ngrok-free.dev";
-  //  static const String baseUrl = "https://unheated-overuse-abrasive.ngrok-free.dev";
-  //  static const String baseUrl = "http://167.114.114.172:8005";
+  static const String baseUrl = "https://app.clauseverify.app";
+  // static const String baseUrl = "https://unheated-overuse-abrasive.ngrok-free.dev";
+  // static const String baseUrl = "http://167.114.114.172:8005";
 
   // ================= AUTH =================
 
@@ -37,6 +36,15 @@ class Endpoints {
 
   static const String fileAnalysis = "$baseUrl/api/files/analysis/";
 
+  // 🆕 Live scan progress polling: GET {scanJobs}{uuid}/?after_event_id=N
+  static const String scanJobs = "$baseUrl/api/files/scan-jobs/";
+
   // for delete
   static const String deleteAccount = "$baseUrl/api/auth/delete-account/";
+
+    // 🔔 Push notification device token
+  static const String notificationDevices =
+      "$baseUrl/api/files/notifications/devices/";
+
+    
 }

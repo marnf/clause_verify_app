@@ -5,6 +5,8 @@ import 'package:clause_verify/core/models/response_data.dart';
 import 'package:clause_verify/core/services/endpoints.dart';
 import 'package:clause_verify/core/services/network_caller.dart';
 import 'package:clause_verify/core/utils/constants/icon_path.dart';
+
+import 'package:clause_verify/core/utils/timezone_helper.dart';
 import 'package:clause_verify/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -68,11 +70,17 @@ class OtpVerificationControllerForRegistraion extends GetxController {
         "email": email,
       };
 
+      // 🆕 আগের মতোই getUserTimezone() দিয়ে timezone বের করে X-Timezone header-এ পাঠানো হবে
+      final timezone = await getUserTimezone();
+
       final NetworkCaller networkCaller = NetworkCaller();
       final ResponseData response = await networkCaller.postRequest(
         Endpoints.verifyOtp,
         body: otpData,
         requiresAuth: false,
+        headers: {
+          'X-Timezone': timezone,
+        },
       );
 
       if (response.isSuccess) {

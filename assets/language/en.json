@@ -638,5 +638,36 @@
   "missingProtections": "Missing Protections",
 
 
-  "scanAgain": "Scan Again"
+  "scanAgain": "Scan Again",
+
+  "article": "Article",
+"contractOrder": "Clause",
+
+"analysisTakingLongerTitle": "Still analysing…",
+"analysisTakingLonger": "Analysis is taking longer than usual. Please wait a little more and keep the app open.",
+
+
+
+
+
+  
+  "liveStatus": "LIVE STATUS",
+
+  "scanStatusQueued": "Document uploaded. Waiting for processing.",
+  "scanStatusStarted": "Document processing has started.",
+  "scanStatusExtracting": "Reading the uploaded PDF or images.",
+  "scanStatusTextExtracted": "Document text extracted. Preparing contract analysis.",
+  "scanStatusAnalyzing": "AI is reviewing the document.",
+  "scanStatusContractCheck": "AI returned a contract classification. Verifying result.",
+  "scanStatusFinalizingAi": "Contract confirmed. Finalizing legal analysis.",
+  "scanStatusSaving": "Analysis completed. Securely saving your result.",
+  "scanStatusCompleted": "Your contract analysis is ready.",
+
+
+
+  "ok": "OK",
+  "notAContractTitle": "Not a Contract",
+
+  "notAContractNoScan": "This document does not look like a contract. No scan was used.",
+  "notAContractScanUsed": "This document does not look like a contract. Daily free rejection limit reached; one scan was used."
 }

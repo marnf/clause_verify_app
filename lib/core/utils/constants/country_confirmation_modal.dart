@@ -1,7 +1,6 @@
-
+import 'package:clause_verify/core/services/auth_service.dart';
 import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:clause_verify/core/utils/constants/app_sizer.dart';
-import 'package:clause_verify/features/home/controllers/home_controller.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -36,10 +35,6 @@ class _CountryConfirmationModalState extends State<CountryConfirmationModal> {
   /// null মানে user এখনো select করেনি
   ScanType? selectedType;
 
-  int _singleCount = 0;
-  int _monthlyCount = 0;
-  int _unlimitedCount = 0;
-
   /// Paragraph-এর শেষে "Privacy Policy" tap করার জন্য
   late final TapGestureRecognizer _privacyTap;
 
@@ -48,14 +43,11 @@ class _CountryConfirmationModalState extends State<CountryConfirmationModal> {
     super.initState();
     _privacyTap = TapGestureRecognizer()..onTap = _openPrivacyPolicy;
 
-    if (Get.isRegistered<HomeController>()) {
-      final home = Get.find<HomeController>();
-      _singleCount = home.scanLimit;
-      _monthlyCount = home.monthlyPackage;
-      _unlimitedCount = home.unlimitedPackage;
-    }
-
-    // শুধু একটাই scan type enabled থাকলে সেটা auto-select
+    // ✅ সরাসরি AuthService থেকে পড়ো — এটা in-memory cache, ProfileRefreshService
+    // দিয়ে synchronously update হয়। তাই upload হওয়ার পরে modal নতুন করে
+    // খুললে সবসময় fresh count পাবে (149, 150 ইত্যাদি)।
+    // আগে এটা HomeController থেকে পড়ত যেটা Rx — কিন্তু ProfileRefreshService
+    // চাইলেই যে সেটা আপডেট হয়ে গেছে এমন কোনো গ্যারান্টি ছিল না।
     final enabledTypes =
         ScanType.values.where((t) => _countOf(t) > 0).toList();
     if (enabledTypes.length == 1) {
@@ -69,19 +61,23 @@ class _CountryConfirmationModalState extends State<CountryConfirmationModal> {
     super.dispose();
   }
 
+  /// সবসময় AuthService থেকে fresh value পড়ো।
+  /// AuthService.userPlanLimit কে ProfileRefreshService সরাসরি আপডেট করে।
   int _countOf(ScanType type) {
     switch (type) {
       case ScanType.single:
-        return _singleCount;
+        return AuthService.scanLimitCount;
       case ScanType.monthly:
-        return _monthlyCount;
+        return AuthService.monthlyPackageCount;
       case ScanType.unlimited:
-        return _unlimitedCount;
+        return AuthService.unlimitedPackageCount;
     }
   }
 
   bool get _hasAnyScan =>
-      _singleCount > 0 || _monthlyCount > 0 || _unlimitedCount > 0;
+      _countOf(ScanType.single) > 0 ||
+      _countOf(ScanType.monthly) > 0 ||
+      _countOf(ScanType.unlimited) > 0;
 
   Future<void> _openPrivacyPolicy() async {
     final uri = Uri.parse('https://www.clauseverify.app/privacy-policy');

@@ -16,7 +16,11 @@ class NetworkCaller {
   // multipart request-এর জন্য আলাদা timeout (সেকেন্ড)
   final int uploadTimeoutDuration = 1000;
 
-  Future<ResponseData> getRequest(String endpoint, {String? token}) async {
+  Future<ResponseData> getRequest(
+    String endpoint, {
+    String? token,
+    Map<String, String>? headers, // ✅ নতুন: extra header (যেমন X-Timezone)
+  }) async {
     AppLoggerHelper.info('GET Request: $endpoint');
 
     // 🔍 Debug: Token check করুন
@@ -25,22 +29,27 @@ class NetworkCaller {
     AppLoggerHelper.info('🔑 Token value: ${authToken?.substring(0, 20)}...'); // First 20 chars only
 
     try {
-      final headers = <String, String>{
+      final requestHeaders = <String, String>{
         'Content-type': 'application/json',
       };
 
+      // ✅ Caller-এর পাঠানো extra header merge করো
+      if (headers != null && headers.isNotEmpty) {
+        requestHeaders.addAll(headers);
+      }
+
       if (authToken != null && authToken.isNotEmpty) {
-        headers['Authorization'] = 'Bearer $authToken';
+        requestHeaders['Authorization'] = 'Bearer $authToken';
         AppLoggerHelper.info('✅ Authorization header added');
       } else {
         AppLoggerHelper.warning('⚠️ No token available for this request');
       }
 
-      AppLoggerHelper.info('📤 Sending request with headers: $headers');
+      AppLoggerHelper.info('📤 Sending request with headers: $requestHeaders');
 
       final Response response = await get(
         Uri.parse(endpoint),
-        headers: headers,
+        headers: requestHeaders,
       ).timeout(Duration(seconds: timeoutDuration));
 
       AppLoggerHelper.info('📥 Response received: ${response.statusCode}');
@@ -52,32 +61,38 @@ class NetworkCaller {
     }
   }
 
-  Future<ResponseData> postRequest(
+    Future<ResponseData> postRequest(
     String endpoint, {
     Map<String, dynamic>? body,
     String? token,
     bool requiresAuth = true, // নতুন parameter
+    Map<String, String>? headers, // 🆕 extra header (যেমন X-Timezone)
   }) async {
     AppLoggerHelper.info('POST Request: $endpoint');
     AppLoggerHelper.info('Request Body: ${jsonEncode(body.toString())}');
 
     try {
       // Headers conditionally তৈরি করুন
-      final headers = <String, String>{
+      final requestHeaders = <String, String>{
         'Content-type': 'application/json',
       };
+
+      // 🆕 Caller-এর পাঠানো extra header merge করো
+      if (headers != null && headers.isNotEmpty) {
+        requestHeaders.addAll(headers);
+      }
 
       // শুধুমাত্র যদি auth দরকার হয় তাহলে Authorization header যোগ করুন
       if (requiresAuth) {
         final authToken = token ?? AuthService.token;
         if (authToken != null && authToken.isNotEmpty) {
-          headers['Authorization'] = 'Bearer $authToken';
+          requestHeaders['Authorization'] = 'Bearer $authToken';
         }
       }
 
       final Response response = await post(
         Uri.parse(endpoint),
-        headers: headers,
+        headers: requestHeaders,
         body: jsonEncode(body),
       ).timeout(Duration(seconds: timeoutDuration));
 
@@ -133,9 +148,9 @@ class NetworkCaller {
     }
   }
 
-    Future<ResponseData> deleteRequest(String endpoint, String? token) async {
+  Future<ResponseData> deleteRequest(String endpoint, String? token) async {
     AppLoggerHelper.info('DELETE Request: $endpoint');
-    
+
     // ✅ Token টা এখানে নাও
     final authToken = token ?? AuthService.token;
     AppLoggerHelper.info('🔑 Token available: ${authToken != null && authToken.isNotEmpty}');
@@ -158,7 +173,7 @@ class NetworkCaller {
         Uri.parse(endpoint),
         headers: headers, // ✅ এখানে হেডার পাঠানো হচ্ছে
       ).timeout(Duration(seconds: timeoutDuration));
-      
+
       return _handleResponse(response);
     } catch (e) {
       AppLoggerHelper.error('❌ Request failed: $e');
@@ -170,6 +185,7 @@ class NetworkCaller {
     String endpoint, {
     List<MapEntry<String, String>>? files, // ✅ Changed Map to List<MapEntry> to allow multiple files with same key name 'files'
     Map<String, String>? fields,
+    Map<String, String>? headers, // 🆕 extra header (X-Scan-Job-ID, X-Timezone ইত্যাদি)
     String? token,
   }) async {
     AppLoggerHelper.info('MULTIPART Request: $endpoint');
@@ -179,6 +195,12 @@ class NetworkCaller {
 
       request.headers['Authorization'] = 'Bearer ${token ?? AuthService.token}';
       // 🔒 নিরাপত্তার জন্য পুরো token আর log-এ ছাপানো হচ্ছে না
+
+      // 🆕 Caller-এর পাঠানো extra header merge করো
+      if (headers != null && headers.isNotEmpty) {
+        request.headers.addAll(headers);
+        AppLoggerHelper.info('🧾 Extra headers: $headers');
+      }
 
       // ✅ Add files
       if (files != null) {
@@ -236,7 +258,7 @@ class NetworkCaller {
 
       AppLoggerHelper.info('📤 Sending multipart request...');
 
-      // ✅ আপলোডের জন্য বড় timeout (180 সেকেন্ড)
+      // ✅ আপলোডের জন্য বড় timeout
       var streamedResponse = await request.send().timeout(
         Duration(seconds: uploadTimeoutDuration),
       );
@@ -271,14 +293,12 @@ class NetworkCaller {
     // AppLoggerHelper.info('Response Status: ${response.statusCode}');
     // AppLoggerHelper.info('Response Body: ${response.body}');
 
-
-AppLoggerHelper.info('Response Status: ${response.statusCode}');
-AppLoggerHelper.info('Content-Type: ${response.headers['content-type']}');
-final body = response.body;
-AppLoggerHelper.info(
-  'Response Body (first 600 chars): ${body.length > 600 ? body.substring(0, 600) : body}',
-);
-
+    AppLoggerHelper.info('Response Status: ${response.statusCode}');
+    AppLoggerHelper.info('Content-Type: ${response.headers['content-type']}');
+    final body = response.body;
+    AppLoggerHelper.info(
+      'Response Body (first 600 chars): ${body.length > 600 ? body.substring(0, 600) : body}',
+    );
 
     try {
       final decodedResponse = jsonDecode(response.body);

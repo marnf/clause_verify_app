@@ -45,14 +45,20 @@ class AnalysisResultController extends GetxController {
   List<ImportantTerm> get _rawTerms =>
       result.value?.aiResponse.importantTerms ?? [];
 
+  List<ImportantTerm> get _rawMissing =>
+      result.value?.aiResponse.missingProtections ?? [];
+
   /// contract-এ যে clause গুলো আসলে পাওয়া গেছে (missing বাদে)।
   /// High/Medium/Low count, tab আর card list সব এখান থেকেই আসে।
   List<ImportantTerm> get allTerms =>
       _rawTerms.where((t) => !t.isMissing).toList();
 
-  /// contract-এ নেই এমন clause — কোনো risk count-এ ঢুকবে না
-  List<ImportantTerm> get missingTerms =>
-      _rawTerms.where((t) => t.isMissing).toList();
+  /// contract-এ নেই এমন clause — কোনো risk count-এ ঢুকবে না।
+  /// নতুন format: missing_protections লিস্ট। পুরনো format: খালি extracted_text।
+  List<ImportantTerm> get missingTerms => [
+        ..._rawMissing,
+        ..._rawTerms.where((t) => t.isMissing),
+      ];
 
   int get foundCount => allTerms.length;
   int get missingCount => missingTerms.length;
@@ -92,39 +98,47 @@ class AnalysisResultController extends GetxController {
   int get totalPages => result.value?.totalPages ?? 0;
   String get createdAt => result.value?.createdAt ?? '';
 
-  String get formattedDate {
-  final dateStr = createdAt;
-  if (dateStr.isEmpty) return '';
-  try {
-   
-    DateTime parsed = DateTime.parse(dateStr);
 
-    
-    final hasTimezone = RegExp(r'(Z|[+-]\d{2}:?\d{2})$').hasMatch(dateStr);
-    if (!hasTimezone) {
-      parsed = DateTime.utc(
-        parsed.year,
-        parsed.month,
-        parsed.day,
-        parsed.hour,
-        parsed.minute,
-        parsed.second,
-      );
+    /// Verdict card-er level: risk_breakdown-er count theke (language-independent)
+  /// high >= medium && high >= low -> high
+  /// medium >= low                 -> medium
+  /// otherwise                     -> low
+  /// Count shob 0 hole '' (neutral color)
+  String get verdictLevel {
+    final b = result.value?.aiResponse.riskBreakdown;
+    if (b == null || b.total == 0) return '';
 
-     
-    }
-
-    
-    final d = parsed.toLocal();
-
-    String two(int n) => n.toString().padLeft(2, '0');
-    return '${two(d.day)}-${two(d.month)}-${d.year} ${two(d.hour)}:${two(d.minute)}';
-  } catch (e) {
-    return dateStr;
+    if (b.highRisk >= b.mediumRisk && b.highRisk >= b.lowRisk) return 'high';
+    if (b.mediumRisk >= b.lowRisk) return 'medium';
+    return 'low';
   }
 
-  
-}
+  String get formattedDate {
+    final dateStr = createdAt;
+    if (dateStr.isEmpty) return '';
+    try {
+      DateTime parsed = DateTime.parse(dateStr);
+
+      final hasTimezone = RegExp(r'(Z|[+-]\d{2}:?\d{2})$').hasMatch(dateStr);
+      if (!hasTimezone) {
+        parsed = DateTime.utc(
+          parsed.year,
+          parsed.month,
+          parsed.day,
+          parsed.hour,
+          parsed.minute,
+          parsed.second,
+        );
+      }
+
+      final d = parsed.toLocal();
+
+      String two(int n) => n.toString().padLeft(2, '0');
+      return '${two(d.day)}-${two(d.month)}-${d.year} ${two(d.hour)}:${two(d.minute)}';
+    } catch (e) {
+      return dateStr;
+    }
+  }
 
   // ══════════ PDF LOCK STATE ══════════
   bool get isPdfLocked {

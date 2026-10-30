@@ -2,6 +2,7 @@
 import 'package:clause_verify/core/services/auth_service.dart';
 import 'package:clause_verify/core/services/endpoints.dart';
 import 'package:clause_verify/core/services/network_caller.dart';
+import 'package:clause_verify/core/utils/timezone_helper.dart';
 import 'package:clause_verify/features/home/model/home_model.dart';
 import 'package:clause_verify/features/home/widget/bottomsheet.dart';
 import 'package:clause_verify/features/home/widget/no_scan_modal.dart';
@@ -69,9 +70,14 @@ class HomeController extends GetxController with WidgetsBindingObserver {
   Future<void> loadUserProfile() async {
     try {
       isLoading.value = true;
+
+      // Phone-এর timezone (Asia/Dhaka, Europe/Paris ইত্যাদি) — প্রতিবার API call-এ header-এ যাবে
+      final timezone = await getUserTimezone();
+
       final response = await NetworkCaller().getRequest(
         Endpoints.userProfile,
         token: AuthService.token,
+        headers: {'X-Timezone': timezone},
       );
 
       if (response.isSuccess && response.responseData != null) {

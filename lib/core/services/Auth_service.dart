@@ -1,11 +1,19 @@
+
+
+
+
+
 import 'dart:convert';
 import 'package:clause_verify/core/services/endpoints.dart';
 import 'package:clause_verify/core/services/network_caller.dart';
 import 'package:clause_verify/core/services/purchase_service.dart';
+import 'package:clause_verify/core/services/notification_service.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
 
 class AuthService {
   static const String _tokenKey = 'token';
@@ -13,6 +21,7 @@ class AuthService {
   static const String _userDataKey = 'user_data';
   static const String _selectedCurrencyKey = 'selected_currency';
   static const String _userPlanLimitKey = 'user_plan_limit';
+  static const String _scanWarningKey = 'pending_scan_warning';
 
   static SharedPreferences? _preferences;
   static String? _token;
@@ -21,6 +30,9 @@ class AuthService {
   static Map<String, dynamic>? _userPlanLimit;
   static String _selectedCurrency = 'USD';
   static String? lastGoogleError;
+
+  /// Pending scan warning: UI (banner) এটা observe করে। empty মানে warning নেই
+  static final RxString scanWarning = ''.obs;
 
   // ─────────────────────────────────────────
   // Init & Ensure Initialized
@@ -58,6 +70,9 @@ class AuthService {
     }
 
     _selectedCurrency = _preferences?.getString(_selectedCurrencyKey) ?? 'USD';
+
+    // Saved scan warning (থাকলে) load করো
+    scanWarning.value = _preferences?.getString(_scanWarningKey) ?? '';
   }
 
   // ─────────────────────────────────────────
@@ -110,6 +125,7 @@ class AuthService {
       }
 
       await syncPurchaseUser();
+      NotificationService.instance.registerForCurrentUser();
     } catch (e) {
       print('❌ Error saving login data: $e');
       rethrow;
@@ -151,6 +167,7 @@ class AuthService {
       }
 
       await syncPurchaseUser();
+      NotificationService.instance.registerForCurrentUser();
     } catch (e) {
       print('❌ Error saving Google login data: $e');
       rethrow;
@@ -221,6 +238,37 @@ class AuthService {
   }
 
   static Map<String, dynamic>? get userPlanLimit => _userPlanLimit;
+
+  // ─────────────────────────────────────────
+  // ✅ Scan Warning Save/Clear
+  // (not_a_contract response-এর "Warning" — next scan পর্যন্ত থাকবে)
+  // ─────────────────────────────────────────
+
+  /// Warning save করো। empty হলে আগেরটা মুছে যাবে
+  static Future<void> saveScanWarning(String text) async {
+    final value = text.trim();
+    if (value.isEmpty) {
+      await clearScanWarning();
+      return;
+    }
+    try {
+      await _ensureInitialized();
+      await _preferences!.setString(_scanWarningKey, value);
+      scanWarning.value = value;
+    } catch (e) {
+      print('❌ Error saving scan warning: $e');
+    }
+  }
+
+  static Future<void> clearScanWarning() async {
+    scanWarning.value = '';
+    try {
+      await _ensureInitialized();
+      await _preferences!.remove(_scanWarningKey);
+    } catch (e) {
+      print('⚠️ Error clearing scan warning: $e');
+    }
+  }
 
   // ─────────────────────────────────────────
   // Bulletproof Integer Parser
@@ -297,6 +345,7 @@ class AuthService {
   static Future<void> logoutUser() async {
     try {
       await _ensureInitialized();
+      await NotificationService.instance.unregisterFromBackend();
       await PurchaseService.logout();
 
       // Google ও Firebase session মুছে ফেলো,
@@ -318,6 +367,7 @@ class AuthService {
       _userData = null;
       _userPlanLimit = null;
       _selectedCurrency = 'USD';
+      scanWarning.value = ''; // অন্য user-এ যেন আগের warning না দেখায়
     } catch (e) {
       print('❌ Error during logout: $e');
       rethrow;

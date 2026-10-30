@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:clause_verify/features/analysis/controller/analysis_result_controller.dart';
 import 'package:clause_verify/features/analysis/model/analysis_result_model.dart';
@@ -191,8 +190,11 @@ class AnalysisResultScreen extends StatelessWidget {
   }
 
   Widget _buildVerdictCard(AnalysisResultController c) {
-    final level = _normalizeLevel(c.overallRisk);
-    final color = _levelColor(level);
+   
+final level = c.verdictLevel.isNotEmpty
+    ? c.verdictLevel
+    : _normalizeLevel(c.overallRisk);
+final color = _levelColor(level);
     final hasRisk = c.overallRisk.isNotEmpty;
     final hasGuidance = c.recommendationGuidance.isNotEmpty;
 
@@ -637,9 +639,64 @@ class AnalysisResultScreen extends StatelessWidget {
     );
   }
 
+  // ───────── Document reference (article / clause order) ─────────
+
+  /// "3" -> "Article 3"; বাকি সব (লম্বা লেখা, "Article 3", "Not in contract") যেমন আছে তেমন
+  String _articleLabel(ImportantTerm t) {
+    final a = t.articleNumber.trim();
+    if (a.isEmpty) return '';
+    return RegExp(r'^\d+$').hasMatch(a) ? '${'article'.tr} $a' : a;
+  }
+
+  /// Card-এর উপরের header: "Clause 1" (ছোট) + "Article 1" (বড়)
+  /// বাঁদিকের রেখা ও Article লেখার রং = card-এর risk color (red / orange / green)
+  Widget _buildReferenceHeader(
+      ImportantTerm term, String articleLabel, Color levelColor) {
+    final hasOrder = term.contractOrder > 0;
+    final headColor = term.isMissing ? _red : levelColor;
+
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.fromLTRB(14.w, 10.h, 14.w, 10.h),
+      decoration: BoxDecoration(
+        color: headColor.withOpacity(0.09),
+        border: Border(
+          left: BorderSide(color: headColor, width: 4),
+          bottom: BorderSide(color: headColor.withOpacity(0.2), width: 1),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (hasOrder)
+            Text('${'contractOrder'.tr} ${term.contractOrder}',
+                style: TextStyle(
+                    color: AppColors.textMuted,
+                    fontSize: 10.5.sp,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.4,
+                    height: 1.3)),
+          if (articleLabel.isNotEmpty) ...[
+            SizedBox(height: hasOrder ? 3.h : 0),
+            Text(articleLabel,
+                style: TextStyle(
+                    color: headColor,
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w800,
+                    height: 1.35)),
+          ],
+        ],
+      ),
+    );
+  }
+
   Widget _buildTermCard(
       AnalysisResultController c, ImportantTerm term, int index) {
     final color = _levelColor(term.level);
+    final articleLabel = _articleLabel(term);
+    final hasReference = articleLabel.isNotEmpty || term.contractOrder > 0;
+    // article_number আর title হুবহু এক হলে (যেমন বাংলা response) title আবার দেখাব না
+    final showTitle = term.termTitle.trim() != term.articleNumber.trim();
 
     return Obx(() {
       final expanded = c.isExpanded(index);
@@ -652,6 +709,7 @@ class AnalysisResultScreen extends StatelessWidget {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 250),
           curve: Curves.easeInOut,
+          clipBehavior: Clip.antiAlias,
           margin: EdgeInsets.only(bottom: 10.h),
           decoration: BoxDecoration(
             color: _card,
@@ -662,8 +720,13 @@ class AnalysisResultScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Header: Clause + Article (রং = risk color)
+              if (hasReference)
+                _buildReferenceHeader(term, articleLabel, color),
+
+              // ───── প্রথম row: icon + title/preview + chevron ─────
               Padding(
-                padding: const EdgeInsets.all(14),
+                padding: EdgeInsets.all(14.w),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -684,14 +747,15 @@ class AnalysisResultScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(term.termTitle,
-                              style: TextStyle(
-                                  color: AppColors.white,
-                                  fontSize: 13.5.sp,
-                                  fontWeight: FontWeight.w600,
-                                  height: 1.3)),
+                          if (showTitle)
+                            Text(term.termTitle,
+                                style: TextStyle(
+                                    color: AppColors.white,
+                                    fontSize: 13.5.sp,
+                                    fontWeight: FontWeight.w600,
+                                    height: 1.3)),
                           if (!expanded && preview.isNotEmpty) ...[
-                            SizedBox(height: 4.h),
+                            SizedBox(height: showTitle ? 4.h : 0),
                             Text(preview,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
@@ -713,13 +777,15 @@ class AnalysisResultScreen extends StatelessWidget {
                   ],
                 ),
               ),
+
+              // ───── নিচের অংশ: পুরো width, icon-এর নিচে কোনো ফাঁকা নেই ─────
               if (expanded)
                 Padding(
                   padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Divider(color: _border, height: 1),
+                      const Divider(color: _border, height: 1), // দাগ ফিরে এল
                       SizedBox(height: 14.h),
                       if (term.lawReference.isNotEmpty) ...[
                         _lawReference(term.lawReference),
@@ -908,7 +974,7 @@ class AnalysisResultScreen extends StatelessWidget {
       case 'high':
         return Icons.warning_rounded;
       case 'medium':
-        return Icons.info_rounded;
+        return Icons.warning_amber_rounded;
       case 'low':
         return Icons.check_circle_rounded;
       default:

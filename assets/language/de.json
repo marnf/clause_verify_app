@@ -631,5 +631,32 @@
     "missingProtection": "Fehlender Schutz",
   "missingProtections": "Fehlende Schutzmaßnahmen",
 
-  "scanAgain": "Erneut scannen"
+  "scanAgain": "Erneut scannen",
+  "article": "Artikel",
+"contractOrder": "Klausel",
+"analysisTakingLongerTitle": "Analyse läuft noch…",
+"analysisTakingLonger": "Die Analyse dauert länger als gewöhnlich. Bitte warten Sie noch einen Moment und lassen Sie die App geöffnet.",
+
+
+
+
+  "liveStatus": "LIVE-STATUS",
+
+  "scanStatusQueued": "Dokument hochgeladen. Warte auf Verarbeitung.",
+  "scanStatusStarted": "Die Dokumentenverarbeitung hat begonnen.",
+  "scanStatusExtracting": "Das hochgeladene PDF oder die Bilder werden gelesen.",
+  "scanStatusTextExtracted": "Dokumenttext extrahiert. Vertragsanalyse wird vorbereitet.",
+  "scanStatusAnalyzing": "Die KI prüft das Dokument.",
+  "scanStatusContractCheck": "Die KI hat eine Vertragseinstufung ermittelt. Ergebnis wird überprüft.",
+  "scanStatusFinalizingAi": "Vertrag bestätigt. Rechtliche Analyse wird abgeschlossen.",
+  "scanStatusSaving": "Analyse abgeschlossen. Ihr Ergebnis wird sicher gespeichert.",
+  "scanStatusCompleted": "Ihre Vertragsanalyse ist bereit.",
+
+
+   "ok": "OK",
+  "notAContractTitle": "Kein Vertrag",
+
+  "notAContractNoScan": "Dieses Dokument sieht nicht wie ein Vertrag aus. Es wurde kein Scan verwendet.",
+  "notAContractScanUsed": "Dieses Dokument sieht nicht wie ein Vertrag aus. Tägliches Limit für kostenlose Ablehnungen erreicht; ein Scan wurde verwendet."
+
 }

@@ -631,5 +631,34 @@
     "missingProtection": "Protección Faltante",
   "missingProtections": "Protecciones Faltantes",
 
-  "scanAgain": "Escanear de nuevo"
+  "scanAgain": "Escanear de nuevo",
+  "article": "Artículo",
+"contractOrder": "Cláusula",
+"analysisTakingLongerTitle": "Analizando todavía…",
+"analysisTakingLonger": "El análisis está tardando más de lo habitual. Espera un poco más y mantén la app abierta.",
+
+
+
+
+
+
+  "liveStatus": "ESTADO EN VIVO",
+
+  "scanStatusQueued": "Documento subido. Esperando procesamiento.",
+  "scanStatusStarted": "El procesamiento del documento ha comenzado.",
+  "scanStatusExtracting": "Leyendo el PDF o las imágenes subidas.",
+  "scanStatusTextExtracted": "Texto del documento extraído. Preparando el análisis del contrato.",
+  "scanStatusAnalyzing": "La IA está revisando el documento.",
+  "scanStatusContractCheck": "La IA devolvió una clasificación de contrato. Verificando resultado.",
+  "scanStatusFinalizingAi": "Contrato confirmado. Finalizando el análisis legal.",
+  "scanStatusSaving": "Análisis completado. Guardando su resultado de forma segura.",
+  "scanStatusCompleted": "Su análisis de contrato está listo.",
+
+
+    "ok": "OK",
+  "notAContractTitle": "No es un contrato",
+
+  "notAContractNoScan": "Este documento no parece un contrato. No se utilizó ningún escaneo.",
+  "notAContractScanUsed": "Este documento no parece un contrato. Se alcanzó el límite diario de rechazos gratuitos; se utilizó un escaneo."
+
 }

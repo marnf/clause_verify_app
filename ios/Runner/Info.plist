@@ -22,24 +22,33 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.929314773106-0adhq1do46a93p2csea4deg7bdprgp0r</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
 	<key>NSCameraUsageDescription</key>
-    <string>ClauseVerify needs camera access to photograph contracts</string>
+	<string>ClauseVerify needs camera access to photograph contracts</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>ClauseVerify needs your location to suggest the correct jurisdiction for contract analysis.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>ClauseVerify needs your location to suggest the correct jurisdiction for contract analysis.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>This app may save processed images to your photo library.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-    <string>ClauseVerify needs photo library access to upload contract images</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-    <string>ClauseVerify needs your location to suggest the correct jurisdiction for contract analysis.</string>
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>ClauseVerify needs your location to suggest the correct jurisdiction for contract analysis.</string>
-	<key>UIFileSharingEnabled</key>
-	<true/>
-	<key>LSSupportsOpeningDocumentsInPlace</key>
-	<true/>
+	<string>ClauseVerify needs photo library access to upload contract images</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -63,6 +72,12 @@
 	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
+	<key>UIFileSharingEnabled</key>
+	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -79,18 +94,6 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.929314773106-0adhq1do46a93p2csea4deg7bdprgp0r</string>
-			</array>
-		</dict>
 	</array>
 </dict>
 </plist>

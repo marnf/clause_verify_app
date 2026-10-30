@@ -632,5 +632,33 @@
   "page": "pagina",
     "missingProtection": "Protezione Mancante",
   "missingProtections": "Protezioni Mancanti",
-  "scanAgain": "Scansiona di nuovo"
+  "scanAgain": "Scansiona di nuovo",
+
+  "article": "Articolo",
+"contractOrder": "Clausola",
+"analysisTakingLongerTitle": "Analisi in corso…",
+"analysisTakingLonger": "L'analisi sta richiedendo più tempo del solito. Attendi ancora un po' e tieni l'app aperta.",
+
+
+
+  "liveStatus": "STATO LIVE",
+
+  "scanStatusQueued": "Documento caricato. In attesa di elaborazione.",
+  "scanStatusStarted": "L'elaborazione del documento è iniziata.",
+  "scanStatusExtracting": "Lettura del PDF o delle immagini caricate.",
+  "scanStatusTextExtracted": "Testo del documento estratto. Preparazione dell'analisi del contratto.",
+  "scanStatusAnalyzing": "L'IA sta revisionando il documento.",
+  "scanStatusContractCheck": "L'IA ha restituito una classificazione del contratto. Verifica del risultato.",
+  "scanStatusFinalizingAi": "Contratto confermato. Finalizzazione dell'analisi legale.",
+  "scanStatusSaving": "Analisi completata. Salvataggio sicuro del risultato.",
+  "scanStatusCompleted": "L'analisi del contratto è pronta.",
+
+
+
+    "ok": "OK",
+  "notAContractTitle": "Non è un contratto",
+
+  "notAContractNoScan": "Questo documento non sembra un contratto. Non è stata utilizzata alcuna scansione.",
+  "notAContractScanUsed": "Questo documento non sembra un contratto. Limite giornaliero di rifiuti gratuiti raggiunto; è stata utilizzata una scansione."
+
 }

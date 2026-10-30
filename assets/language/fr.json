@@ -633,5 +633,35 @@
   "page": "page",
   "missingProtection": "Protection Manquante",
   "missingProtections": "Protections Manquantes",
-  "scanAgain": "Scanner à nouveau"
+  "scanAgain": "Scanner à nouveau",
+  "article": "Article",
+"contractOrder": "Clause",
+"analysisTakingLongerTitle": "Analyse en cours…",
+"analysisTakingLonger": "L'analyse prend plus de temps que prévu. Veuillez patienter encore un peu et garder l'application ouverte.",
+
+
+
+
+
+  "liveStatus": "STATUT EN DIRECT",
+
+  "scanStatusQueued": "Document téléversé. En attente de traitement.",
+  "scanStatusStarted": "Le traitement du document a commencé.",
+  "scanStatusExtracting": "Lecture du PDF ou des images téléversés.",
+  "scanStatusTextExtracted": "Texte du document extrait. Préparation de l'analyse du contrat.",
+  "scanStatusAnalyzing": "L'IA examine le document.",
+  "scanStatusContractCheck": "L'IA a renvoyé une classification de contrat. Vérification du résultat.",
+  "scanStatusFinalizingAi": "Contrat confirmé. Finalisation de l'analyse juridique.",
+  "scanStatusSaving": "Analyse terminée. Enregistrement sécurisé de votre résultat.",
+  "scanStatusCompleted": "Votre analyse de contrat est prête.",
+
+
+
+
+    "ok": "OK",
+  "notAContractTitle": "Pas un contrat",
+
+  "notAContractNoScan": "Ce document ne ressemble pas à un contrat. Aucun scan n'a été utilisé.",
+  "notAContractScanUsed": "Ce document ne ressemble pas à un contrat. Limite quotidienne de refus gratuits atteinte ; un scan a été utilisé."
+
 }

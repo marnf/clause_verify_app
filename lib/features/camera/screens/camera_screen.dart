@@ -1,5 +1,6 @@
 
 import 'package:clause_verify/core/common/widgets/app_bar.dart';
+import 'package:clause_verify/core/services/scan_warning_service.dart';
 import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:clause_verify/core/utils/constants/app_sizer.dart';
 import 'package:clause_verify/features/camera/controllers/camera_controller.dart';
@@ -21,7 +22,6 @@ class CameraScreen extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          // ✅ FIX: SafeArea দিয়ে কনটেন্ট phone-এর navigation bar-এর ওপরে শেষ হবে
           SafeArea(
             top: false, // উপরের অংশ AppBar নিজেই সামলায়
             bottom: true, // navigation bar-এর নিচে কিছু দেখাবে না
@@ -37,6 +37,9 @@ class CameraScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 16.h),
+
+                        // ── Pending Warning (next scan পর্যন্ত থাকবে) ──
+                        const ScanWarningBanner(),
 
                         // ── Action Buttons ──
                         _buildActionButtons(controller),
@@ -444,7 +447,7 @@ class CameraScreen extends StatelessWidget {
   }
 
   // ══════════════════════════════════════
-  //  Sticky Submit Button
+  //  Sticky Submit Button (spinner nai, modal-e progress dekhay)
   // ══════════════════════════════════════
   Widget _buildStickySubmitButton(CameraController controller) {
     return Obx(() {
@@ -469,37 +472,14 @@ class CameraScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Center(
-              child: isUploading
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: AppColors.cream,
-                          ),
-                        ),
-                        SizedBox(width: 10.w),
-                        Text(
-                          'analysing'.tr,
-                          style: TextStyle(
-                            color: AppColors.cream,
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    )
-                  : Text(
-                      'submitForAnalysis'.tr,
-                      style: TextStyle(
-                        color: (hasPhotos) ? AppColors.black : AppColors.textMuted,
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+              child: Text(
+                'submitForAnalysis'.tr,
+                style: TextStyle(
+                  color: hasPhotos ? AppColors.black : AppColors.textMuted,
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ),
         ),

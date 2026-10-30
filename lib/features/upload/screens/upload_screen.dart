@@ -1,4 +1,7 @@
+
+
 import 'package:clause_verify/core/common/widgets/app_bar.dart';
+import 'package:clause_verify/core/services/scan_warning_service.dart';
 import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:clause_verify/core/utils/constants/app_sizer.dart';
 import 'package:clause_verify/features/upload/controllers/upload_controller.dart';
@@ -48,6 +51,9 @@ class UploadScreen extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 24.h),
+
+                        // ── Pending Warning (next scan পর্যন্ত থাকবে) ──
+                        const ScanWarningBanner(),
 
                         // ── Dashed Upload Area ──
                         _buildUploadArea(controller),
@@ -572,8 +578,8 @@ class UploadScreen extends StatelessWidget {
     );
   }
 
-    // ══════════════════════════════════════
-  //  Sticky Submit Button
+  // ══════════════════════════════════════
+  //  Sticky Submit Button (spinner nai, modal-e progress dekhay)
   // ══════════════════════════════════════
   Widget _buildStickySubmitButton(UploadController controller) {
     return Obx(() {
@@ -598,37 +604,14 @@ class UploadScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Center(
-              child: isUploading
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Color(0xFFF5F5F0), // off-white
-                          ),
-                        ),
-                        SizedBox(width: 10.w),
-                        Text(
-                          'analysing'.tr,
-                          style: TextStyle(
-                            color: const Color(0xFFF5F5F0), // off-white
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    )
-                  : Text(
-                      'submitForAnalysis'.tr,
-                      style: TextStyle(
-                        color: (hasFiles) ? AppColors.black : AppColors.textMuted,
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+              child: Text(
+                'submitForAnalysis'.tr,
+                style: TextStyle(
+                  color: hasFiles ? AppColors.black : AppColors.textMuted,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ),
         ),

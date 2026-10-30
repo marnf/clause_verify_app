@@ -1,4 +1,5 @@
 import 'package:clause_verify/core/services/auth_service.dart';
+import 'package:clause_verify/core/services/notification_service.dart';
 import 'package:clause_verify/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -120,13 +121,15 @@ class SplashController extends GetxController
 
       // Navigate to next screen after animation completes
       Future.delayed(const Duration(milliseconds: 3200), () {
-        // Get.offAllNamed(AppRoute.onboardingScreen);
-
         if (AuthService.isLoggedIn) {
-  
           Get.offAllNamed(AppRoute.navBar);
+
+          // 🔔 App বন্ধ অবস্থায় notification tap করে খুলে থাকলে,
+          // home-এ পৌঁছানোর পর সেই analysis-এর result screen খুলবে
+          Future.delayed(const Duration(milliseconds: 600), () {
+            NotificationService.instance.consumePendingNavigation();
+          });
         } else {
-       
           Get.offAllNamed(AppRoute.onboardingScreen);
         }
       });
