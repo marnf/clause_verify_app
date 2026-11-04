@@ -136,6 +136,19 @@ class ScanWarningService {
 class ScanWarningBanner extends StatelessWidget {
   const ScanWarningBanner({Key? key}) : super(key: key);
 
+  /// Backend থেকে আসা English warning text-কে user-এর selected language-এ
+  /// convert করে। Match না করলে backend-এর original text-ই দেখায়।
+  static String _localized(String raw) {
+    final lower = raw.toLowerCase();
+
+    // "The next non-contract document today will use a scan."
+    if (lower.contains('next non-contract') && lower.contains('scan')) {
+      return 'scanWarningNextNonContract'.tr;
+    }
+
+    return raw;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -161,7 +174,7 @@ class ScanWarningBanner extends StatelessWidget {
               SizedBox(width: 10.w),
               Expanded(
                 child: Text(
-                  text,
+                  _localized(text),
                   style: TextStyle(
                     color: AppColors.warning,
                     fontSize: 13.sp,

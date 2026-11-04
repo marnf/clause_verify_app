@@ -8,10 +8,15 @@ class HistoryModel {
   final String recommendation;
   final DateTime? createdAt;
 
-  // Optional: backend future e pathale line ta dekhabe
-  final int? highRiskCount;
-  final int? mediumRiskCount;
-  final int? missingProtectionCount;
+  /// false hole card er upore "New" tag dekhabe
+  final bool isRead;
+
+  // risk_breakdown থেকে
+  final int? lowRisk;
+  final int? highRisk;
+  final int? mediumRisk;
+  final int? foundClause;
+  final int? missingClause;
 
   HistoryModel({
     required this.id,
@@ -19,10 +24,13 @@ class HistoryModel {
     required this.country,
     required this.overallRisk,
     required this.recommendation,
+    this.isRead = true,
     this.createdAt,
-    this.highRiskCount,
-    this.mediumRiskCount,
-    this.missingProtectionCount,
+    this.lowRisk,
+    this.highRisk,
+    this.mediumRisk,
+    this.foundClause,
+    this.missingClause,
   });
 
   factory HistoryModel.fromJson(Map<String, dynamic> json) {
@@ -33,37 +41,81 @@ class HistoryModel {
       return int.tryParse(v.toString());
     }
 
+    // is_read: bool / "True" / "False" / 1 / 0 shob handle kore.
+    // Field na thakle ba null hole read dhore nibe (faltu "New" dekhabe na)
+    bool b(dynamic v, {bool fallback = true}) {
+      if (v == null) return fallback;
+      if (v is bool) return v;
+      if (v is num) return v != 0;
+      final str = v.toString().trim().toLowerCase();
+      if (str == 'true' || str == '1') return true;
+      if (str == 'false' || str == '0') return false;
+      return fallback;
+    }
+
+    // risk_breakdown null হলেও crash করবে না
+    final rawBreakdown = json['risk_breakdown'];
+    final Map<String, dynamic> breakdown = rawBreakdown is Map
+        ? Map<String, dynamic>.from(rawBreakdown)
+        : <String, dynamic>{};
+
     return HistoryModel(
       id: s(json['id']),
       title: s(json['title']),
       country: s(json['country']),
       overallRisk: s(json['overall_risk']),
       recommendation: s(json['recommendation']),
+      isRead: b(json['is_read']),
       createdAt: DateTime.tryParse(s(json['created_at']))?.toLocal(),
-      highRiskCount: n(json['high_risk_count']),
-      mediumRiskCount: n(json['medium_risk_count']),
-      missingProtectionCount: n(json['missing_protection_count']),
+      lowRisk: n(breakdown['low_risk']),
+      highRisk: n(breakdown['high_risk']),
+      mediumRisk: n(breakdown['medium_risk']),
+      foundClause: n(breakdown['found_clause']),
+      missingClause: n(breakdown['missing_clause']),
     );
   }
 
-  bool get hasCounts =>
-      highRiskCount != null ||
-      mediumRiskCount != null ||
-      missingProtectionCount != null;
+  /// Local e isRead change korar jonno
+  HistoryModel copyWith({bool? isRead}) {
+    return HistoryModel(
+      id: id,
+      title: title,
+      country: country,
+      overallRisk: overallRisk,
+      recommendation: recommendation,
+      isRead: isRead ?? this.isRead,
+      createdAt: createdAt,
+      lowRisk: lowRisk,
+      highRisk: highRisk,
+      mediumRisk: mediumRisk,
+      foundClause: foundClause,
+      missingClause: missingClause,
+    );
+  }
 
-  /// "high" | "medium" | "low" | "" (চেনা না গেলে খালি)
-  /// Counts thakle counts theke, na hole overall_risk theke
+  bool get hasBreakdown =>
+      lowRisk != null || highRisk != null || mediumRisk != null;
+
+  /// "high" | "medium" | "low" | "" (breakdown না থাকলে খালি)
+  ///
+  /// শুধু risk_breakdown এর সংখ্যা থেকে ঠিক হয়, ভাষা/টেক্সট দেখে না।
+  /// Logic:
+  ///   high >= medium && high >= low  -> high
+  ///   medium >= low                  -> medium
+  ///   otherwise                      -> low
   String get level {
-    if (hasCounts) {
-      if ((highRiskCount ?? 0) > 0) return 'high';
-      if ((mediumRiskCount ?? 0) > 0) return 'medium';
-      return 'low';
-    }
-    final r = overallRisk.toLowerCase();
-    if (r.contains('high')) return 'high';
-    if (r.contains('medium') || r.contains('moderate')) return 'medium';
-    if (r == 'low' || r.startsWith('low ')) return 'low';
-    return '';
+    if (!hasBreakdown) return '';
+
+    final low = lowRisk ?? 0;
+    final high = highRisk ?? 0;
+    final medium = mediumRisk ?? 0;
+
+    // সব 0 হলে কিছু বলার নেই -> grey
+    if (low == 0 && high == 0 && medium == 0) return '';
+
+    if (high >= medium && high >= low) return 'high';
+    if (medium >= low) return 'medium';
+    return 'low';
   }
 
   /// "accept" | "review" | "reject" | "" (চেনা না গেলে খালি)
@@ -78,7 +130,7 @@ class HistoryModel {
   /// Card title: Document name / contract type
   String get displayTitle => title.isNotEmpty ? title : 'Untitled Document';
 
-  /// Card subtitle: "Sep 29, 2026 · Canada"
+  /// Card subtitle: "Oct 30, 2026 · France"
   String get subtitle {
     const months = [
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -93,13 +145,13 @@ class HistoryModel {
     return parts.join(' · ');
   }
 
-  /// "2 high risk · 1 medium risk · 1 missing protection" (0 gulo skip hobe)
+  /// "10 high risk · 4 medium risk · 1 missing protection" (0 গুলো skip হবে)
   String get countsLine {
     final parts = <String>[];
-    if ((highRiskCount ?? 0) > 0) parts.add('$highRiskCount high risk');
-    if ((mediumRiskCount ?? 0) > 0) parts.add('$mediumRiskCount medium risk');
-    if ((missingProtectionCount ?? 0) > 0) {
-      parts.add('$missingProtectionCount missing protection');
+    if ((highRisk ?? 0) > 0) parts.add('$highRisk high risk');
+    if ((mediumRisk ?? 0) > 0) parts.add('$mediumRisk medium risk');
+    if ((missingClause ?? 0) > 0) {
+      parts.add('$missingClause missing protection');
     }
     return parts.join(' · ');
   }

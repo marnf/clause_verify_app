@@ -12,6 +12,11 @@
     <!-- Location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
+    <!-- ClauseVerify ফোল্ডারে সেভ: শুধু Android 9 ও নিচের জন্য -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+
     <!-- Google Play policy: gallery permission লাগবে না, বাইরে থেকে merge হলেও সরাও -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" tools:node="remove" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" tools:node="remove" />
@@ -33,7 +38,7 @@
     </queries>
 
     <application
-        android:label="Clause Verify"
+        android:label="ClauseVerify"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

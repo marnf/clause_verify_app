@@ -3,15 +3,30 @@ import 'package:clause_verify/core/localization/localization_controller.dart';
 import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:clause_verify/core/utils/constants/app_sizer.dart';
 import 'package:clause_verify/features/home/controllers/home_controller.dart';
+import 'package:clause_verify/features/home/model/scan_job_status_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   HomeController get controller => Get.isRegistered<HomeController>()
       ? Get.find<HomeController>()
       : Get.put(HomeController());
+
+  @override
+  void initState() {
+    super.initState();
+    // Home screen jotobar toiri hobe, totobar latest job status abar check hobe
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) controller.onHomeVisible();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +46,7 @@ class HomeScreen extends StatelessWidget {
                     SizedBox(height: 28.h),
                     _buildActionSection(),
                     SizedBox(height: 28.h),
+                    _buildJobStatusCard(),
                     _buildHowItWorksSection(),
                     SizedBox(height: 16.h),
                     _buildUpgradeCard(),
@@ -155,7 +171,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-    // ══════════════ Upload + Scan cards (ekta common lock box) ══════════════
+  // ══════════════ Upload + Scan cards (ekta common lock box) ══════════════
   Widget _buildActionSection() {
     return Obx(() {
       final locked = controller.isLocked;
@@ -248,12 +264,11 @@ class HomeScreen extends StatelessWidget {
             Container(
               width: 52.w,
               height: 52.h,
-                            decoration: BoxDecoration(
+              decoration: BoxDecoration(
                 color: AppColors.navy,
                 borderRadius: BorderRadius.circular(14),
               ),
-              child:
-                  Icon(icon, color: AppColors.primaryColor, size: 26.sp),
+              child: Icon(icon, color: AppColors.primaryColor, size: 26.sp),
             ),
             SizedBox(width: 16.w),
             Expanded(
@@ -278,6 +293,153 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // ══════════════ Latest scan job card ══════════════
+  // jobStatus null hole card-i dekhabe na. Null hoy jokhon:
+  //  - last 5 min-e kono scan nai
+  //  - COMPLETED + is_read true (user age dekhe felechhe)
+
+  // phase -> localized title (backend text na, stage/status theke)
+  String _jobTitle(ScanJobStatus job) {
+    switch (job.phase) {
+      case 'queued':
+        return 'jobStageQueued'.tr;
+      case 'analyzing':
+        return 'jobStageAnalyzing'.tr;
+      case 'completed':
+        return 'jobStageCompleted'.tr;
+      case 'failed':
+        return 'jobStageFailed'.tr;
+      default:
+        return job.stage; // chena jay na hole backend-er stage
+    }
+  }
+
+  String _jobMessage(ScanJobStatus job) {
+    switch (job.phase) {
+      case 'queued':
+        return 'jobMsgQueued'.tr;
+      case 'analyzing':
+        return 'jobMsgAnalyzing'.tr;
+      case 'completed':
+        return 'jobMsgCompleted'.tr;
+      case 'failed':
+        return 'jobMsgFailed'.tr;
+      default:
+        return job.message; // chena jay na hole backend-er message
+    }
+  }
+
+  Widget _buildJobStatusCard() {
+    return Obx(() {
+      final job = controller.jobStatus.value;
+      if (job == null) return const SizedBox.shrink();
+
+      final phase = job.phase;
+      final isCompleted = job.isCompleted;
+      final isFailed = job.isFailed;
+      final isActive = job.isActive;
+      final opening = controller.isOpeningResult.value;
+
+      final Color color = isCompleted
+          ? AppColors.success
+          : (isFailed ? AppColors.error : AppColors.primaryColor);
+
+      final Widget icon;
+      if (isActive) {
+        icon = _SpinningIcon(
+          icon: phase == 'queued'
+              ? Icons.hourglass_top_rounded
+              : Icons.sync_rounded,
+          color: color,
+          size: 24.sp,
+        );
+      } else {
+        icon = Icon(
+          isCompleted ? Icons.check_circle_rounded : Icons.error_rounded,
+          color: color,
+          size: 24.sp,
+        );
+      }
+
+      return Padding(
+        padding: EdgeInsets.only(bottom: 16.h),
+        child: GestureDetector(
+          onTap: isCompleted && !opening ? controller.openJobResult : null,
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(16.w),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.07),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: color.withValues(alpha: 0.4), width: 1),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 44.w,
+                      height: 44.w,
+                      decoration: BoxDecoration(
+                        color: color.withValues(alpha: 0.15),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(child: icon),
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(_jobTitle(job),
+                              style: TextStyle(
+                                  color: color,
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.w800)),
+                          SizedBox(height: 3.h),
+                          Text(_jobMessage(job),
+                              style: TextStyle(
+                                  color: AppColors.textSubtle,
+                                  fontSize: 12.5.sp,
+                                  height: 1.4)),
+                        ],
+                      ),
+                    ),
+                    if (isCompleted) ...[
+                      SizedBox(width: 8.w),
+                      opening
+                          ? SizedBox(
+                              width: 18.w,
+                              height: 18.w,
+                              child: CircularProgressIndicator(
+                                  strokeWidth: 2, color: color))
+                          : Icon(Icons.chevron_right_rounded,
+                              color: color, size: 24.sp),
+                    ],
+                  ],
+                ),
+                // "Tap to view result" — card-er majhkhane
+                if (isCompleted) ...[
+                  SizedBox(height: 12.h),
+                  Center(
+                    child: Text('tapToViewResult'.tr,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: color,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600)),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      );
+    });
   }
 
   // ══════════════ How It Works ══════════════
@@ -337,7 +499,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   // ══════════════ Upgrade card ══════════════
-    Widget _buildUpgradeCard() {
+  Widget _buildUpgradeCard() {
     return GestureDetector(
       onTap: controller.navigateToPremium,
       child: Container(
@@ -381,6 +543,44 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// ঘুরতে থাকা icon (QUEUED / ANALYZING এর জন্য)
+class _SpinningIcon extends StatefulWidget {
+  final IconData icon;
+  final Color color;
+  final double size;
+
+  const _SpinningIcon({
+    required this.icon,
+    required this.color,
+    required this.size,
+  });
+
+  @override
+  State<_SpinningIcon> createState() => _SpinningIconState();
+}
+
+class _SpinningIconState extends State<_SpinningIcon>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _anim = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1400),
+  )..repeat();
+
+  @override
+  void dispose() {
+    _anim.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RotationTransition(
+      turns: _anim,
+      child: Icon(widget.icon, color: widget.color, size: widget.size),
     );
   }
 }

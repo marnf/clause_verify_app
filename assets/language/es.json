@@ -659,6 +659,20 @@
   "notAContractTitle": "No es un contrato",
 
   "notAContractNoScan": "Este documento no parece un contrato. No se utilizó ningún escaneo.",
-  "notAContractScanUsed": "Este documento no parece un contrato. Se alcanzó el límite diario de rechazos gratuitos; se utilizó un escaneo."
+  "notAContractScanUsed": "Este documento no parece un contrato. Se alcanzó el límite diario de rechazos gratuitos; se utilizó un escaneo.",
+    "jobStageQueued": "En cola",
+  "jobStageAnalyzing": "Analizando",
+  "jobStageCompleted": "Análisis completado",
+  "jobStageFailed": "Error en el análisis",
+  "jobMsgQueued": "Documento subido. En espera de procesamiento.",
+    "jobMsgAnalyzing": "Tu último contrato subido todavía se está analizando.",
+  "jobMsgCompleted": "El análisis de tu último contrato subido está listo.",
+  "jobMsgFailed": "Algo salió mal al analizar tu documento.",
+  "jobId": "ID del trabajo",
+  "tapToViewResult": "Toca para ver el resultado",
+  "resultLoadFailed": "No se pudo cargar el resultado. Inténtalo de nuevo.",
+
+  "newTag": "Nuevo",
+  "scanWarningNextNonContract": "El próximo documento que no sea un contrato usará un escaneo hoy."
 
 }

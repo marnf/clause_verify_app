@@ -39,12 +39,19 @@ class Endpoints {
   // 🆕 Live scan progress polling: GET {scanJobs}{uuid}/?after_event_id=N
   static const String scanJobs = "$baseUrl/api/files/scan-jobs/";
 
+  // 🆕 Home screen card: সবশেষ ৫ মিনিটের scan job-এর অবস্থা
+  static const String latestScanStatus =
+      "$baseUrl/api/files/scan-jobs/latest-status/";
+
   // for delete
   static const String deleteAccount = "$baseUrl/api/auth/delete-account/";
 
-    // 🔔 Push notification device token
+  // 🔔 Push notification device token
   static const String notificationDevices =
       "$baseUrl/api/files/notifications/devices/";
 
-    
+
+  // 🆕 Mark as read: PATCH {fileAnalyses}{id}/mark-as-read/
+  // (note: ekhane "analyses", uporer fileAnalysis e "analysis")
+  static const String fileAnalyses = "$baseUrl/api/files/analyses/";
 }

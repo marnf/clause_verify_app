@@ -662,6 +662,21 @@
   "notAContractTitle": "Pas un contrat",
 
   "notAContractNoScan": "Ce document ne ressemble pas à un contrat. Aucun scan n'a été utilisé.",
-  "notAContractScanUsed": "Ce document ne ressemble pas à un contrat. Limite quotidienne de refus gratuits atteinte ; un scan a été utilisé."
+  "notAContractScanUsed": "Ce document ne ressemble pas à un contrat. Limite quotidienne de refus gratuits atteinte ; un scan a été utilisé.",
+
+    "jobStageQueued": "En file d'attente",
+  "jobStageAnalyzing": "Analyse en cours",
+  "jobStageCompleted": "Analyse terminée",
+  "jobStageFailed": "Échec de l'analyse",
+  "jobMsgQueued": "Document téléversé. En attente de traitement.",
+    "jobMsgAnalyzing": "Votre dernier contrat téléversé est toujours en cours d'analyse.",
+    "jobMsgCompleted": "L'analyse de votre dernier contrat téléversé est prête.",
+  "jobMsgFailed": "Un problème est survenu lors de l'analyse de votre document.",
+  "jobId": "ID de la tâche",
+  "tapToViewResult": "Appuyez pour voir le résultat",
+  "resultLoadFailed": "Impossible de charger le résultat. Veuillez réessayer.",
+
+  "newTag": "Nouveau",
+  "scanWarningNextNonContract": "Le prochain document qui n'est pas un contrat utilisera un scan aujourd'hui."
 
 }

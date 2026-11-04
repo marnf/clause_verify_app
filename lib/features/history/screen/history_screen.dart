@@ -19,7 +19,6 @@ class HistoryScreen extends StatelessWidget {
   static const Color _card = AppColors.surface;
   static const Color _border = AppColors.cardBorder;
   static const Color _red = AppColors.error;
-  static const Color _orange = AppColors.warning;
   static const Color _green = AppColors.success;
   static const Color _grey = AppColors.textMuted;
 
@@ -158,11 +157,14 @@ class HistoryScreen extends StatelessWidget {
   }
 
   // Card: Title / Subtitle (date · country) / Risk label / Counts line
+  // Unread hole top-right corner e "New" badge (card er bhitore)
   Widget _buildHistoryCard(HistoryModel item) {
+    // রং শুধু risk_breakdown থেকে ঠিক হওয়া level এর উপর নির্ভর করে
     final Color riskColor = _levelColor(item.level);
     final String subtitle = item.subtitle;
     final String riskLabel = _riskLabel(item);
     final String countsLine = item.countsLine;
+    final bool isNew = !item.isRead;
 
     return GestureDetector(
       onTap: () => controller.navigateToDetails(item),
@@ -171,90 +173,151 @@ class HistoryScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: _card,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: _border, width: 1),
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Left colored bar
-              Container(width: 5.w, color: riskColor),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(16.w),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 44.w,
-                        height: 44.w,
-                        decoration: BoxDecoration(
-                          color: riskColor.withOpacity(0.12),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Icon(Icons.description_outlined,
-                            color: riskColor, size: 22.sp),
-                      ),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Title
-                            Text(
-                              item.displayTitle,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: AppColors.white,
-                                fontSize: 15.5.sp,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            // Subtitle
-                            if (subtitle.isNotEmpty) ...[
-                              SizedBox(height: 3.h),
-                              Text(
-                                subtitle,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: AppColors.textMuted,
-                                  fontSize: 12.5.sp,
-                                ),
-                              ),
-                            ],
-                            // Risk level label
-                            if (riskLabel.isNotEmpty) ...[
-                              SizedBox(height: 8.h),
-                              _riskBadge(riskLabel, riskColor),
-                            ],
-                            // Counts line
-                            if (countsLine.isNotEmpty) ...[
-                              SizedBox(height: 4.h),
-                              Text(
-                                countsLine,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                                                style: TextStyle(
-                                  color: AppColors.textMuted,
-                                  fontSize: 11.5.sp,
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                                Icon(Icons.chevron_right_rounded,
-                          color: AppColors.textMuted, size: 24.sp),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+          border: Border.all(
+            // Unread card er border e halka gold highlight
+            color: isNew ? _gold.withOpacity(0.45) : _border,
+            width: 1,
           ),
         ),
+        // Clip kore dey, tai badge card er rounded corner er sathe mile jay
+        clipBehavior: Clip.antiAlias,
+        child: Stack(
+          children: [
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Left colored bar
+                  Container(width: 5.w, color: riskColor),
+                  Expanded(
+                    child: Padding(
+                      // Unread hole upore ektu beshi jayga, jate badge er nichhe title na pore
+                      padding: EdgeInsets.fromLTRB(
+                        16.w,
+                        isNew ? 26.h : 16.w,
+                        16.w,
+                        16.w,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 44.w,
+                            height: 44.w,
+                            decoration: BoxDecoration(
+                              color: riskColor.withOpacity(0.12),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(Icons.description_outlined,
+                                color: riskColor, size: 22.sp),
+                          ),
+                          SizedBox(width: 12.w),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Title
+                                Text(
+                                  item.displayTitle,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: AppColors.white,
+                                    fontSize: 15.5.sp,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                // Subtitle
+                                if (subtitle.isNotEmpty) ...[
+                                  SizedBox(height: 3.h),
+                                  Text(
+                                    subtitle,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: AppColors.textMuted,
+                                      fontSize: 12.5.sp,
+                                    ),
+                                  ),
+                                ],
+                                // Risk level label
+                                if (riskLabel.isNotEmpty) ...[
+                                  SizedBox(height: 8.h),
+                                  _riskBadge(riskLabel, riskColor),
+                                ],
+                                // Counts line
+                                if (countsLine.isNotEmpty) ...[
+                                  SizedBox(height: 4.h),
+                                  Text(
+                                    countsLine,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: AppColors.textMuted,
+                                      fontSize: 11.5.sp,
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                          Icon(Icons.chevron_right_rounded,
+                              color: AppColors.textMuted, size: 24.sp),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // "New" badge: top-right corner, card er bhitore
+            if (isNew)
+              Positioned(
+                top: 0,
+                right: 0,
+                child: _newBadge(),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Amazon-style corner badge: top-right e lege thake, shudhu nicher-bam kon gola
+  Widget _newBadge() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            _gold,
+            _gold.withOpacity(0.8),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        // Top-right ta card er Clip.antiAlias diye nijei gol hoye jabe
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(12),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.auto_awesome_rounded,
+              size: 11.sp, color: AppColors.black),
+          SizedBox(width: 4.w),
+          Text(
+            'newTag'.tr.toUpperCase(),
+            style: TextStyle(
+              color: AppColors.black,
+              fontSize: 10.5.sp,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0.8,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -298,12 +361,13 @@ class HistoryScreen extends StatelessWidget {
     }
   }
 
+  // high -> red, medium -> gold, low -> green
   Color _levelColor(String level) {
     switch (level) {
       case 'high':
         return _red;
       case 'medium':
-        return _orange;
+        return _gold;
       case 'low':
         return _green;
       default:

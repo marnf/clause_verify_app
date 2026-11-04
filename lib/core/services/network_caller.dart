@@ -125,23 +125,40 @@ class NetworkCaller {
     }
   }
 
-  Future<ResponseData> patchRequest(
+   Future<ResponseData> patchRequest(
     String endpoint, {
     Map<String, dynamic>? body,
     String? token,
+    bool requiresAuth = true, // 🆕 postRequest er moto
+    Map<String, String>? headers, // 🆕 extra header
   }) async {
     AppLoggerHelper.info('PATCH Request: $endpoint');
     AppLoggerHelper.info('Request Body: ${jsonEncode(body)}');
 
     try {
+      final requestHeaders = <String, String>{
+        'Content-type': 'application/json',
+      };
+
+      if (headers != null && headers.isNotEmpty) {
+        requestHeaders.addAll(headers);
+      }
+
+      // ✅ Bearer prefix shoho token (age Bearer chilo na)
+      if (requiresAuth) {
+        final authToken = token ?? AuthService.token;
+        if (authToken != null && authToken.isNotEmpty) {
+          requestHeaders['Authorization'] = 'Bearer $authToken';
+        }
+      }
+
       final Response response = await patch(
         Uri.parse(endpoint),
-        headers: {
-          'Authorization': token ?? AuthService.token.toString(),
-          'Content-type': 'application/json',
-        },
-        body: jsonEncode(body),
+        headers: requestHeaders,
+        // body na dile null jabe, tai body: null hole kichu pathabe na
+        body: body != null ? jsonEncode(body) : null,
       ).timeout(Duration(seconds: timeoutDuration));
+
       return _handleResponse(response);
     } catch (e) {
       return _handleError(e);

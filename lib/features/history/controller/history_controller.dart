@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:clause_verify/core/services/endpoints.dart';
 import 'package:clause_verify/core/services/network_caller.dart';
-import 'package:clause_verify/core/utils/constants/app_colors.dart';
-import 'package:clause_verify/features/analysis/model/analysis_result_model.dart';
 import 'package:clause_verify/features/analysis/controller/analysis_result_controller.dart';
 import 'package:clause_verify/features/history/model/history_model.dart';
 import 'package:clause_verify/routes/app_routes.dart';
@@ -117,60 +115,31 @@ class HistoryController extends GetxController {
     }
   }
 
-  // ── Navigate to detail: fetch detail API then go to AnalysisResultScreen ──
-  Future<void> navigateToDetails(HistoryModel item) async {
+  // ── Local list e item ke read mark kora (New badge sathe sathe soray dey) ──
+  // AnalysisResultController mark-as-read API success hole eta call kore
+  void markAsReadLocally(String id) {
+    final index = historyList.indexWhere((e) => e.id == id);
+    if (index == -1) return;
+
+    final old = historyList[index];
+    if (old.isRead) return;
+
+    historyList[index] = old.copyWith(isRead: true);
+  }
+
+  // ── Navigate to detail: shudhu id pass kori ──
+  // Report GET kora ar is_read false hole mark-as-read PATCH kora
+  // AnalysisResultController nijei korbe
+  void navigateToDetails(HistoryModel item) {
+    // Delete existing controller so fresh one is created by binding
     try {
-      // Show loading dialog
-      Get.dialog(
-        WillPopScope(
-          onWillPop: () async => false,
-          child: Center(
-            child: CircularProgressIndicator(color: AppColors.primaryColor),
-          ),
-        ),
-        barrierDismissible: false,
-      );
+      Get.delete<AnalysisResultController>(force: true);
+    } catch (_) {}
 
-      final response = await _networkCaller.getRequest(
-        '${Endpoints.fileAnalysis}${item.id}/',
-      );
-
-      Get.back(); // Close loading dialog
-
-      if (response.isSuccess && response.responseData != null) {
-        final analysisResult =
-            AnalysisResultModel.fromJson(response.responseData);
-
-        // Delete existing controller so fresh one is created by binding
-        try {
-          Get.delete<AnalysisResultController>(force: true);
-        } catch (_) {}
-
-        // Navigate to AnalysisResultScreen with the data
-        Get.toNamed(
-          AppRoute.analysisResultScreen,
-          arguments: analysisResult,
-        );
-      } else {
-        Get.snackbar(
-          'error'.tr,
-          response.errorMessage ?? 'failedToLoadAnalysisDetails'.tr,
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: AppColors.surface,
-          colorText: AppColors.white,
-        );
-      }
-    } catch (e) {
-      if (Get.isDialogOpen == true) Get.back();
-
-      Get.snackbar(
-        'error'.tr,
-        'failedToLoadAnalysisDetails'.tr,
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: AppColors.surface,
-        colorText: AppColors.white,
-      );
-    }
+    Get.toNamed(
+      AppRoute.analysisResultScreen,
+      arguments: item.id,
+    );
   }
 
   // ── Pull to refresh ──

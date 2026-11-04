@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'package:clause_verify/features/nav_bar/controllers/nav_bar_controller.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,9 @@ import 'package:clause_verify/core/utils/constants/app_colors.dart';
 import 'package:clause_verify/core/utils/constants/app_sizer.dart';
 import 'package:clause_verify/features/home/controllers/home_controller.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:file_picker/file_picker.dart'; // ✅ flutter_file_dialog এর বদলে file_picker ব্যবহার করা হচ্ছে
+import 'package:media_store_plus/media_store_plus.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class PdfViewerScreen extends StatefulWidget {
   const PdfViewerScreen({Key? key}) : super(key: key);
@@ -20,6 +21,9 @@ class PdfViewerScreen extends StatefulWidget {
 }
 
 class _PdfViewerScreenState extends State<PdfViewerScreen> {
+  // এই অ্যাপের সব download এই ফোল্ডারে যাবে
+  static const String _folderName = 'ClauseVerify';
+
   String pdfUrl = '';
   final RxString localPath = ''.obs;
   final RxBool isDownloadingFile = true.obs;
@@ -69,49 +73,74 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
   }
 
   // ══════════════════════════════════════
-  //  ✅ FIXED: file_picker দিয়ে cross-platform save
-  //  (flutter_file_dialog এর বদলে — Android + iOS দুটোতেই কাজ করে)
+  //  ✅ "ClauseVerify" ফোল্ডারে সেভ
+  //  Android: Documents/ClauseVerify/
+  //  iOS: Files অ্যাপ > On My iPhone > ClauseVerify
   // ══════════════════════════════════════
   Future<void> _saveToDevice() async {
     if (localPath.value.isEmpty || isSavingToDevice.value) return;
+
+    File? tempFile;
     try {
       isSavingToDevice.value = true;
 
-      final file = File(localPath.value);
-      final bytes = await file.readAsBytes();
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final fileName = 'ClauseVerify_Report_$timestamp.pdf';
 
-      // bytes পাস করা must — এটা ছাড়া মোবাইল প্ল্যাটফর্মে ফাইল আসলে write হয় না,
-      // শুধু dialog খুলে কিন্তু কিছু save হয় না
-      final String? outputPath = await FilePicker.platform.saveFile(
-        dialogTitle: 'saveReport'.tr,
-        fileName: fileName,
-        bytes: bytes,
-        type: FileType.custom,
-        allowedExtensions: ['pdf'],
-      );
+      // সঠিক নামে temp copy (MediaStore এই নামেই ফাইল সেভ করে)
+      final tempDir = await getTemporaryDirectory();
+      tempFile = await File(localPath.value).copy('${tempDir.path}/$fileName');
 
-      if (outputPath != null) {
-        _showPremiumNotification(
-          title: 'downloaded'.tr,
-          message: 'reportSavedToDownloads'.tr,
-          isSuccess: true,
+      if (Platform.isAndroid) {
+        // Android 9 ও নিচে (API <= 28) storage permission লাগে।
+        // Android 10+ এ MediaStore দিয়ে লিখতে permission লাগে না।
+        final sdk = (await DeviceInfoPlugin().androidInfo).version.sdkInt;
+        if (sdk <= 28) {
+          final status = await Permission.storage.request();
+          if (!status.isGranted) {
+            throw Exception('Storage permission denied.');
+          }
+        }
+
+        await MediaStore.ensureInitialized();
+        MediaStore.appFolder = _folderName; // Documents/ClauseVerify
+
+                final saved = await MediaStore().saveFile(
+          tempFilePath: tempFile.path,
+          dirType: DirType.download,
+          dirName: DirName.download,
         );
+
+        if (saved == null) {
+          throw Exception('File could not be saved.');
+        }
+      } else {
+        // iOS: অ্যাপের Documents ফোল্ডারই Files অ্যাপে
+        // "On My iPhone > ClauseVerify" হিসেবে দেখায়
+        final docs = await getApplicationDocumentsDirectory();
+        await tempFile.copy('${docs.path}/$fileName');
       }
-      // outputPath == null মানে সাধারণত user নিজে cancel করেছে,
-      // এটাকে error হিসেবে না দেখানোই ভালো
+
+      _showPremiumNotification(
+        title: 'downloaded'.tr,
+        message: 'reportSavedToDownloads'.tr,
+        isSuccess: true,
+      );
     } catch (e, stack) {
       debugPrint('Save error: $e');
       debugPrint('$stack');
       _showPremiumNotification(
         title: 'error'.tr,
-        // 👇 ডিবাগ করার জন্য আপাতত raw error দেখাচ্ছি, exact কারণ বের করতে সাহায্য করবে।
-        // প্রোডাকশনে release দেওয়ার আগে এটা আবার 'somethingWentWrong'.tr করে দিন।
+        // ডিবাগের জন্য raw error। release এর আগে 'somethingWentWrong'.tr করে দিও।
         message: 'Something went wrong: $e',
         isSuccess: false,
       );
     } finally {
+      try {
+        if (tempFile != null && await tempFile.exists()) {
+          await tempFile.delete();
+        }
+      } catch (_) {}
       isSavingToDevice.value = false;
     }
   }
@@ -289,7 +318,7 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
           ),
         ],
       ),
-      // ✅ FIX: SafeArea দিয়ে নিচের বাটন phone-এর navigation bar-এর ওপরে থাকবে
+      // ✅ SafeArea দিয়ে নিচের বাটন phone-এর navigation bar-এর ওপরে থাকবে
       body: SafeArea(
         top: false, // উপরের অংশ AppBar নিজেই সামলায়
         bottom: true, // navigation bar-এর নিচে কিছু দেখাবে না

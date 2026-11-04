@@ -22,46 +22,143 @@ class AnalysisResultScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: _bg,
-      // ✅ FIX: SafeArea দিয়ে কনটেন্ট নেভিগেশন বারের ওপরে শেষ হবে
-      body: SafeArea(
-        top: false, // উপরের অংশ কাস্টম AppBar নিজেই সামলায়
-        bottom: true, // নেভিগেশন বারের নিচে কিছু দেখাবে না
-        child: CustomScrollView(
-          physics: const BouncingScrollPhysics(),
-          slivers: [
-            _buildAppBar(c, context),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 16.h),
-                    _buildVerdictCard(c),
-                    _buildOverviewSection(c),
-                    if (c.positivePoints.isNotEmpty) ...[
-                      SizedBox(height: 24.h),
-                      _buildPositivePoints(c),
+      body: Obx(() {
+        // Report load hocche (id diye API call)
+        if (c.isLoading.value && c.result.value == null) {
+          return _buildLoadingView();
+        }
+
+        // Load fail korse, r kono data nai
+        if (c.result.value == null) {
+          return _buildErrorView(c);
+        }
+
+        return SafeArea(
+          top: false, // উপরের অংশ কাস্টম AppBar নিজেই সামলায়
+          bottom: true, // নেভিগেশন বারের নিচে কিছু দেখাবে না
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              _buildAppBar(c, context),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 16.h),
+                      _buildVerdictCard(c),
+                      _buildOverviewSection(c),
+                      if (c.positivePoints.isNotEmpty) ...[
+                        SizedBox(height: 24.h),
+                        _buildPositivePoints(c),
+                      ],
+                      if (c.allTerms.isNotEmpty) ...[
+                        SizedBox(height: 28.h),
+                        _buildTermsHeader(c),
+                        SizedBox(height: 12.h),
+                        _buildFilterTabs(c),
+                        SizedBox(height: 14.h),
+                        _buildTermsList(c),
+                      ],
+                      if (c.missingTerms.isNotEmpty) ...[
+                        SizedBox(height: 28.h),
+                        _buildMissingSection(c),
+                      ],
+                      SizedBox(height: 40.h),
                     ],
-                    if (c.allTerms.isNotEmpty) ...[
-                      SizedBox(height: 28.h),
-                      _buildTermsHeader(c),
-                      SizedBox(height: 12.h),
-                      _buildFilterTabs(c),
-                      SizedBox(height: 14.h),
-                      _buildTermsList(c),
-                    ],
-                    if (c.missingTerms.isNotEmpty) ...[
-                      SizedBox(height: 28.h),
-                      _buildMissingSection(c),
-                    ],
-                    SizedBox(height: 40.h),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
+        );
+      }),
+    );
+  }
+
+  // ───────── Loading / Error states ─────────
+
+  Widget _buildBackButton() {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => Get.back(),
+      child: Container(
+        width: 40.w,
+        height: 40.w,
+        decoration: BoxDecoration(
+          color: AppColors.navy,
+          shape: BoxShape.circle,
+          border: Border.all(color: _border, width: 1),
         ),
+        child: Center(
+          child: Icon(Icons.arrow_back_ios_new_rounded,
+              color: _gold, size: 18.sp),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingView() {
+    return SafeArea(
+      child: Stack(
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(20.w, 15.h, 0, 0),
+            child: _buildBackButton(),
+          ),
+          const Center(
+            child: CircularProgressIndicator(color: _gold),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorView(AnalysisResultController c) {
+    return SafeArea(
+      child: Stack(
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(20.w, 15.h, 0, 0),
+            child: _buildBackButton(),
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error_outline,
+                    color: AppColors.textMuted, size: 64.sp),
+                SizedBox(height: 16.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  child: Text(
+                    c.errorMessage.value.isNotEmpty
+                        ? c.errorMessage.value
+                        : 'failedToLoadAnalysisDetails'.tr,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: AppColors.textMuted, fontSize: 16.sp),
+                  ),
+                ),
+                SizedBox(height: 24.h),
+                ElevatedButton(
+                  onPressed: () => c.loadAnalysis(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _gold,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 32.w, vertical: 12.h),
+                  ),
+                  child: Text('retry'.tr,
+                      style: TextStyle(
+                          color: AppColors.black,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600)),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -190,12 +287,10 @@ class AnalysisResultScreen extends StatelessWidget {
   }
 
   Widget _buildVerdictCard(AnalysisResultController c) {
-   
-final level = c.verdictLevel.isNotEmpty
-    ? c.verdictLevel
-    : _normalizeLevel(c.overallRisk);
-final color = _levelColor(level);
-    final hasRisk = c.overallRisk.isNotEmpty;
+    // level controller থেকেই আসে; color আর label দুটোই এই level থেকে
+    final level = c.verdictLevel;
+    final color = _levelColor(level);
+    final hasRisk = level.isNotEmpty;
     final hasGuidance = c.recommendationGuidance.isNotEmpty;
 
     return Container(
@@ -224,7 +319,7 @@ final color = _levelColor(level);
                 SizedBox(width: 14.w),
                 Expanded(
                   child: Text(
-                    _riskLabel(c.overallRisk),
+                    _riskLabel(level),
                     style: TextStyle(
                         color: color,
                         fontSize: 24.sp,
@@ -523,27 +618,23 @@ final color = _levelColor(level);
     );
   }
 
+  // All / High / Medium / Standard — চারটা tab সবসময় থাকবে
   Widget _buildFilterTabs(AnalysisResultController c) {
     final filters = <Map<String, dynamic>>[
       {'key': 'all', 'label': 'all'.tr, 'count': c.foundCount},
-      if (c.countOfLevel('high') > 0)
-        {'key': 'high', 'label': 'high'.tr, 'count': c.countOfLevel('high')},
-      if (c.countOfLevel('medium') > 0)
-        {
-          'key': 'medium',
-          'label': 'medium'.tr,
-          'count': c.countOfLevel('medium')
-        },
+      {'key': 'high', 'label': 'high'.tr, 'count': c.countOfLevel('high')},
+      {
+        'key': 'medium',
+        'label': 'medium'.tr,
+        'count': c.countOfLevel('medium')
+      },
       // "Low" -> "Standard"
-      if (c.countOfLevel('low') > 0)
-        {
-          'key': 'low',
-          'label': 'standardLabel'.tr,
-          'count': c.countOfLevel('low')
-        },
+      {
+        'key': 'low',
+        'label': 'standardLabel'.tr,
+        'count': c.countOfLevel('low')
+      },
     ];
-
-    if (filters.length <= 2) return const SizedBox.shrink();
 
     return Obx(() => SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -649,11 +740,12 @@ final color = _levelColor(level);
   }
 
   /// Card-এর উপরের header: "Clause 1" (ছোট) + "Article 1" (বড়)
-  /// বাঁদিকের রেখা ও Article লেখার রং = card-এর risk color (red / orange / green)
+  /// রং সবসময় card-এর risk color: high = red, medium = gold, standard = green
+  /// (missing হলেও একই নিয়ম)
   Widget _buildReferenceHeader(
       ImportantTerm term, String articleLabel, Color levelColor) {
     final hasOrder = term.contractOrder > 0;
-    final headColor = term.isMissing ? _red : levelColor;
+    final headColor = levelColor;
 
     return Container(
       width: double.infinity,
@@ -778,14 +870,14 @@ final color = _levelColor(level);
                 ),
               ),
 
-              // ───── নিচের অংশ: পুরো width, icon-এর নিচে কোনো ফাঁকা নেই ─────
+              // ───── নিচের অংশ ─────
               if (expanded)
                 Padding(
                   padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Divider(color: _border, height: 1), // দাগ ফিরে এল
+                      const Divider(color: _border, height: 1),
                       SizedBox(height: 14.h),
                       if (term.lawReference.isNotEmpty) ...[
                         _lawReference(term.lawReference),
@@ -934,32 +1026,26 @@ final color = _levelColor(level);
     );
   }
 
-  String _normalizeLevel(String risk) {
-    final r = risk.toLowerCase();
-    if (r.contains('high')) return 'high';
-    if (r.contains('medium') || r.contains('moderate')) return 'medium';
-    if (r.contains('low')) return 'low';
-    return '';
-  }
-
-  String _riskLabel(String risk) {
-    switch (_normalizeLevel(risk)) {
+  // Verdict label: শুধু level থেকে (static, 5 ভাষায় translate হয়)
+  // red -> High Risk, yellow/orange -> Medium Risk, green -> Standard
+  String _riskLabel(String level) {
+    switch (level) {
       case 'high':
         return 'highRisk'.tr;
       case 'medium':
         return 'mediumRisk'.tr;
-      // "Low Risk" -> "Standard"
       case 'low':
-        return 'standardRisk'.tr;
+        return 'standardLabel'.tr;
       default:
-        return risk;
+        return '';
     }
   }
 
+  // high -> red, medium -> golden (warning), low/standard -> green
   Color _levelColor(String level) {
     switch (level) {
       case 'high':
-        return _red;
+        return const Color.fromARGB(255, 209, 47, 22);
       case 'medium':
         return _orange;
       case 'low':

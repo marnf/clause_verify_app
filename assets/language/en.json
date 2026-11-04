@@ -669,5 +669,22 @@
   "notAContractTitle": "Not a Contract",
 
   "notAContractNoScan": "This document does not look like a contract. No scan was used.",
-  "notAContractScanUsed": "This document does not look like a contract. Daily free rejection limit reached; one scan was used."
+  "notAContractScanUsed": "This document does not look like a contract. Daily free rejection limit reached; one scan was used.",
+
+
+    "jobStageQueued": "In Queue",
+  "jobStageAnalyzing": "Analyzing",
+  "jobStageCompleted": "Analysis Complete",
+  "jobStageFailed": "Analysis Failed",
+  "jobMsgQueued": "Document uploaded. Waiting for processing.",
+    "jobMsgAnalyzing": "Your last uploaded contract is still being analyzed.",
+    "jobMsgCompleted": "Your last uploaded contract analysis is ready.",
+  "jobMsgFailed": "Something went wrong while analyzing your document.",
+  "jobId": "Job ID",
+  "tapToViewResult": "Tap to view result",
+  "resultLoadFailed": "Could not load the result. Please try again.",
+
+
+  "newTag": "New",
+  "scanWarningNextNonContract": "The next non-contract document today will use a scan."
 }

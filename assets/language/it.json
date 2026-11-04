@@ -659,6 +659,20 @@
   "notAContractTitle": "Non è un contratto",
 
   "notAContractNoScan": "Questo documento non sembra un contratto. Non è stata utilizzata alcuna scansione.",
-  "notAContractScanUsed": "Questo documento non sembra un contratto. Limite giornaliero di rifiuti gratuiti raggiunto; è stata utilizzata una scansione."
+  "notAContractScanUsed": "Questo documento non sembra un contratto. Limite giornaliero di rifiuti gratuiti raggiunto; è stata utilizzata una scansione.",
+    "jobStageQueued": "In coda",
+  "jobStageAnalyzing": "Analisi in corso",
+  "jobStageCompleted": "Analisi completata",
+  "jobStageFailed": "Analisi non riuscita",
+  "jobMsgQueued": "Documento caricato. In attesa di elaborazione.",
+    "jobMsgAnalyzing": "Il tuo ultimo contratto caricato è ancora in fase di analisi.",
+    "jobMsgCompleted": "L'analisi dell'ultimo contratto caricato è pronta.",
+  "jobMsgFailed": "Si è verificato un problema durante l'analisi del documento.",
+  "jobId": "ID attività",
+  "tapToViewResult": "Tocca per vedere il risultato",
+  "resultLoadFailed": "Impossibile caricare il risultato. Riprova.",
+
+  "newTag": "Nuovo",
+  "scanWarningNextNonContract": "Il prossimo documento che non è un contratto utilizzerà una scansione oggi."
 
 }

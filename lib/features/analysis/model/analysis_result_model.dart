@@ -8,10 +8,25 @@ int _toInt(dynamic value) {
 
 String _toStr(dynamic value) => value?.toString().trim() ?? '';
 
+/// bool / "True" / "False" / 1 / 0 shob handle kore.
+/// Field na thakle ba null hole [fallback] (default true = read)
+bool _toBool(dynamic value, {bool fallback = true}) {
+  if (value == null) return fallback;
+  if (value is bool) return value;
+  if (value is num) return value != 0;
+  final s = value.toString().trim().toLowerCase();
+  if (s == 'true' || s == '1') return true;
+  if (s == 'false' || s == '0') return false;
+  return fallback;
+}
+
 class AnalysisResultModel {
   final String id;
   final int totalPages;
   final String createdAt;
+
+  /// false hole ei report ta user ekhono dekhe ni
+  final bool isRead;
   final AiResponse aiResponse;
 
   AnalysisResultModel({
@@ -19,14 +34,15 @@ class AnalysisResultModel {
     required this.totalPages,
     required this.createdAt,
     required this.aiResponse,
+    this.isRead = true,
   });
 
   factory AnalysisResultModel.fromJson(Map<String, dynamic> json) {
-    print('RAW created_at: ${json['created_at']}');
     return AnalysisResultModel(
       id: _toStr(json['id']),
       totalPages: _toInt(json['total_pages']),
       createdAt: _toStr(json['created_at']),
+      isRead: _toBool(json['is_read']),
       aiResponse: AiResponse.fromJson(
         (json['ai_response'] as Map<String, dynamic>?) ?? {},
       ),
@@ -37,6 +53,7 @@ class AnalysisResultModel {
         'id': id,
         'total_pages': totalPages,
         'created_at': createdAt,
+        'is_read': isRead,
         'ai_response': aiResponse.toJson(),
       };
 }
@@ -46,7 +63,7 @@ class AiResponse {
   final RiskBreakdown riskBreakdown;
   final List<String> positivePoints;
   final List<ImportantTerm> importantTerms;
-  final List<ImportantTerm> missingProtections; // NEW
+  final List<ImportantTerm> missingProtections;
 
   AiResponse({
     required this.summary,
@@ -156,8 +173,8 @@ class RiskBreakdown {
 }
 
 class ImportantTerm {
-  final String articleNumber; // NEW: "3", "Article 3", "Not in contract"
-  final int contractOrder; // NEW: contract-এ clause-এর ক্রম (missing হলে 0)
+  final String articleNumber; // "3", "Article 3", "Not in contract"
+  final int contractOrder; // contract-এ clause-এর ক্রম (missing হলে 0)
   final String termTitle;
   final String status; // "red", "warning", "green"
   final String riskLevel; // "high", "medium", "low"
@@ -165,7 +182,7 @@ class ImportantTerm {
   final String aiExplanation;
   final String aiRecommendation;
   final String lawReference;
-  final String presenceStatus; // NEW: "missing" (শুধু missing_protections-এ)
+  final String presenceStatus; // "missing" / "found" ইত্যাদি
 
   ImportantTerm({
     required this.articleNumber,
@@ -180,19 +197,41 @@ class ImportantTerm {
     required this.presenceStatus,
   });
 
-  /// presence_status == missing অথবা extracted_text খালি মানে clause নেই
-  bool get isMissing =>
-      presenceStatus.toLowerCase() == 'missing' || extractedText.isEmpty;
+  /// Missing কিনা:
+  ///   1) presence_status থাকলে সেটাই চূড়ান্ত ("missing" == missing, বাকি সব found)
+  ///   2) না থাকলে article_number "Not in contract" টাইপ হলে missing
+  ///   3) অন্য সব ক্ষেত্রে found
+  ///
+  /// ⚠️ আগে এখানে "extracted_text খালি = missing" ধরা হতো। কিন্তু
+  /// low/green (standard) clause-এর extracted_text খালি থাকতে পারে,
+  /// তাই সেগুলো ভুল করে missing হয়ে যেত। এখন আর সেটা ধরা হয় না।
+  bool get isMissing {
+    final p = presenceStatus.trim().toLowerCase();
+    if (p.isNotEmpty) return p == 'missing';
+
+    final a = articleNumber.trim().toLowerCase();
+    if (a.contains('not in contract') || a.contains('not found in contract')) {
+      return true;
+    }
+    return false;
+  }
 
   /// "high" | "medium" | "low" — risk_level না এলে status থেকে বের করা হয়
   String get level {
-    final r = riskLevel.toLowerCase();
-    if (r == 'high' || r == 'medium' || r == 'low') return r;
-    switch (status.toLowerCase()) {
+    final r = riskLevel.trim().toLowerCase();
+    if (r == 'high') return 'high';
+    if (r == 'medium') return 'medium';
+    if (r == 'low' || r == 'standard') return 'low';
+
+    switch (status.trim().toLowerCase()) {
       case 'red':
         return 'high';
       case 'warning':
+      case 'yellow':
+      case 'orange':
+      case 'gold':
         return 'medium';
+      case 'green':
       default:
         return 'low';
     }

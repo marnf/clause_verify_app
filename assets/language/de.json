@@ -657,6 +657,21 @@
   "notAContractTitle": "Kein Vertrag",
 
   "notAContractNoScan": "Dieses Dokument sieht nicht wie ein Vertrag aus. Es wurde kein Scan verwendet.",
-  "notAContractScanUsed": "Dieses Dokument sieht nicht wie ein Vertrag aus. Tägliches Limit für kostenlose Ablehnungen erreicht; ein Scan wurde verwendet."
+  "notAContractScanUsed": "Dieses Dokument sieht nicht wie ein Vertrag aus. Tägliches Limit für kostenlose Ablehnungen erreicht; ein Scan wurde verwendet.",
+    "jobStageQueued": "In der Warteschlange",
+  "jobStageAnalyzing": "Analyse läuft",
+  "jobStageCompleted": "Analyse abgeschlossen",
+  "jobStageFailed": "Analyse fehlgeschlagen",
+  "jobMsgQueued": "Dokument hochgeladen. Warten auf Verarbeitung.",
+    "jobMsgAnalyzing": "Ihr zuletzt hochgeladener Vertrag wird noch analysiert.",
+    "jobMsgCompleted": "Die Analyse Ihres zuletzt hochgeladenen Vertrags ist fertig.",
+  "jobMsgFailed": "Bei der Analyse Ihres Dokuments ist ein Fehler aufgetreten.",
+  "jobId": "Auftrags-ID",
+  "tapToViewResult": "Tippen, um das Ergebnis anzuzeigen",
+  "resultLoadFailed": "Das Ergebnis konnte nicht geladen werden. Bitte versuchen Sie es erneut.",
+
+  "newTag": "Neu",
+
+  "scanWarningNextNonContract": "Das nächste Dokument, das kein Vertrag ist, verbraucht heute einen Scan."
 
 }

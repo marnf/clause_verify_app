@@ -3,15 +3,24 @@ import 'package:clause_verify/core/models/response_data.dart';
 import 'package:clause_verify/core/services/endpoints.dart';
 import 'package:clause_verify/core/services/network_caller.dart';
 import 'package:clause_verify/features/analysis/model/analysis_result_model.dart';
+import 'package:clause_verify/features/history/controller/history_controller.dart';
 import 'package:clause_verify/features/subscription/widgets/pdf_purchase_sheet.dart';
 import 'package:clause_verify/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 class AnalysisResultController extends GetxController {
+  final NetworkCaller _networkCaller = NetworkCaller();
+
   final Rx<AnalysisResultModel?> result = Rx<AnalysisResultModel?>(null);
   final RxSet<int> expandedIndexes = <int>{}.obs;
   final RxString activeFilter = 'all'.obs;
+
+  // ── Id diye load korar state ──
+  final RxBool isLoading = false.obs;
+  final RxString errorMessage = ''.obs;
+  String _analysisId = '';
+  bool _isMarkingRead = false;
 
   // PDF states
   final RxBool isGeneratingPdf = false.obs;
@@ -27,16 +36,106 @@ class AnalysisResultController extends GetxController {
   void onInit() {
     super.onInit();
     final args = Get.arguments;
-    if (args is AnalysisResultModel) {
-      result.value = args;
+
+    if (args is String && args.trim().isNotEmpty) {
+      // ── Notun way: shudhu id ashe -> API theke report ane ──
+      _analysisId = args.trim();
+      loadAnalysis();
+    } else if (args is AnalysisResultModel) {
+      // ── Age theke load kora model (jemon notun scan er por) ──
+      _applyResult(args);
     } else if (args is Map<String, dynamic>) {
-      result.value = AnalysisResultModel.fromJson(args);
+      _applyResult(AnalysisResultModel.fromJson(args));
+    } else {
+      errorMessage.value = 'failedToLoadAnalysisDetails'.tr;
     }
+  }
+
+  // ══════════ Load by id + mark as read ══════════
+
+  /// GET /analysis/{id}/ -> result set -> is_read false hole mark-as-read PATCH
+  Future<void> loadAnalysis() async {
+    if (_analysisId.isEmpty || isLoading.value) return;
+
+    try {
+      isLoading.value = true;
+      errorMessage.value = '';
+
+      final response = await _networkCaller
+          .getRequest('${Endpoints.fileAnalysis}$_analysisId/');
+
+      if (response.isSuccess && response.responseData != null) {
+        final model = AnalysisResultModel.fromJson(
+          Map<String, dynamic>.from(response.responseData as Map),
+        );
+        _applyResult(model);
+      } else {
+        errorMessage.value = response.errorMessage.isNotEmpty
+            ? response.errorMessage
+            : 'failedToLoadAnalysisDetails'.tr;
+      }
+    } catch (e) {
+      errorMessage.value = 'failedToLoadAnalysisDetails'.tr;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  /// Result set kore, high risk clause gulo khule dey, r dorkar hole read mark kore
+  void _applyResult(AnalysisResultModel model) {
+    result.value = model;
 
     // High risk clause গুলো শুরুতেই খোলা থাকবে
+    expandedIndexes.clear();
     final terms = allTerms;
     for (int i = 0; i < terms.length; i++) {
       if (terms[i].level == 'high') expandedIndexes.add(i);
+    }
+
+    _markAsReadIfNeeded(model);
+  }
+
+  /// is_read true hole kichu hit korbe na.
+  /// false hole PATCH /analyses/{id}/mark-as-read/ (body nai, shudhu token)
+  Future<void> _markAsReadIfNeeded(AnalysisResultModel model) async {
+    if (model.isRead) return;
+    if (model.id.isEmpty || _isMarkingRead) return;
+
+    _isMarkingRead = true;
+    try {
+      final response = await _networkCaller.patchRequest(
+        '${Endpoints.fileAnalyses}${model.id}/mark-as-read/',
+      );
+
+      // Empty body (200/204) hole _handleResponse isSuccess false dite pare,
+      // tai status code o dekhi
+      final bool ok = response.isSuccess ||
+          response.statusCode == 200 ||
+          response.statusCode == 204;
+
+      if (ok) {
+        // Local result eo read kore rakhi, jate abar hit na hoy
+        result.value = AnalysisResultModel(
+          id: model.id,
+          totalPages: model.totalPages,
+          createdAt: model.createdAt,
+          aiResponse: model.aiResponse,
+          isRead: true,
+        );
+
+        // History screen e "New" badge sathe sathe soriye dei
+        if (Get.isRegistered<HistoryController>()) {
+          Get.find<HistoryController>().markAsReadLocally(model.id);
+        }
+      } else {
+        debugPrint(
+            'mark-as-read failed: ${response.statusCode} ${response.errorMessage}');
+      }
+    } catch (e) {
+      // Mark-as-read fail korle user er experience nosto korbo na, silent
+      debugPrint('mark-as-read failed: $e');
+    } finally {
+      _isMarkingRead = false;
     }
   }
 
@@ -54,17 +153,45 @@ class AnalysisResultController extends GetxController {
       _rawTerms.where((t) => !t.isMissing).toList();
 
   /// contract-এ নেই এমন clause — কোনো risk count-এ ঢুকবে না।
-  /// নতুন format: missing_protections লিস্ট। পুরনো format: খালি extracted_text।
+  /// নতুন format: missing_protections লিস্ট। পুরনো format: article_number "Not in contract"।
   List<ImportantTerm> get missingTerms => [
         ..._rawMissing,
         ..._rawTerms.where((t) => t.isMissing),
       ];
 
-  int get foundCount => allTerms.length;
-  int get missingCount => missingTerms.length;
+  // ── Count fallback: clause লিস্ট একদম খালি এলে backend-এর risk_breakdown থেকে count নেওয়া হবে ──
+  RiskBreakdown? get _breakdown => result.value?.aiResponse.riskBreakdown;
 
-  int countOfLevel(String level) =>
-      allTerms.where((t) => t.level == level).length;
+  bool get _useBreakdown {
+    final b = _breakdown;
+    if (b == null) return false;
+    if (allTerms.isNotEmpty || missingTerms.isNotEmpty) return false;
+    return (b.total + b.missingClause) > 0;
+  }
+
+  /// Clauses Found = High + Medium + Standard(low)
+  int get foundCount => _useBreakdown ? _breakdown!.total : allTerms.length;
+
+  /// Missing Protections
+  int get missingCount =>
+      _useBreakdown ? _breakdown!.missingClause : missingTerms.length;
+
+  int countOfLevel(String level) {
+    if (_useBreakdown) {
+      final b = _breakdown!;
+      switch (level) {
+        case 'high':
+          return b.highRisk;
+        case 'medium':
+          return b.mediumRisk;
+        case 'low':
+          return b.lowRisk;
+        default:
+          return 0;
+      }
+    }
+    return allTerms.where((t) => t.level == level).length;
+  }
 
   // ══════════ Expand / Filter ══════════
   void toggleExpand(int index) {
@@ -98,19 +225,48 @@ class AnalysisResultController extends GetxController {
   int get totalPages => result.value?.totalPages ?? 0;
   String get createdAt => result.value?.createdAt ?? '';
 
+  // ══════════ Verdict level ══════════
 
-    /// Verdict card-er level: risk_breakdown-er count theke (language-independent)
   /// high >= medium && high >= low -> high
   /// medium >= low                 -> medium
   /// otherwise                     -> low
-  /// Count shob 0 hole '' (neutral color)
+  /// সব count 0 হলে '' (neutral)
+  String _pickLevel(int high, int medium, int low) {
+    if (high + medium + low == 0) return '';
+    if (high >= medium && high >= low) return 'high';
+    if (medium >= low) return 'medium';
+    return 'low';
+  }
+
+  /// শেষ ভরসা: backend-এর text থেকে (শুধু English keyword)
+  String _normalizeLevel(String risk) {
+    final r = risk.toLowerCase();
+    if (r.contains('high')) return 'high';
+    if (r.contains('medium') || r.contains('moderate')) return 'medium';
+    if (r.contains('low') || r.contains('standard')) return 'low';
+    return '';
+  }
+
+  /// Verdict card-er level (language-independent):
+  /// 1) risk_breakdown-er count
+  /// 2) না পেলে found clause গুলোর level count
+  /// 3) তাও না পেলে overall_risk text (English keyword)
+  /// Screen-এ label ও color দুটোই এই level থেকে আসবে, backend text না।
   String get verdictLevel {
     final b = result.value?.aiResponse.riskBreakdown;
-    if (b == null || b.total == 0) return '';
+    if (b != null) {
+      final fromBreakdown = _pickLevel(b.highRisk, b.mediumRisk, b.lowRisk);
+      if (fromBreakdown.isNotEmpty) return fromBreakdown;
+    }
 
-    if (b.highRisk >= b.mediumRisk && b.highRisk >= b.lowRisk) return 'high';
-    if (b.mediumRisk >= b.lowRisk) return 'medium';
-    return 'low';
+    final fromTerms = _pickLevel(
+      countOfLevel('high'),
+      countOfLevel('medium'),
+      countOfLevel('low'),
+    );
+    if (fromTerms.isNotEmpty) return fromTerms;
+
+    return _normalizeLevel(overallRisk);
   }
 
   String get formattedDate {
