@@ -227,14 +227,15 @@ class AnalysisResultController extends GetxController {
 
   // ══════════ Verdict level ══════════
 
-  /// high >= medium && high >= low -> high
-  /// medium >= low                 -> medium
-  /// otherwise                     -> low
-  /// সব count 0 হলে '' (neutral)
-  String _pickLevel(int high, int medium, int low) {
-    if (high + medium + low == 0) return '';
-    if (high >= medium && high >= low) return 'high';
-    if (medium >= low) return 'medium';
+  /// Overall verdict rule (client er requirement):
+  /// - HIGH   : kombokhe 1ta high-risk clause ba 1ta missing protection
+  /// - MEDIUM : high/missing nai, kintu kombokhe 1ta medium clause
+  /// - LOW    : shob clause standard (low) -> "Standard" dekhabe
+  /// kono data na thakle '' (neutral)
+  String _pickLevel(int high, int medium, int low, int missing) {
+    if (high + medium + low + missing == 0) return '';
+    if (high > 0 || missing > 0) return 'high';
+    if (medium > 0) return 'medium';
     return 'low';
   }
 
@@ -248,23 +249,19 @@ class AnalysisResultController extends GetxController {
   }
 
   /// Verdict card-er level (language-independent):
-  /// 1) risk_breakdown-er count
-  /// 2) না পেলে found clause গুলোর level count
-  /// 3) তাও না পেলে overall_risk text (English keyword)
+  /// 1) clause list + missing list theke (countOfLevel / missingCount)
+  /// 2) na pele overall_risk text (English keyword)
+  /// countOfLevel / missingCount already risk_breakdown fallback handle kore,
+  /// tai alada kore breakdown check korar dorkar nai.
   /// Screen-এ label ও color দুটোই এই level থেকে আসবে, backend text না।
   String get verdictLevel {
-    final b = result.value?.aiResponse.riskBreakdown;
-    if (b != null) {
-      final fromBreakdown = _pickLevel(b.highRisk, b.mediumRisk, b.lowRisk);
-      if (fromBreakdown.isNotEmpty) return fromBreakdown;
-    }
-
-    final fromTerms = _pickLevel(
+    final fromCounts = _pickLevel(
       countOfLevel('high'),
       countOfLevel('medium'),
       countOfLevel('low'),
+      missingCount,
     );
-    if (fromTerms.isNotEmpty) return fromTerms;
+    if (fromCounts.isNotEmpty) return fromCounts;
 
     return _normalizeLevel(overallRisk);
   }

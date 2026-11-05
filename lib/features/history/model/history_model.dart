@@ -94,27 +94,31 @@ class HistoryModel {
   }
 
   bool get hasBreakdown =>
-      lowRisk != null || highRisk != null || mediumRisk != null;
+      lowRisk != null ||
+      highRisk != null ||
+      mediumRisk != null ||
+      missingClause != null;
 
   /// "high" | "medium" | "low" | "" (breakdown না থাকলে খালি)
   ///
   /// শুধু risk_breakdown এর সংখ্যা থেকে ঠিক হয়, ভাষা/টেক্সট দেখে না।
-  /// Logic:
-  ///   high >= medium && high >= low  -> high
-  ///   medium >= low                  -> medium
-  ///   otherwise                      -> low
+  /// Client er rule:
+  ///   - HIGH   : kombokhe 1ta high-risk clause ba 1ta missing protection
+  ///   - MEDIUM : high/missing nai, kintu kombokhe 1ta medium clause
+  ///   - LOW    : shob clause standard (low)
   String get level {
     if (!hasBreakdown) return '';
 
     final low = lowRisk ?? 0;
     final high = highRisk ?? 0;
     final medium = mediumRisk ?? 0;
+    final missing = missingClause ?? 0;
 
     // সব 0 হলে কিছু বলার নেই -> grey
-    if (low == 0 && high == 0 && medium == 0) return '';
+    if (low == 0 && high == 0 && medium == 0 && missing == 0) return '';
 
-    if (high >= medium && high >= low) return 'high';
-    if (medium >= low) return 'medium';
+    if (high > 0 || missing > 0) return 'high';
+    if (medium > 0) return 'medium';
     return 'low';
   }
 
